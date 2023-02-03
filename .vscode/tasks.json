@@ -7,20 +7,10 @@
             "label": "build debug",
             "type": "process",
             "command": "make",
-            "args": [
-                "PLATFORM=PLATFORM_DESKTOP",
-                "BUILD_MODE=DEBUG",
-                "PROJECT_NAME=${fileBasenameNoExtension}",
-                "OBJS=${fileBasenameNoExtension}.c"
-            ],
+            
             "windows": {
-                "command": "mingw32-make.exe",
-                "args": [
-                    "RAYLIB_PATH=C:/raylib/raylib",
-                    "PROJECT_NAME=${fileBasenameNoExtension}",
-                    "OBJS=${fileBasenameNoExtension}.c",
-                    "BUILD_MODE=DEBUG"
-                ],
+                "command": "./raylib/w64devkit/bin/make.exe",
+                
             },
             "osx": {
                 "args": [
@@ -42,18 +32,10 @@
             "label": "build release",
             "type": "process",
             "command": "make",
-            "args": [
-                "PLATFORM=PLATFORM_DESKTOP",
-                "PROJECT_NAME=${fileBasenameNoExtension}",
-                "OBJS=${fileBasenameNoExtension}.c"
-            ],
+            
             "windows": {
-                "command": "mingw32-make.exe",
-                "args": [
-                    "RAYLIB_PATH=C:/raylib/raylib",
-                    "PROJECT_NAME=${fileBasenameNoExtension}",
-                    "OBJS=${fileBasenameNoExtension}.c"
-                ],
+                "command": "./raylib/w64devkit/bin/make.exe",
+
             },
             "osx": {
                 "args": [
