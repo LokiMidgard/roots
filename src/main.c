@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <conio.h>
 #include "raylib.h"
 
 int __stdcall AllocConsole(void);
@@ -68,6 +69,7 @@ int main()
     //--------------------------------------------------------------------------------------
     CloseWindow();                  // Close window and OpenGL context
     //--------------------------------------------------------------------------------------
+    getch();
     FreeConsole();
 
     return 0;
