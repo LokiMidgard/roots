@@ -8,7 +8,7 @@
             "name": "Debug",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/release/roots.exe",
+            "program": "${workspaceFolder}/dist/DEBUG/roots.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
@@ -42,7 +42,7 @@
             "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": false,
-            "program": "${workspaceFolder}/release/roots.exe",
+            "program": "${workspaceFolder}/dist/RELEASE/roots.exe",
             "MIMode": "gdb",
             "windows": {
               "program": "${workspaceFolder}/${fileBasenameNoExtension}.exe",

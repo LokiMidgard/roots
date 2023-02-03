@@ -7,10 +7,15 @@
             "label": "build debug",
             "type": "process",
             "command": "make",
-            
+            "args": [
+                "PLATFORM=PLATFORM_DESKTOP",
+                "BUILD_MODE=DEBUG"
+            ],
             "windows": {
                 "command": "./raylib/w64devkit/bin/make.exe",
-                
+                "args": [
+                    "BUILD_MODE=DEBUG"
+                ],
             },
             "osx": {
                 "args": [
