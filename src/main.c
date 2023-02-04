@@ -110,16 +110,15 @@ int main()
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "raylib");
     SetTargetFPS(FPS);
 
-#if defined(PLATFORM_WEB)
-    emscripten_set_main_loop(UpdateDrawFrame, FPS, 1);
-#else
-
     /***************************************************************************
      * Init stuff
      ****************************************************************************/
     sprite_init(&mole, "resources/mole.png", 8, 30, 30, 15, 0);
     world_init(&world);
 
+#if defined(PLATFORM_WEB)
+    emscripten_set_main_loop(UpdateDrawFrame, FPS, 1);
+#else
     while (!WindowShouldClose()) // Detect window close button or ESC key
     {
         UpdateDrawFrame();
