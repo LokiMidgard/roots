@@ -4,17 +4,13 @@
 int g_device = INPUT_KEYBOARD;
 Sprite* g_sprite = (Sprite*)0;
 int g_mouse_deadzone = 20;
+int g_gamepad = 0;
 
 bool input_set_device(int device) {
     switch(device) {
         case INPUT_GAMEPAD:
-            if (IsGamepadAvailable(0)) {
-                g_device = device;
-            } else {
-                printf("No Gamepad found");
-                return false;
-            }
-            break;
+            g_device = device;
+            g_gamepad = 0;
         default:
             g_device = device;
             break;
@@ -26,10 +22,16 @@ void input_set_mouse_center(Sprite* sprite) { g_sprite = sprite; }
 
 void input_set_mouse_deadzone(int deadzone) { g_mouse_deadzone = deadzone; }
 
+int input_get_device() {
+    return g_device == INPUT_GAMEPAD && !IsGamepadAvailable(g_gamepad) ? INPUT_KEYBOARD : g_device;
+}
+
 Vector2 input_get_dir() {
     Vector2 dir = { 0, 0 };
 
-    switch(g_device) {
+    int device = input_get_device();
+
+    switch(device) {
         case INPUT_KEYBOARD:
             if (IsKeyDown(KEY_RIGHT)) dir.x = 1;
             if (IsKeyDown(KEY_LEFT)) dir.x = -1;
@@ -49,16 +51,16 @@ Vector2 input_get_dir() {
             break;
 
         case INPUT_GAMEPAD:
-            dir.x = GetGamepadAxisMovement(0, 0);
-            dir.y = GetGamepadAxisMovement(0, 1);
-        break;
+            dir.x = GetGamepadAxisMovement(g_gamepad, GAMEPAD_AXIS_LEFT_X);
+            dir.y = GetGamepadAxisMovement(g_gamepad, GAMEPAD_AXIS_LEFT_Y);
+            break;
     }
 
     return Vector2Normalize(dir);
 }
 
 bool input_is_button_pressed(int button) {
-    switch(g_device) {
+    switch(input_get_device()) {
         case INPUT_KEYBOARD:
             switch(button) {
                 case 0: return IsKeyDown(KBD_BUTTON_0);
@@ -67,12 +69,14 @@ bool input_is_button_pressed(int button) {
             break;
         case INPUT_MOUSE:
             return IsMouseButtonDown(button);
+        case INPUT_GAMEPAD:
+            return IsGamepadButtonDown(g_gamepad, button);
     }
     return false;
 }
 
 const char* input_get_device_name() {
-    switch(g_device) {
+    switch(input_get_device()) {
         case INPUT_GAMEPAD: return "Gamepad";
         case INPUT_MOUSE: return "Mouse";
         case INPUT_KEYBOARD: return "Keyboard";
