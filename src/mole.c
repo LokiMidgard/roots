@@ -36,14 +36,6 @@ void mole_update(Mole *mole, Vector2 *movement, Color *bitmap)
 
     Vector2 new_mole_position = Vector2Add(sprite->position, *movement);
 
-    if (Vector2Length(*movement) > 0.5)
-    {
-        if (!IsSoundPlaying(mole->snd_dig))
-        {
-            PlaySound(mole->snd_dig);
-        }
-    }
-
     float terain_multiplyer = 1.0f;
     for (int offsetX = -mole_width / 2; offsetX < mole_width / 2; ++offsetX)
         for (int offsetY = -mole_height / 2; offsetY < mole_height / 2; ++offsetY)
@@ -54,16 +46,59 @@ void mole_update(Mole *mole, Vector2 *movement, Color *bitmap)
                 if (IS_COLOR(current, TERRA_STONE))
                 {
                     terain_multiplyer = 0.15f;
+                    if (mole->stoneEaterBonus > 0)
+                    {
+                        terain_multiplyer = fmin(terain_multiplyer, 0.25f);
+                    }
+                    else
+                    {
+                        terain_multiplyer = fmin(terain_multiplyer, 0.05f);
+                        
+                    }
                 }
                 else if (IS_COLOR(current, TERRA_EARTH))
                 {
                     terain_multiplyer = fmin(terain_multiplyer, 0.5f);
                 }
+                else if (IS_COLOR(current, TERRA_ROOT))
+                {
+                    mole->health -= 1;
+                }
+                else if (IS_COLOR(current, TERRA_EMERALD))
+                {
+                    mole->points += 1;
+                }
+                else if (IS_COLOR(current, TERRA_QUICK_STONE))
+                {
+                    mole->speedBonus = 300;
+                }
+                else if (IS_COLOR(current, TERRA_DIG_STONE))
+                {
+                    mole->stoneEaterBonus = 600;
+                }
             }
         }
 
+    // calculate bonuses
+    if (mole->speedBonus > 0)
+    {
+        *movement = Vector2Scale(*movement, 1.5);
+        mole->speedBonus -= 1;
+    }
+    if (mole->stoneEaterBonus > 0)
+    {
+        mole->stoneEaterBonus -= 1;
+    }
     *movement = Vector2Scale(*movement, terain_multiplyer);
-    // digging
+
+    if (Vector2Length(*movement) > 0.5)
+    {
+        if (!IsSoundPlaying(mole->snd_dig))
+        {
+            PlaySound(mole->snd_dig);
+        }
+    }
+
     if (terain_multiplyer == 0)
     {
         if (!IsSoundPlaying(mole->snd_collide))
@@ -72,6 +107,7 @@ void mole_update(Mole *mole, Vector2 *movement, Color *bitmap)
         }
     }
 
+    // digging
     for (int offsetX = -mole_width / 2; offsetX < mole_width / 2; ++offsetX)
         for (int offsetY = -mole_height / 2; offsetY < mole_height / 2; ++offsetY)
         {
@@ -81,6 +117,22 @@ void mole_update(Mole *mole, Vector2 *movement, Color *bitmap)
             }
         }
 
+    if (mole->stoneEaterBonus > 0 && mole->speedBonus > 0)
+    {
+        sprite->tint = PURPLE;
+    }
+    else if (mole->speedBonus > 0)
+    {
+        sprite->tint = BLUE;
+    }
+    else if (mole->stoneEaterBonus > 0)
+    {
+        sprite->tint = RED;
+    }
+    else
+    {
+        sprite->tint = WHITE;
+    }
     sprite_update(sprite, movement);
 
     // ensure position is in bounds

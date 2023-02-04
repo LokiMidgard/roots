@@ -13,6 +13,9 @@
 #define TERRA_TUNEL (DARKBROWN)
 #define TERRA_STONE (GRAY)
 #define TERRA_ROOT (BLACK)
+#define TERRA_EMERALD (GREEN)
+#define TERRA_QUICK_STONE (BLUE)
+#define TERRA_DIG_STONE (RED)
 
 #define NUM_SEEDS (30)
 

@@ -30,6 +30,12 @@ void UpdateDrawFrame()
 {
     // handle input
     Vector2 movement = input_get_dir();
+ 
+    if (IsKeyPressed(KEY_SPACE))
+        mole.stoneEaterBonus=600;
+
+    if (IsKeyPressed(KEY_COMMA))
+        mole.speedBonus=300;
 
     // update
     world_update(&world, &mole);
