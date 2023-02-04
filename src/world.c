@@ -13,6 +13,10 @@ void world_init(World *world)
     world->next_bitmap = LoadImageColors(world->image);
     world->screen_texture = LoadTextureFromImage(world->image);
 
+    world->leftSpeed = 20;
+    world->rightSpeed = 20;
+    world->centerSpeed = 20;
+
     for (int i = 0; i < NUM_SEEDS; ++i)
     {
         int x = rand() % WIDTH;
@@ -85,25 +89,48 @@ void world_scroll(World *world, Sprite *mole)
         }
     }
 }
-int alternate = -1;
 void world_update(World *world, Mole *mole)
 {
-    
-          alternate *=-1;
-    
+
+    int alternate = -1;
+
     world->pos_remainder += world->speed;
     world_scroll(world, &mole->sprite);
+
+    if (rand() % 1000 < 1)
+    {
+        world->leftSpeed = rand() % 20+10;
+        world->rightSpeed = rand() % 20+10;
+        world->centerSpeed = 60 - world->rightSpeed - world->leftSpeed;
+
+        printf("left: %d\ncenter: %d\nright: %d\n", world->leftSpeed, world->centerSpeed, world->rightSpeed);
+    }
 
     // update pixles
     for (int x = 0; x < WIDTH; x++)
         for (int y = HEIGHT - 1; y > 0; y--)
         {
+            alternate *= -1;
 
             Color *current = world_get_terrain(world, x, y);
             if (IS_COLOR(current, TERRA_ROOT_TIP))
             {
-                if (rand() % 100 > 20)
-                    continue;
+                if (x < WIDTH / 3)
+                {
+
+                    if (rand() % 100 > world->leftSpeed)
+                        continue;
+                }
+                else if (x < 2 * WIDTH / 3)
+                {
+                    if (rand() % 100 > world->centerSpeed)
+                        continue;
+                }
+                else
+                {
+                    if (rand() % 100 > world->rightSpeed)
+                        continue;
+                }
 
                 if (rand() % 100 < 5)
                 {
@@ -114,7 +141,7 @@ void world_update(World *world, Mole *mole)
                     world_set_terrain(world, x, y, TERRA_ROOT);
                 }
 
-                if (rand() % 100 < 80)
+                if (rand() % 100 < 40)
                 {
                     world_set_terrain(world, x, y + 1, TERRA_ROOT_TIP);
                 }
@@ -141,7 +168,7 @@ void world_update(World *world, Mole *mole)
                     world_set_terrain(world, x, y, TERRA_ROOT);
                 }
 
-                if (rand() % 100 < 80)
+                if (rand() % 100 < 40)
                 {
                     world_set_terrain(world, x, y + 1, TERRA_ROOT_TIP);
                 }
