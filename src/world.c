@@ -63,6 +63,17 @@ world_get_terrain(World *world, int x, int y)
     return bitmap + POS(x, y);
 }
 
+void world_dig(World* world, int x, int y, int radius) {
+    for (int offsetX = -radius; offsetX < radius; ++offsetX) {
+        for (int offsetY = -radius; offsetY < radius; ++offsetY)
+        {
+            if (sqrt(offsetX*offsetX + offsetY*offsetY) <= radius) {
+                world_set_terrain(world, x + offsetX, y + offsetY, TERRA_TUNEL);
+            }
+        }
+    }
+}
+
 int color_are_equal(Color c1, Color c2)
 {
     return c1.r == c2.r && c1.g == c2.g && c1.b == c2.b;

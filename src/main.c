@@ -41,6 +41,9 @@ void UpdateDrawFrame()
     if (input_is_button_pressed(1))
         mole.speedBonus=300;
 
+    if (input_is_button_pressed(2)) 
+        mole_explode(&mole);
+
     if(mole.health>0){
         // update
         world_update(&world, &mole);

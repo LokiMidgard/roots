@@ -7,9 +7,10 @@ void mole_init(Mole *mole, float x, float y)
 {
     mole->snd_dig = LoadSound("resources/dig01.wav");
     SetSoundVolume(mole->snd_dig, 0.1f);
-
     mole->snd_collide = LoadSound("resources/crumble.wav");
     SetSoundVolume(mole->snd_collide, 0.5f);
+    mole->snd_explode = LoadSound("resources/explode.wav");
+
     mole->health = 100;
     mole->points = 0;
     mole->speed = 3;
@@ -20,6 +21,8 @@ void mole_init(Mole *mole, float x, float y)
 
     mole->speedBonus = 0;
     mole->stoneEaterBonus = 0;
+
+    mole->explode_req = false;
 }
 
 void mole_update(Mole *mole, Vector2 *movement, Color *bitmap)
@@ -106,16 +109,13 @@ void mole_update(Mole *mole, Vector2 *movement, Color *bitmap)
         }
     }
 
-    // digging
-    for (int offsetX = -mole_width / 2; offsetX < mole_width / 2; ++offsetX)
-        for (int offsetY = -mole_height / 2; offsetY < mole_height / 2; ++offsetY)
-        {
-            if ((offsetY != -mole_height / 2 && offsetY != mole_height / 2 - 1) || (offsetX != -mole_width / 2 && offsetX != mole_width / 2 - 1))
-            {
-                world_set_terrain(&world, sprite->position.x + offsetX, (int)sprite->position.y + offsetY, TERRA_TUNEL);
-                //bitmap[POS((int)sprite->position.x + offsetX, (int)sprite->position.y + offsetY)] = TERRA_TUNEL;
-            }
-        }
+    world_dig(&world, sprite->position.x, sprite->position.y, mole_width);
+
+    if (mole->explode_req) {
+        world_dig(&world, sprite->position.x, sprite->position.y, 50);
+        PlaySound(mole->snd_explode);
+        mole->explode_req = false;
+    }
 
     if (mole->stoneEaterBonus > 0 && mole->speedBonus > 0)
     {
@@ -158,4 +158,8 @@ void mole_update(Mole *mole, Vector2 *movement, Color *bitmap)
 void mole_draw(Mole *mole)
 {
     sprite_draw(&mole->sprite);
+}
+
+void mole_explode(Mole* mole) {
+    mole->explode_req = true;
 }

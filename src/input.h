@@ -11,6 +11,11 @@
 
 #define KBD_BUTTON_0 KEY_SPACE
 #define KBD_BUTTON_1 KEY_COMMA
+#define KBD_BUTTON_2 KEY_PERIOD
+
+#define GPD_BUTTON_0 GAMEPAD_BUTTON_RIGHT_FACE_DOWN
+#define GPD_BUTTON_1 GAMEPAD_BUTTON_RIGHT_FACE_RIGHT
+#define GPD_BUTTON_2 GAMEPAD_BUTTON_RIGHT_FACE_UP
 
 bool input_set_device(int device);
 void input_set_mouse_center(Sprite* sprite);
