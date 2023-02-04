@@ -22,7 +22,8 @@ void mole_init(Mole *mole, float x, float y)
     mole->speedBonus = 0;
     mole->stoneEaterBonus = 0;
 
-    mole->explode_req = 0;
+    mole->explode_time = 0;
+    particles_init(&mole->part_dig);
 }
 
 void mole_update(Mole *mole, Vector2 *movement, Color *bitmap)
@@ -110,14 +111,7 @@ void mole_update(Mole *mole, Vector2 *movement, Color *bitmap)
     }
 
     world_dig(&world, sprite->position.x, sprite->position.y, mole_width);
-
-    if (mole->explode_req) {
-        mole->explode_time = 3.1415f;
-        if (!IsSoundPlaying(mole->snd_explode)) {
-            PlaySound(mole->snd_explode);
-        }
-        mole->explode_req = false;
-    }
+    particles_emit(&mole->part_dig, 5, sprite->position.x, sprite->position.y);
 
     if (mole->explode_time > 0) {
         mole->explode_time -= 0.09;
@@ -164,16 +158,21 @@ void mole_update(Mole *mole, Vector2 *movement, Color *bitmap)
     {
         sprite->position.y = HEIGHT - sprite->image.height;
     }
+
+    particles_update(&mole->part_dig);
 }
 
 void mole_draw(Mole *mole)
 {
     sprite_draw(&mole->sprite);
+    particles_draw(&mole->part_dig);
 }
 
 void mole_explode(Mole* mole) {
-    if (!mole->explode_req && mole->explode_time == 0) {
-        mole->explode_req = true;
+    if (mole->explode_time == 0) {
         mole->explode_time = 3.1415f;
+        if (!IsSoundPlaying(mole->snd_explode)) {
+            PlaySound(mole->snd_explode);
+        }
     }
 }

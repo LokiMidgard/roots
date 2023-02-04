@@ -13,6 +13,7 @@
 #include "sprite.h"
 #include "world.h"
 #include "mole.h"
+#include "particles.h"
 
 Mole mole;
 World world;
@@ -22,7 +23,7 @@ World world;
 #include "sprite.c"
 #include "world.c"
 #include "mole.c"
-
+#include "particles.c"
 
 //------------------------------------------------------------------------------
 // Local Variables Definition (local to this module)
