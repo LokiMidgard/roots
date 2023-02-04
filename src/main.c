@@ -37,6 +37,13 @@ void UpdateDrawFrame()
         movement.y = movement.y - 1;
     if (IsKeyDown(KEY_DOWN))
         movement.y = movement.y + 1;
+    
+    
+    if (IsKeyPressed(KEY_SPACE))
+        mole.stoneEaterBonus=600;
+
+    if (IsKeyPressed(KEY_COMMA))
+        mole.speedBonus=300;
 
     
 

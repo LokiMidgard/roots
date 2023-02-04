@@ -12,6 +12,7 @@ void sprite_init(Sprite *s, const char *file, int num_of_frames, int x, int y, i
     s->position.y = y;
     s->speed = speed;
     s->rotation = rotation;
+    s->tint = WHITE;
 }
 
 void sprite_draw(Sprite *s)
@@ -28,7 +29,7 @@ void sprite_draw(Sprite *s)
         frame_height * GetScreenHeight() / HEIGHT   // height
     };
     Vector2 origin = {frame_width / 2 * GetScreenWidth() / WIDTH, frame_height / 2 * GetScreenHeight() / HEIGHT};
-    DrawTexturePro(s->image, frame, dstRect, origin, s->rotation, WHITE);
+    DrawTexturePro(s->image, frame, dstRect, origin, s->rotation, s->tint);
 }
 
 void sprite_update(Sprite *s, Vector2 *movement)

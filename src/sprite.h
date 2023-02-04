@@ -11,6 +11,7 @@ typedef struct Sprite
     Texture2D image;
     int number_of_frames;
     float rotation;
+    Color tint;
 } Sprite;
 
 void sprite_init(Sprite *s, const char *file, int num_of_frames, int x, int y, int speed, float rotation);
