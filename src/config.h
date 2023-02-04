@@ -14,7 +14,7 @@
 #define TERRA_EARTH (BROWN)
 #define TERRA_TUNEL (DARKBROWN)
 #define TERRA_STONE (GRAY)
-#define TERRA_ROOT (CLITERAL(Color){ 0, 0, 0, 20 })
+#define TERRA_ROOT (CLITERAL(Color){ 0, 0, 0, 255 })
 #define TERRA_ROOT_TIP (CLITERAL(Color){ 0, 1, 255, 255 })
 #define TERRA_ROOT_KNOT (CLITERAL(Color){ 0, 255, 1, 255 })
 #define TERRA_EMERALD (GREEN)

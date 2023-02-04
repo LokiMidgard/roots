@@ -4,6 +4,9 @@
 #include "world.h"
 #include "mole.h"
 
+#define max(a, b) (((a) > (b)) ? (a) : (b))
+#define min(a, b) (((a) < (b)) ? (a) : (b))
+
 void world_set_terrain(World *world, int x, int y, Color color)
 {
     Color *bitmap = world->current_bitmap;
@@ -117,14 +120,10 @@ void world_scroll(World *world, Sprite *mole)
         }
     }
 }
-void world_update(World *world, Mole *mole)
+
+void update_roots(World *world)
 {
-
     int alternate = -1;
-
-    world->pos_remainder += world->speed;
-    world_scroll(world, &mole->sprite);
-
     if (rand() % 1000 < 1)
     {
         world->leftSpeed = rand() % (HEIGHT - 100) + 50;
@@ -143,9 +142,9 @@ void world_update(World *world, Mole *mole)
             Color *current = world_get_terrain(world, x, y);
             if (IS_COLOR(current, TERRA_ROOT_TIP))
             {
-                int targetHeight = x < WIDTH / 3
+                int targetHeight = x < (WIDTH / 3)
                                        ? world->leftSpeed
-                                   : x < 2 * WIDTH / 3
+                                   : (x < 2 * WIDTH / 3)
                                        ? world->centerSpeed
                                        : world->leftSpeed;
 
@@ -155,18 +154,16 @@ void world_update(World *world, Mole *mole)
                     continue;
 
                 unsigned char direction = current->a & 7;
-                unsigned char age = current->a > 3;
+                unsigned char age = current->a >> 3;
 
-                if (age > 5 + (rand() % 5))
+                if (age > (15 + (rand() % 5)))
                 {
                     age = 0;
                     direction = rand() % 7;
                 }
                 age++;
 
-                direction = 0;
-
-                if (rand() % 1000 < 5)
+                if ((rand() % 1000) < 5)
                 {
                     world_set_terrain(world, x, y, TERRA_ROOT_KNOT);
                 }
@@ -180,7 +177,7 @@ void world_update(World *world, Mole *mole)
                 r += 600 * (float)direction / 7;
 
                 Color new_tip = TERRA_ROOT_TIP;
-                new_tip.a = age < 3 | direction;
+                new_tip.a = (age << 3) | direction;
 
                 if (r > 333 && r < 666)
                 {
@@ -188,11 +185,11 @@ void world_update(World *world, Mole *mole)
                 }
                 else if ((r < 666 && x > 0) || x >= WIDTH - 1)
                 {
-                    world_set_terrain(world, x - 1 * alternate, y + 1, new_tip);
+                    world_set_terrain(world, x - 1, y + 1, new_tip);
                 }
                 else
                 {
-                    world_set_terrain(world, x + 1 * alternate, y + 1, new_tip);
+                    world_set_terrain(world, x + 1, y + 1, new_tip);
                 }
             }
             else if (IS_COLOR(current, TERRA_ROOT_KNOT))
@@ -222,7 +219,39 @@ void world_update(World *world, Mole *mole)
                     world_set_terrain(world, x + 1 * alternate, y + 1, TERRA_ROOT_TIP);
                 }
             }
+            else if (IS_COLOR(current, TERRA_ROOT))
+            {
+                int age = 255-current->a;
+                Color new_color = TERRA_ROOT;
+                new_color.a = max(0, current->a - 1);
+
+                world_set_terrain(world, x, y, new_color);
+
+                if (age == 150)
+                {
+                //  printf("\nage: %d",age);
+                    if (!IS_COLOR(world_get_terrain(world, x + 1, y), TERRA_ROOT))
+                    {
+                        world_set_terrain(world, x + 1, y, TERRA_ROOT);
+                    }
+                }
+                if (age == 200)
+                {
+                    if (!IS_COLOR(world_get_terrain(world, x - 1, y), TERRA_ROOT))
+                    {
+                        world_set_terrain(world, x - 1, y, TERRA_ROOT);
+                    }
+                }
+            }
         }
+}
+
+void world_update(World *world, Mole *mole)
+{
+
+    world->pos_remainder += world->speed;
+    world_scroll(world, &mole->sprite);
+    update_roots(world);
 }
 
 void world_draw(World *world)
