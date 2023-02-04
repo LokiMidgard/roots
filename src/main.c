@@ -21,36 +21,36 @@
 //----------------------------------------------------------------------------------
 // Local Variables Definition (local to this module)
 //----------------------------------------------------------------------------------
-Sprite mole;
+Mole mole;
 World world;
 
 void UpdateDrawFrame()
 {
-        // handle input
-        Vector2 movement = {0, 0};
+    // handle input
+    Vector2 movement = {0, 0};
 
-        if (IsKeyDown(KEY_RIGHT))
-            movement.x = movement.x + 1;
-        if (IsKeyDown(KEY_LEFT))
-            movement.x = movement.x - 1;
-        if (IsKeyDown(KEY_UP))
-            movement.y = movement.y - 1;
-        if (IsKeyDown(KEY_DOWN))
-            movement.y = movement.y + 1;
+    if (IsKeyDown(KEY_RIGHT))
+        movement.x = movement.x + 1;
+    if (IsKeyDown(KEY_LEFT))
+        movement.x = movement.x - 1;
+    if (IsKeyDown(KEY_UP))
+        movement.y = movement.y - 1;
+    if (IsKeyDown(KEY_DOWN))
+        movement.y = movement.y + 1;
 
-        movement = Vector2Normalize(movement);
+    
 
-        // update
-        world_update(&world, &mole);
-        mole_update(&mole, &movement, world.bitmap);
+    // update
+    world_update(&world, &mole);
+    mole_update(&mole, &movement, world.bitmap);
 
-        // draw
-        BeginDrawing();
+    // draw
+    BeginDrawing();
 
-        world_draw(&world);
-        sprite_draw(&mole);
+    world_draw(&world);
+    sprite_draw(&mole);
 
-        EndDrawing();
+    EndDrawing();
 }
 
 int main()
@@ -66,7 +66,7 @@ int main()
     /***************************************************************************
      * Init stuff
      ****************************************************************************/
-    sprite_init(&mole, "resources/mole.png", 8, 30, 30, 15, 0);
+    mole_init(&mole, 30, 30);
     world_init(&world);
 
 #if defined(PLATFORM_WEB)

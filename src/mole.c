@@ -3,15 +3,30 @@
 #include "config.h"
 #include "mole.h"
 
-void mole_update(Sprite *mole, Vector2 *movement, Color *bitmap)
+void mole_init(Mole *mole, float x, float y)
+{
+    mole->health = 100;
+    mole->points = 0;
+    mole->speed = 3;
+    sprite_init(&mole->sprite, "resources/mole.png", 8, 30, 30, 15, 0);
+
+    Vector2 position = {x, y};
+    mole->sprite.position = position;
+
+    mole->speedBonus = 0;
+    mole->stoneEaterBonus = 0;
+}
+
+void mole_update(Mole *mole, Vector2 *movement, Color *bitmap)
 {
     // dig
-    int mole_width = (mole->image.width / mole->number_of_frames);
-    int mole_height = mole->image.height;
-    Vector2 new_mole_position = Vector2Add(mole->position, *movement);
-
+    int mole_width = (mole->sprite.image.width / mole->sprite.number_of_frames);
+    int mole_height = mole->sprite.image.height;
     // set movement speed of mole
-    *movement = Vector2Scale(*movement, 3.0f);
+    *movement = Vector2Normalize(*movement);
+    *movement = Vector2Scale(*movement, mole->speed);
+
+    Vector2 new_mole_position = Vector2Add(mole->sprite.position, *movement);
 
     float terain_multiplyer = 1.0f;
     for (int offsetX = -mole_width / 2; offsetX < mole_width / 2; ++offsetX)
@@ -38,27 +53,27 @@ void mole_update(Sprite *mole, Vector2 *movement, Color *bitmap)
         for (int offsetY = -mole_height / 2; offsetY < mole_height / 2; ++offsetY)
         {
             if ((offsetY != -mole_height / 2 && offsetY != mole_height / 2 - 1) || (offsetX != -mole_width / 2 && offsetX != mole_width / 2 - 1))
-                bitmap[POS((int)mole->position.x + offsetX, (int)mole->position.y + offsetY)] = TERRA_TUNEL;
+                bitmap[POS((int)mole->sprite.position.x + offsetX, (int)mole->sprite.position.y + offsetY)] = TERRA_TUNEL;
         }
 
     sprite_update(mole, movement);
 
     // ensure position is in bounds
-    if (mole->position.x < mole->image.width / mole->number_of_frames)
+    if (mole->sprite.position.x < mole->sprite.image.width / mole->sprite.number_of_frames)
     {
-        mole->position.x = mole->image.width / mole->number_of_frames;
+        mole->sprite.position.x = mole->sprite.image.width / mole->sprite.number_of_frames;
     }
-    if (mole->position.y < mole->image.height)
+    if (mole->sprite.position.y < mole->sprite.image.height)
     {
-        mole->position.y = mole->image.height;
+        mole->sprite.position.y = mole->sprite.image.height;
     }
 
-    if (mole->position.x > WIDTH - mole->image.width / mole->number_of_frames)
+    if (mole->sprite.position.x > WIDTH - mole->sprite.image.width / mole->sprite.number_of_frames)
     {
-        mole->position.x = WIDTH - mole->image.width / mole->number_of_frames;
+        mole->sprite.position.x = WIDTH - mole->sprite.image.width / mole->sprite.number_of_frames;
     }
-    if (mole->position.y > HEIGHT - mole->image.height)
+    if (mole->sprite.position.y > HEIGHT - mole->sprite.image.height)
     {
-        mole->position.y = HEIGHT - mole->image.height;
+        mole->sprite.position.y = HEIGHT - mole->sprite.image.height;
     }
 }
