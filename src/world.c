@@ -15,8 +15,9 @@ void world_init(World *world)
 
     for (int i = 0; i < NUM_SEEDS; ++i)
     {
-        // int x = rand() % WIDTH;
-        // int y = HEIGHT - 1;
+        int x = rand() % WIDTH;
+        int y = HEIGHT - 1;
+        world_set_terrain(world, x, y, TERRA_ROOT_TIP);
         for (int offset = -3; offset < 3; ++offset)
         {
             // world->bitmap[POS(x + offset, y)] = TERRA_STONE;
@@ -84,11 +85,76 @@ void world_scroll(World *world, Sprite *mole)
         }
     }
 }
-
+int alternate = -1;
 void world_update(World *world, Mole *mole)
 {
+    
+          alternate *=-1;
+    
     world->pos_remainder += world->speed;
     world_scroll(world, &mole->sprite);
+
+    // update pixles
+    for (int x = 0; x < WIDTH; x++)
+        for (int y = HEIGHT - 1; y > 0; y--)
+        {
+
+            Color *current = world_get_terrain(world, x, y);
+            if (IS_COLOR(current, TERRA_ROOT_TIP))
+            {
+                if (rand() % 100 > 20)
+                    continue;
+
+                if (rand() % 100 < 5)
+                {
+                    world_set_terrain(world, x, y, TERRA_ROOT_KNOT);
+                }
+                else
+                {
+                    world_set_terrain(world, x, y, TERRA_ROOT);
+                }
+
+                if (rand() % 100 < 80)
+                {
+                    world_set_terrain(world, x, y + 1, TERRA_ROOT_TIP);
+                }
+                else if ((rand() % 1 < 1 && x > 0) || x >= WIDTH - 1)
+                {
+                    world_set_terrain(world, x - 1 * alternate, y + 1, TERRA_ROOT_TIP);
+                }
+                else
+                {
+                    world_set_terrain(world, x + 1 * alternate, y + 1, TERRA_ROOT_TIP);
+                }
+            }
+            else if (IS_COLOR(current, TERRA_ROOT_KNOT))
+            {
+                if (rand() % 100 > 5)
+                    continue;
+
+                if (rand() % 100 < 2)
+                {
+                    world_set_terrain(world, x, y, TERRA_ROOT_KNOT);
+                }
+                else
+                {
+                    world_set_terrain(world, x, y, TERRA_ROOT);
+                }
+
+                if (rand() % 100 < 80)
+                {
+                    world_set_terrain(world, x, y + 1, TERRA_ROOT_TIP);
+                }
+                else if ((rand() % 1 < 1 && x > 0) || x >= WIDTH - 1)
+                {
+                    world_set_terrain(world, x - 1 * alternate, y + 1, TERRA_ROOT_TIP);
+                }
+                else
+                {
+                    world_set_terrain(world, x + 1 * alternate, y + 1, TERRA_ROOT_TIP);
+                }
+            }
+        }
 }
 
 void world_draw(World *world)
