@@ -78,20 +78,25 @@ world_get_terrain(World *world, int x, int y)
     return bitmap + POS(x, y);
 }
 
-void world_dig(World* world, int x, int y, int radius) {
-    for (int offsetX = -radius; offsetX < radius; ++offsetX) {
+Dig world_dig(World *world, int x, int y, int radius)
+{
+    Dig dig = {0};
+    for (int offsetX = -radius; offsetX < radius; ++offsetX)
+    {
         for (int offsetY = -radius; offsetY < radius; ++offsetY)
         {
-            if (sqrt(offsetX*offsetX + offsetY*offsetY) <= radius) {
+            Color *c = world_get_terrain(world, x + offsetX, y + offsetY);
+            if (color_are_equal(*c, TERRA_EARTH))
+                dig.types[EARTH] += 1;
+            if (color_are_equal(*c, TERRA_STONE))
+                dig.types[STONE] += 1;
+            if (sqrt(offsetX * offsetX + offsetY * offsetY) <= radius)
+            {
                 world_set_terrain(world, x + offsetX, y + offsetY, TERRA_TUNEL);
             }
         }
     }
-}
-
-int color_are_equal(Color c1, Color c2)
-{
-    return c1.r == c2.r && c1.g == c2.g && c1.b == c2.b;
+    return (dig);
 }
 
 void world_scroll(World *world, Sprite *mole)
@@ -106,8 +111,7 @@ void world_scroll(World *world, Sprite *mole)
             world->depth = 0;
             UnloadImageColors(world->current_bitmap);
             world->current_bitmap = world->next_bitmap;
-            int selected_image = rand()%world->number_of_images;
-            printf("selected: %d\n", selected_image);
+            int selected_image = rand() % world->number_of_images;
             world->next_bitmap = LoadImageColors(world->images[selected_image]);
         }
     }
@@ -122,9 +126,9 @@ void world_update(World *world, Mole *mole)
 
     if (rand() % 1000 < 1)
     {
-        world->leftSpeed = rand() % 20+10;
-        world->rightSpeed = rand() % 20+10;
-        world->centerSpeed = 60 - world->rightSpeed - world->leftSpeed;
+        world->leftSpeed = rand() % (HEIGHT - 100) + 50;
+        world->rightSpeed = rand() % (HEIGHT - 100) + 50;
+        world->centerSpeed = rand() % (HEIGHT - 100) + 50;
 
         printf("left: %d\ncenter: %d\nright: %d\n", world->leftSpeed, world->centerSpeed, world->rightSpeed);
     }
@@ -138,24 +142,30 @@ void world_update(World *world, Mole *mole)
             Color *current = world_get_terrain(world, x, y);
             if (IS_COLOR(current, TERRA_ROOT_TIP))
             {
-                if (x < WIDTH / 3)
-                {
+                int targetHeight = x < WIDTH / 3
+                                       ? world->leftSpeed
+                                   : x < 2 * WIDTH / 3
+                                       ? world->centerSpeed
+                                       : world->leftSpeed;
 
-                    if (rand() % 100 > world->leftSpeed)
-                        continue;
-                }
-                else if (x < 2 * WIDTH / 3)
-                {
-                    if (rand() % 100 > world->centerSpeed)
-                        continue;
-                }
-                else
-                {
-                    if (rand() % 100 > world->rightSpeed)
-                        continue;
-                }
+                // if (rand() % targetHeight < y)
+                //     continue;
+                if (rand() % 100 > 20)
+                    continue;
 
-                if (rand() % 100 < 5)
+                unsigned char direction = current->a & 7;
+                unsigned char age = current->a > 3;
+
+                if (age > 5 + (rand() % 5))
+                {
+                    age = 0;
+                    direction = rand() % 7;
+                }
+                age++;
+
+                direction = 0;
+
+                if (rand() % 1000 < 5)
                 {
                     world_set_terrain(world, x, y, TERRA_ROOT_KNOT);
                 }
@@ -164,17 +174,24 @@ void world_update(World *world, Mole *mole)
                     world_set_terrain(world, x, y, TERRA_ROOT);
                 }
 
-                if (rand() % 100 < 40)
+                int r = rand() % 1000;
+                r -= 300;
+                r += 600 * (float)direction / 7;
+
+                Color new_tip = TERRA_ROOT_TIP;
+                new_tip.a = age < 3 | direction;
+
+                if (r > 333 && r < 666)
                 {
-                    world_set_terrain(world, x, y + 1, TERRA_ROOT_TIP);
+                    world_set_terrain(world, x, y + 1, new_tip);
                 }
-                else if ((rand() % 1 < 1 && x > 0) || x >= WIDTH - 1)
+                else if ((r < 666 && x > 0) || x >= WIDTH - 1)
                 {
-                    world_set_terrain(world, x - 1 * alternate, y + 1, TERRA_ROOT_TIP);
+                    world_set_terrain(world, x - 1 * alternate, y + 1, new_tip);
                 }
                 else
                 {
-                    world_set_terrain(world, x + 1 * alternate, y + 1, TERRA_ROOT_TIP);
+                    world_set_terrain(world, x + 1 * alternate, y + 1, new_tip);
                 }
             }
             else if (IS_COLOR(current, TERRA_ROOT_KNOT))

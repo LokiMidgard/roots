@@ -6,6 +6,10 @@
 #if defined(PLATFORM_WEB)
 #include <emscripten/emscripten.h>
 #endif
+int color_are_equal(Color c1, Color c2)
+{
+    return c1.r == c2.r && c1.g == c2.g && c1.b == c2.b;
+}
 
 #include "config.h"
 #include "console.h"
@@ -15,8 +19,11 @@
 #include "mole.h"
 #include "particles.h"
 
-Mole mole;
-World world;
+
+Mole   mole;
+World  world;
+Sprite lose;
+
 
 #include "console.c"
 #include "input.c"
@@ -25,11 +32,6 @@ World world;
 #include "mole.c"
 #include "particles.c"
 
-//------------------------------------------------------------------------------
-// Local Variables Definition (local to this module)
-//----------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-Sprite lose;
 
 void UpdateDrawFrame()
 {
@@ -48,7 +50,7 @@ void UpdateDrawFrame()
     if(mole.health>0){
         // update
         world_update(&world, &mole);
-        mole_update(&mole, &movement, world.current_bitmap);
+        mole_update(&mole, &movement);
     }
     // draw
     BeginDrawing();
