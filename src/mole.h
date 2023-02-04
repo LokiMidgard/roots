@@ -7,6 +7,7 @@
 typedef struct Mole {
     Sprite sprite;
     Sound snd_dig;
+    Sound snd_collide;
 } Mole;
 
 void mole_update(Mole *mole, Vector2 *movement, Color *bitmap);

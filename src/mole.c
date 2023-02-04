@@ -5,7 +5,12 @@
 
 void mole_init(Mole* mole) {
     sprite_init(&mole->sprite, "resources/mole.png", 8, 30, 30, 15, 0);
+
     mole->snd_dig = LoadSound("resources/dig01.wav");
+    SetSoundVolume(mole->snd_dig, 0.1f);
+
+    mole->snd_collide = LoadSound("resources/crumble.wav");
+    SetSoundVolume(mole->snd_collide, 0.5f);
 }
 
 void mole_update(Mole *mole, Vector2 *movement, Color *bitmap)
@@ -46,6 +51,11 @@ void mole_update(Mole *mole, Vector2 *movement, Color *bitmap)
 
     printf("multipriye %f\n", terain_multiplyer);
     *movement = Vector2Scale(*movement, terain_multiplyer);
+    if (terain_multiplyer == 0) {
+        if (!IsSoundPlaying(mole->snd_collide)) {
+            PlaySound(mole->snd_collide);
+        }
+    }
 
     for (int offsetX = -mole_width / 2; offsetX < mole_width / 2; ++offsetX)
         for (int offsetY = -mole_height / 2; offsetY < mole_height / 2; ++offsetY)
