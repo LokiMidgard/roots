@@ -28,15 +28,15 @@ World world;
 
 void UpdateDrawFrame()
 {
-        // handle input
-        Vector2 movement = input_get_dir();
+    // handle input
+    Vector2 movement = input_get_dir();
 
-        // update
-        world_update(&world, &mole);
-        mole_update(&mole, &movement, world.bitmap);
+    // update
+    world_update(&world, &mole);
+    mole_update(&mole, &movement, world.bitmap);
 
-        // draw
-        BeginDrawing();
+    // draw
+    BeginDrawing();
 
         world_draw(&world);
         mole_draw(&mole);
@@ -45,7 +45,7 @@ void UpdateDrawFrame()
         DrawText(text, 10, 10, 14, WHITE);
 
 
-        EndDrawing();
+    EndDrawing();
 }
 
 int main()
@@ -62,7 +62,7 @@ int main()
     /***************************************************************************
      * Init stuff
      ****************************************************************************/
-    mole_init(&mole);
+    mole_init(&mole, 30, 30);
     world_init(&world);
 
 #if defined(PLATFORM_WEB)
