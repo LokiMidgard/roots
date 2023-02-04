@@ -6,6 +6,10 @@
 void mole_init(Mole *mole, float x, float y)
 {
     mole->snd_dig = LoadSound("resources/dig01.wav");
+    SetSoundVolume(mole->snd_dig, 0.1f);
+
+    mole->snd_collide = LoadSound("resources/crumble.wav");
+    SetSoundVolume(mole->snd_collide, 0.5f);
     mole->health = 100;
     mole->points = 0;
     mole->speed = 3;
@@ -32,6 +36,14 @@ void mole_update(Mole *mole, Vector2 *movement, Color *bitmap)
 
     Vector2 new_mole_position = Vector2Add(sprite->position, *movement);
 
+    if (Vector2Length(*movement) > 0.5)
+    {
+        if (!IsSoundPlaying(mole->snd_dig))
+        {
+            PlaySound(mole->snd_dig);
+        }
+    }
+
     float terain_multiplyer = 1.0f;
     for (int offsetX = -mole_width / 2; offsetX < mole_width / 2; ++offsetX)
         for (int offsetY = -mole_height / 2; offsetY < mole_height / 2; ++offsetY)
@@ -50,9 +62,16 @@ void mole_update(Mole *mole, Vector2 *movement, Color *bitmap)
             }
         }
 
-printf("terain_multiplyer %f\n", terain_multiplyer);
     *movement = Vector2Scale(*movement, terain_multiplyer);
     // digging
+    if (terain_multiplyer == 0)
+    {
+        if (!IsSoundPlaying(mole->snd_collide))
+        {
+            PlaySound(mole->snd_collide);
+        }
+    }
+
     for (int offsetX = -mole_width / 2; offsetX < mole_width / 2; ++offsetX)
         for (int offsetY = -mole_height / 2; offsetY < mole_height / 2; ++offsetY)
         {

@@ -4,7 +4,8 @@
 #include "raylib.h"
 #include "sprite.h"
 
-typedef struct Mole {
+typedef struct Mole
+{
     Sprite sprite;
     float points;
     float health;
@@ -13,12 +14,11 @@ typedef struct Mole {
     float speedBonus;
     float stoneEaterBonus;
     Sound snd_dig;
-    
-} Mole;
+    Sound snd_collide;
 
+} Mole;
 
 void mole_update(Mole *mole, Vector2 *movement, Color *bitmap);
 void mole_init(Mole *mole, float x, float y);
-
 
 #endif

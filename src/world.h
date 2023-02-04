@@ -10,6 +10,7 @@ typedef struct World {
     Image image;
     Color* bitmap;
     Texture2D screen_texture;
+    int depth;
 } World;
 
 void world_init(World* world);
