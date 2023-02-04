@@ -1,3 +1,5 @@
+#include "raylib.h"
+#include "raymath.h"
 #include "sprite.h"
 #include "config.h"
 
