@@ -76,7 +76,7 @@ int main()
      ****************************************************************************/
     InitConsole();
     SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
-    InitWindow(WIDTH, HEIGHT, "raylib");
+    InitWindow(SWIDTH, SHEIGHT, "raylib");
     SetTargetFPS(FPS);
 
 #if defined(PLATFORM_WEB)
