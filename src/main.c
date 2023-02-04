@@ -63,6 +63,7 @@ int main()
     SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "raylib");
     //InitAudioDevice();
+    input_set_device(INPUT_MOUSE);
     SetTargetFPS(FPS);
 
     /***************************************************************************

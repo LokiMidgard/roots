@@ -4,9 +4,14 @@
 #include "raylib.h"
 #include "raymath.h"
 
+#define INPUT_KEYBOARD 0
+#define INPUT_MOUSE 1
+#define INPUT_GAMEPAD 2
+
 #define KBD_BUTTON_0 KEY_SPACE
 #define KBD_BUTTON_1 KEY_COMMA
 
+void input_set_device(int device);
 Vector2 input_get_dir();
 bool input_is_button_pressed(int button);
 
