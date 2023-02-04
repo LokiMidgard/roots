@@ -27,9 +27,10 @@
 float world_spd = 0.3f;
 float world_pos_remainder = 0.0f;
 
-void world_scroll(Color *world)
+void world_scroll(Color *world, Sprite *mole)
 {
     int num_lines_to_scroll = (int)world_pos_remainder;
+    mole->position.y -= num_lines_to_scroll;
     for (int i = 0; i < num_lines_to_scroll; ++i)
     {
         // move world 1 pixel up
@@ -76,10 +77,10 @@ void world_scroll(Color *world)
     world_pos_remainder -= num_lines_to_scroll;
 }
 
-void world_update(Color *world)
+void world_update(Color *world, Sprite *mole)
 {
     world_pos_remainder += world_spd;
-    world_scroll(world);
+    world_scroll(world, mole);
 }
 
 void mole_update(Sprite *mole, Vector2 *movement, Color *world)
@@ -113,7 +114,7 @@ void mole_update(Sprite *mole, Vector2 *movement, Color *world)
         }
 
     sprite_update(mole, movement);
-    
+
     // ensure position is in bounds
     if (mole->position.x < mole->image.width / mole->number_of_frames)
     {
@@ -132,7 +133,6 @@ void mole_update(Sprite *mole, Vector2 *movement, Color *world)
     {
         mole->position.y = HEIGHT - mole->image.height;
     }
-
 }
 
 int main()
@@ -148,6 +148,12 @@ int main()
 #if defined(PLATFORM_WEB)
     emscripten_set_main_loop(UpdateDrawFrame, FPS, 1);
 #else
+
+    /***************************************************************************
+     * Create character
+     ****************************************************************************/
+    Sprite mole;
+    sprite_init(&mole, "resources/mole.png", 8, 30, 30, 15, 0);
 
     /***************************************************************************
      * Create inital world
@@ -169,13 +175,7 @@ int main()
 
     // pre-scroll some lines
     world_pos_remainder = 100;
-    world_scroll(world);
-
-    /***************************************************************************
-     * Create character
-     ****************************************************************************/
-    Sprite mole;
-    sprite_init(&mole, "resources/mole.png", 8, 30, 30, 15, 0);
+    world_scroll(world, &mole);
 
     /***************************************************************************
      * Main Loop
@@ -196,10 +196,8 @@ int main()
 
         movement = Vector2Normalize(movement);
 
+        world_update(world, &mole);
         mole_update(&mole, &movement, world);
-        world_update(world);
-
-        world_scroll(world);
 
         BeginDrawing();
         // ClearBackground(RAYWHITE);
