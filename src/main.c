@@ -27,8 +27,6 @@
 float world_spd = 0.3f;
 float world_pos_remainder = 0.0f;
 
-#define IS_COLOR(pos, col) (pos->r == col.r && pos->g == col.g && pos->b == col.b)
-
 void world_scroll(Color *world)
 {
     int num_lines_to_scroll = (int)world_pos_remainder;
