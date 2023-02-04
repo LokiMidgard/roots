@@ -80,9 +80,7 @@ int main()
     sprite_init(&lose, "resources/lose.png",1, WIDTH/2, HEIGHT/2, 15, 0);
 
     input_set_mouse_center(&mole.sprite);
-    if (!input_set_device(INPUT_GAMEPAD)) {
-        // input_set_device(INPUT_MOUSE);
-    }
+    input_set_device(INPUT_GAMEPAD);
 
 #if defined(PLATFORM_WEB)
     emscripten_set_main_loop(UpdateDrawFrame, FPS, 1);
