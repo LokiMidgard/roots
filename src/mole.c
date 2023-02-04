@@ -42,7 +42,8 @@ void mole_update(Mole *mole, Vector2 *movement, Color *bitmap)
         {
             if ((offsetY != -mole_height / 2 && offsetY != mole_height / 2 - 1) || (offsetX != -mole_width / 2 && offsetX != mole_width / 2 - 1))
             {
-                Color *current = &bitmap[POS((int)new_mole_position.x + offsetX, (int)new_mole_position.y + offsetY)];
+                //Color *current = &bitmap[POS((int)new_mole_position.x + offsetX, (int)new_mole_position.y + offsetY)];
+                Color *current = world_get_terrain(&world, (int)new_mole_position.x + offsetX, (int)new_mole_position.y + offsetY);
                 if (IS_COLOR(current, TERRA_STONE))
                 {
                     if (mole->stoneEaterBonus > 0)
@@ -111,7 +112,8 @@ void mole_update(Mole *mole, Vector2 *movement, Color *bitmap)
         {
             if ((offsetY != -mole_height / 2 && offsetY != mole_height / 2 - 1) || (offsetX != -mole_width / 2 && offsetX != mole_width / 2 - 1))
             {
-                bitmap[POS((int)sprite->position.x + offsetX, (int)sprite->position.y + offsetY)] = TERRA_TUNEL;
+                world_set_terrain(&world, sprite->position.x + offsetX, (int)sprite->position.y + offsetY, TERRA_TUNEL);
+                //bitmap[POS((int)sprite->position.x + offsetX, (int)sprite->position.y + offsetY)] = TERRA_TUNEL;
             }
         }
 

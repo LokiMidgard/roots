@@ -3,6 +3,9 @@
 #include <conio.h>
 #include <string.h>
 #include "raylib.h"
+#if defined(PLATFORM_WEB)
+#include <emscripten/emscripten.h>
+#endif
 
 #include "config.h"
 #include "console.h"
@@ -11,21 +14,20 @@
 #include "world.h"
 #include "mole.h"
 
+Mole mole;
+World world;
+
 #include "console.c"
 #include "input.c"
 #include "sprite.c"
 #include "world.c"
 #include "mole.c"
 
-#if defined(PLATFORM_WEB)
-#include <emscripten/emscripten.h>
-#endif
 
 //------------------------------------------------------------------------------
 // Local Variables Definition (local to this module)
+//----------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-Mole mole;
-World world;
 Sprite lose;
 
 void UpdateDrawFrame()
@@ -42,7 +44,7 @@ void UpdateDrawFrame()
     if(mole.health>0){
         // update
         world_update(&world, &mole);
-        mole_update(&mole, &movement, world.bitmap);
+        mole_update(&mole, &movement, world.current_bitmap);
     }
     // draw
     BeginDrawing();

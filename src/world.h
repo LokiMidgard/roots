@@ -8,7 +8,8 @@ typedef struct World {
     float speed;
     float pos_remainder;
     Image image;
-    Color* bitmap;
+    Color* current_bitmap;
+    Color* next_bitmap;
     Texture2D screen_texture;
     int depth;
 } World;
