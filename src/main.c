@@ -5,11 +5,13 @@
 #include "raylib.h"
 
 #include "config.h"
+#include "input.h"
 #include "sprite.h"
 #include "world.h"
 #include "mole.h"
 
 #include "console.c"
+#include "input.c"
 #include "sprite.c"
 #include "world.c"
 #include "mole.c"
@@ -26,26 +28,15 @@ World world;
 
 void UpdateDrawFrame()
 {
-        // handle input
-        Vector2 movement = {0, 0};
+    // handle input
+    Vector2 movement = input_get_dir();
 
-        if (IsKeyDown(KEY_RIGHT))
-            movement.x = movement.x + 1;
-        if (IsKeyDown(KEY_LEFT))
-            movement.x = movement.x - 1;
-        if (IsKeyDown(KEY_UP))
-            movement.y = movement.y - 1;
-        if (IsKeyDown(KEY_DOWN))
-            movement.y = movement.y + 1;
+    // update
+    world_update(&world, &mole);
+    mole_update(&mole, &movement, world.bitmap);
 
-        movement = Vector2Normalize(movement);
-
-        // update
-        world_update(&world, &mole);
-        mole_update(&mole, &movement, world.bitmap);
-
-        // draw
-        BeginDrawing();
+    // draw
+    BeginDrawing();
 
         world_draw(&world);
         mole_draw(&mole);
@@ -54,7 +45,7 @@ void UpdateDrawFrame()
         DrawText(text, 10, 10, 14, WHITE);
 
 
-        EndDrawing();
+    EndDrawing();
 }
 
 int main()
@@ -71,7 +62,7 @@ int main()
     /***************************************************************************
      * Init stuff
      ****************************************************************************/
-    mole_init(&mole);
+    mole_init(&mole, 30, 30);
     world_init(&world);
 
 #if defined(PLATFORM_WEB)

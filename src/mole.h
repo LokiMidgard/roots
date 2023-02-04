@@ -4,11 +4,21 @@
 #include "raylib.h"
 #include "sprite.h"
 
-typedef struct Mole {
+typedef struct Mole
+{
     Sprite sprite;
+    float points;
+    float health;
+    float speed;
+    // bonuses have a valu indicating the number of frames they have effect.
+    float speedBonus;
+    float stoneEaterBonus;
     Sound snd_dig;
+    Sound snd_collide;
+
 } Mole;
 
 void mole_update(Mole *mole, Vector2 *movement, Color *bitmap);
+void mole_init(Mole *mole, float x, float y);
 
 #endif
