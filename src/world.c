@@ -72,6 +72,7 @@ color_are_equal(Color c1, Color c2)
 void world_scroll(World *world, Sprite *mole)
 {
     world->depth += 1;
+    mole->position.y -= 1;
     if (world->depth == HEIGHT)
     {
         world->depth = 0;
