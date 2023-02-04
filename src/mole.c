@@ -9,6 +9,10 @@ void mole_update(Sprite *mole, Vector2 *movement, Color *bitmap)
     int mole_width = (mole->image.width / mole->number_of_frames);
     int mole_height = mole->image.height;
     Vector2 new_mole_position = Vector2Add(mole->position, *movement);
+
+    // set movement speed of mole
+    *movement = Vector2Scale(*movement, 3.0f);
+
     float terain_multiplyer = 1.0f;
     for (int offsetX = -mole_width / 2; offsetX < mole_width / 2; ++offsetX)
         for (int offsetY = -mole_height / 2; offsetY < mole_height / 2; ++offsetY)
@@ -27,7 +31,7 @@ void mole_update(Sprite *mole, Vector2 *movement, Color *bitmap)
             }
         }
 
-printf("multipriye %f\n", terain_multiplyer);
+    printf("multipriye %f\n", terain_multiplyer);
     *movement = Vector2Scale(*movement, terain_multiplyer);
 
     for (int offsetX = -mole_width / 2; offsetX < mole_width / 2; ++offsetX)
