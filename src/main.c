@@ -12,8 +12,8 @@ void __stdcall FreeConsole(void);
 //----------------------------------------------------------------------------------
 // Local Variables Definition (local to this module)
 //----------------------------------------------------------------------------------
-Camera camera = { 0 };
-Vector3 cubePosition = { 0 };
+const int screenWidth = 960;
+const int screenHeight = 540;
 
 //----------------------------------------------------------------------------------
 // Local Functions Declaration
@@ -36,18 +36,8 @@ int main()
 
     // Initialization
     //--------------------------------------------------------------------------------------
-    const int screenWidth = 800;
-    const int screenHeight = 450;
 
     InitWindow(screenWidth, screenHeight, "raylib");
-
-    camera.position = (Vector3){ 10.0f, 10.0f, 8.0f };
-    camera.target = (Vector3){ 0.0f, 0.0f, 0.0f };
-    camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };
-    camera.fovy = 60.0f;
-    camera.projection = CAMERA_PERSPECTIVE;
-    
-    SetCameraMode(camera, CAMERA_ORBITAL);
 
     //--------------------------------------------------------------------------------------
 
@@ -61,7 +51,6 @@ int main()
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
         UpdateDrawFrame();
-        printf("Hello, world!\n");
     }
 #endif
 
@@ -75,31 +64,51 @@ int main()
     return 0;
 }
 
+float rotation = 0.0f;
 // Update and draw game frame
 static void UpdateDrawFrame(void)
 {
+
     // Update
     //----------------------------------------------------------------------------------
-    UpdateCamera(&camera);
+    rotation += 0.2f;
     //----------------------------------------------------------------------------------
 
     // Draw
     //----------------------------------------------------------------------------------
     BeginDrawing();
 
-        ClearBackground(RAYWHITE);
+    ClearBackground(RAYWHITE);
 
-        BeginMode3D(camera);
+    DrawText("some basic shapes available on raylib", 20, 20, 20, DARKGRAY);
 
-            DrawCube(cubePosition, 2.0f, 2.0f, 2.0f, RED);
-            DrawCubeWires(cubePosition, 2.0f, 2.0f, 2.0f, MAROON);
-            DrawGrid(10, 1.0f);
+    // Circle shapes and lines
+    DrawCircle(screenWidth/5, 120, 35, DARKBLUE);
+    DrawCircleGradient(screenWidth/5, 220, 60, GREEN, SKYBLUE);
+    DrawCircleLines(screenWidth/5, 340, 80, DARKBLUE);
 
-        EndMode3D();
+    // Rectangle shapes and lines
+    DrawRectangle(screenWidth/4*2 - 60, 100, 120, 60, RED);
+    DrawRectangleGradientH(screenWidth/4*2 - 90, 170, 180, 130, MAROON, GOLD);
+    DrawRectangleLines(screenWidth/4*2 - 40, 320, 80, 60, ORANGE);  // NOTE: Uses QUADS internally, not lines
 
-        DrawText("This is a raylib example", 10, 40, 20, DARKGRAY);
+    // Triangle shapes and lines
+    DrawTriangle((Vector2){ screenWidth/4.0f *3.0f, 80.0f },
+                 (Vector2){ screenWidth/4.0f *3.0f - 60.0f, 150.0f },
+                 (Vector2){ screenWidth/4.0f *3.0f + 60.0f, 150.0f }, VIOLET);
 
-        DrawFPS(10, 10);
+    DrawTriangleLines((Vector2){ screenWidth/4.0f*3.0f, 160.0f },
+                      (Vector2){ screenWidth/4.0f*3.0f - 20.0f, 230.0f },
+                      (Vector2){ screenWidth/4.0f*3.0f + 20.0f, 230.0f }, DARKBLUE);
+
+    // Polygon shapes and lines
+    DrawPoly((Vector2){ screenWidth/4.0f*3, 330 }, 6, 80, rotation, BROWN);
+    DrawPolyLines((Vector2){ screenWidth/4.0f*3, 330 }, 6, 90, rotation, BROWN);
+    DrawPolyLinesEx((Vector2){ screenWidth/4.0f*3, 330 }, 6, 85, rotation, 6, BEIGE);
+
+    // NOTE: We draw all LINES based shapes together to optimize internal drawing,
+    // this way, all LINES are rendered in a single draw pass
+    DrawLine(18, 42, screenWidth - 18, 42, BLACK);
 
     EndDrawing();
     //----------------------------------------------------------------------------------
