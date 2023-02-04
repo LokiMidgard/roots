@@ -45,7 +45,6 @@ void mole_update(Mole *mole, Vector2 *movement, Color *bitmap)
                 Color *current = &bitmap[POS((int)new_mole_position.x + offsetX, (int)new_mole_position.y + offsetY)];
                 if (IS_COLOR(current, TERRA_STONE))
                 {
-                    terain_multiplyer = 0.15f;
                     if (mole->stoneEaterBonus > 0)
                     {
                         terain_multiplyer = fmin(terain_multiplyer, 0.25f);
