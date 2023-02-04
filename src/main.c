@@ -48,11 +48,11 @@ void UpdateDrawFrame()
     }
     // draw
     BeginDrawing();
-
+        ClearBackground(BLACK);
         world_draw(&world);
         mole_draw(&mole);
         char text[256] = {0};
-        snprintf(text, 256, "depth: %2.2d\npoints: %d\ninput: %s", world.depth, mole.points, input_get_device_name());
+        snprintf(text, 256, "depth: %2.2d\npoints: %d\ninput: %s\nfullscreen: F\nexit: ESC", world.depth, mole.points, input_get_device_name());
         DrawText(text, 10, 10, 14, WHITE);
         
      if(mole.health<=0){
