@@ -35,7 +35,7 @@ void sprite_draw(Sprite *s)
         frame_width * GetScreenWidth() / WIDTH,     // width
         frame_height * GetScreenHeight() / HEIGHT   // height
     };
-    Vector2 origin = {frame_width / 2, frame_height / 2};
+    Vector2 origin = {frame_width / 2 * GetScreenWidth() / WIDTH, frame_height / 2 * GetScreenHeight() / HEIGHT};
     DrawTexturePro(s->image, frame, dstRect, origin, s->rotation, WHITE);
 }
 
