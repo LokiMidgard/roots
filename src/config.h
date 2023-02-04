@@ -9,6 +9,13 @@
 #define WINDOW_HEIGHT ((int)(HEIGHT*SCALE))
 #define POS(x, y) ((y) * (WIDTH) + (x))
 
+#define TERRA_EARTH (BROWN)
+#define TERRA_TUNEL (DARKBROWN)
+#define TERRA_STONE (GRAY)
+#define TERRA_ROOT (BLACK)
+
+#define NUM_SEEDS (30)
+
 #define IS_COLOR(pos, col) (pos->r == col.r && pos->g == col.g && pos->b == col.b)
 
 #endif
