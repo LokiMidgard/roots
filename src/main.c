@@ -24,35 +24,62 @@
 
 #define NUM_SEEDS (30)
 
+float world_spd = 0.3f;
+float world_pos_remainder = 0.0f;
+
 void world_scroll(Color *world)
 {
-    // move world 1 pixel up
-    char *dst = (char *)world;
-    char *src = (char *)(world + WIDTH);
-    size_t num_bytes = sizeof(Color) * WIDTH * (HEIGHT - 1);
-    memmove(dst, src, num_bytes);
-
-    // draw new bottom line
-    int y = HEIGHT - 1;
-    for (int x = 1; x < WIDTH - 1; ++x)
+    int num_lines_to_scroll = (int)world_pos_remainder;
+    for (int i = 0; i < num_lines_to_scroll; ++i)
     {
-        Color *current = &world[POS(x, y)];
-        Color *next = &world[POS(x + 1, y)];
-        // Color last    = world[POS(x-1,y)];
+        // move world 1 pixel up
+        char *dst = (char *)world;
+        char *src = (char *)(world + WIDTH);
+        size_t num_bytes = sizeof(Color) * WIDTH * (HEIGHT - 1);
+        memmove(dst, src, num_bytes);
 
-        if (current->r == TERRA_STONE.r)
+        // draw new bottom line
+        int y = HEIGHT - 1;
+        for (int x = 1; x < WIDTH - 1; ++x)
         {
-            if (rand() % 15 < 8)
-                world[POS(x, y)] = TERRA_STONE;
-            else
-                world[POS(x, y)] = TERRA_EARTH;
-        }
-        if (next->r == TERRA_STONE.r)
-        {
-            if (rand() % 15 < 8)
-                world[POS(x, y)] = TERRA_STONE;
+            Color *current = &world[POS(x, y)];
+            Color *right = &world[POS(x + 1, y)];
+            Color *left = &world[POS(x - 1, y)];
+            Color *above = &world[POS(x, y - 1)];
+
+            if (IS_COLOR(current, TERRA_STONE))
+            {
+                if (rand() % 15 < 8)
+                {
+                    world[POS(x, y)] = TERRA_STONE;
+                }
+                else
+                {
+                    if (IS_COLOR(above, TERRA_STONE) && !IS_COLOR(left, TERRA_STONE))
+                    {
+                        int offset = rand() % 3 - 1;
+                        world[POS(x + offset, y)] = TERRA_STONE;
+                    }
+                    else
+                    {
+                        world[POS(x, y)] = TERRA_EARTH;
+                    }
+                }
+            }
+            if (IS_COLOR(right, TERRA_STONE))
+            {
+                if (rand() % 15 < 8)
+                    world[POS(x, y)] = TERRA_STONE;
+            }
         }
     }
+    world_pos_remainder -= num_lines_to_scroll;
+}
+
+void world_update(Color *world)
+{
+    world_pos_remainder += world_spd;
+    world_scroll(world);
 }
 
 void mole_update(Sprite *mole, Vector2 *movement, Color *world)
@@ -84,7 +111,28 @@ void mole_update(Sprite *mole, Vector2 *movement, Color *world)
             if ((offsetY != -mole_height / 2 && offsetY != mole_height / 2 - 1) || (offsetX != -mole_width / 2 && offsetX != mole_width / 2 - 1))
                 world[POS((int)new_mole_position.x + offsetX, (int)new_mole_position.y + offsetY)] = TERRA_TUNEL;
         }
+
     sprite_update(mole, movement);
+    
+    // ensure position is in bounds
+    if (mole->position.x < mole->image.width / mole->number_of_frames)
+    {
+        mole->position.x = mole->image.width / mole->number_of_frames;
+    }
+    if (mole->position.y < mole->image.height)
+    {
+        mole->position.y = mole->image.height;
+    }
+
+    if (mole->position.x > WIDTH - mole->image.width / mole->number_of_frames)
+    {
+        mole->position.x = WIDTH - mole->image.width / mole->number_of_frames;
+    }
+    if (mole->position.y > HEIGHT - mole->image.height)
+    {
+        mole->position.y = HEIGHT - mole->image.height;
+    }
+
 }
 
 int main()
@@ -94,7 +142,7 @@ int main()
      ****************************************************************************/
     InitConsole();
     SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
-    InitWindow(WIDTH, HEIGHT, "raylib");
+    InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "raylib");
     SetTargetFPS(FPS);
 
 #if defined(PLATFORM_WEB)
@@ -120,10 +168,8 @@ int main()
     }
 
     // pre-scroll some lines
-    for (int i = 0; i < 10; ++i)
-    {
-        world_scroll(world);
-    }
+    world_pos_remainder = 100;
+    world_scroll(world);
 
     /***************************************************************************
      * Create character
@@ -151,6 +197,7 @@ int main()
         movement = Vector2Normalize(movement);
 
         mole_update(&mole, &movement, world);
+        world_update(world);
 
         world_scroll(world);
 
