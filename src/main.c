@@ -5,11 +5,13 @@
 #include "raylib.h"
 
 #include "config.h"
+#include "input.h"
 #include "sprite.h"
 #include "world.h"
 #include "mole.h"
 
 #include "console.c"
+#include "input.c"
 #include "sprite.c"
 #include "world.c"
 #include "mole.c"
@@ -27,18 +29,7 @@ World world;
 void UpdateDrawFrame()
 {
         // handle input
-        Vector2 movement = {0, 0};
-
-        if (IsKeyDown(KEY_RIGHT))
-            movement.x = movement.x + 1;
-        if (IsKeyDown(KEY_LEFT))
-            movement.x = movement.x - 1;
-        if (IsKeyDown(KEY_UP))
-            movement.y = movement.y - 1;
-        if (IsKeyDown(KEY_DOWN))
-            movement.y = movement.y + 1;
-
-        movement = Vector2Normalize(movement);
+        Vector2 movement = input_get_dir();
 
         // update
         world_update(&world, &mole);
