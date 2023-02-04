@@ -31,10 +31,10 @@ void UpdateDrawFrame()
     // handle input
     Vector2 movement = input_get_dir();
  
-    if (IsKeyPressed(KEY_SPACE))
+    if (input_is_button_pressed(0))
         mole.stoneEaterBonus=600;
 
-    if (IsKeyPressed(KEY_COMMA))
+    if (input_is_button_pressed(1))
         mole.speedBonus=300;
 
     // update

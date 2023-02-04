@@ -11,3 +11,11 @@ Vector2 input_get_dir() {
 
     return Vector2Normalize(dir);
 }
+
+bool input_is_button_pressed(int button) {
+    switch(button) {
+        case 0: return IsKeyDown(KBD_BUTTON_0);
+        case 1: return IsKeyDown(KBD_BUTTON_1);
+    }
+    return false;
+}
