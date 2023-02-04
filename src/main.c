@@ -47,8 +47,8 @@ void UpdateDrawFrame()
     // draw
     BeginDrawing();
 
-    world_draw(&world);
-    sprite_draw(&mole);
+        world_draw(&world);
+        mole_draw(&mole);
 
     EndDrawing();
 }
