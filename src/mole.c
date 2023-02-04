@@ -53,7 +53,7 @@ void mole_update(Mole *mole, Vector2 *movement, Color *bitmap)
                 Color *current = &bitmap[POS((int)new_mole_position.x + offsetX, (int)new_mole_position.y + offsetY)];
                 if (IS_COLOR(current, TERRA_STONE))
                 {
-                    terain_multiplyer = 0.0f;
+                    terain_multiplyer = 0.15f;
                 }
                 else if (IS_COLOR(current, TERRA_EARTH))
                 {
