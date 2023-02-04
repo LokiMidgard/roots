@@ -26,7 +26,7 @@ World world;
 
 void UpdateDrawFrame()
 {
-        // controles
+        // handle input
         Vector2 movement = {0, 0};
 
         if (IsKeyDown(KEY_RIGHT))
@@ -40,9 +40,11 @@ void UpdateDrawFrame()
 
         movement = Vector2Normalize(movement);
 
+        // update
         world_update(&world, &mole);
         mole_update(&mole, &movement, world.bitmap);
 
+        // draw
         BeginDrawing();
 
         world_draw(&world);
