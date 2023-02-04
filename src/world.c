@@ -7,17 +7,18 @@
 void world_init(World* world) {
     world->speed = 0.3f;
     world->pos_remainder = 100;
-    world->image = GenImageColor(WIDTH, HEIGHT, TERRA_EARTH);
-    world->bitmap = LoadImageColors(world->image);
+    world->image = LoadImage("resources/tile.png");
+    world->current_bitmap = LoadImageColors(world->image);
+    world->next_bitmap    = LoadImageColors(world->image);
     world->screen_texture = LoadTextureFromImage(world->image);
 
     for (int i = 0; i < NUM_SEEDS; ++i)
     {
-        int x = rand() % WIDTH;
-        int y = HEIGHT - 1;
+        //int x = rand() % WIDTH;
+        //int y = HEIGHT - 1;
         for (int offset = -3; offset < 3; ++offset)
         {
-            world->bitmap[POS(x + offset, y)] = TERRA_STONE;
+            //world->bitmap[POS(x + offset, y)] = TERRA_STONE;
         }
     }
 }
@@ -25,10 +26,41 @@ void world_init(World* world) {
 void
 world_set_terrain(World *world, int x, int y, Color color)
 {
+    Color* bitmap = world->current_bitmap;
+    int scroll_amount = world->depth;
+    int from_the_top = HEIGHT - scroll_amount;
+    if (y >= from_the_top)
+    {
+        y -= from_the_top;
+        bitmap = world->next_bitmap;
+    }
+    else
+    {
+        y += world->depth;
+    }
     if (x < 0 || y < 0 || x >= WIDTH || y >= HEIGHT)
         return;
-    Color* bitmap = world->bitmap;
     bitmap[POS(x, y)] = color;
+}
+
+Color *
+world_get_terrain(World *world, int x, int y)
+{
+    Color* bitmap = world->current_bitmap;
+    int scroll_amount = world->depth;
+    int from_the_top = HEIGHT - scroll_amount;
+    if (y >= from_the_top)
+    {
+        y -= from_the_top;
+        bitmap = world->next_bitmap;
+    }
+    else
+    {
+        y += world->depth;
+    }
+    if (x < 0 || y < 0 || x >= WIDTH || y >= HEIGHT)
+        return &TERRA_EARTH;
+    return bitmap + POS(x, y);
 }
 
 int
@@ -39,56 +71,14 @@ color_are_equal(Color c1, Color c2)
 
 void world_scroll(World *world, Sprite *mole)
 {
-    Color* bitmap = world->bitmap;
-    int num_lines_to_scroll = (int)world->pos_remainder;
-    mole->position.y -= num_lines_to_scroll;
-    for (int i = 0; i < num_lines_to_scroll; ++i)
+    world->depth += 1;
+    if (world->depth == HEIGHT)
     {
-        // move world 1 pixel up
-        world->depth += 1;
-        char *dst = (char *)bitmap;
-        char *src = (char *)(bitmap + WIDTH);
-        size_t num_bytes = sizeof(Color) * WIDTH * (HEIGHT - 1);
-        memmove(dst, src, num_bytes);
-
-        // draw new bottom line
-        int y = HEIGHT - 1;
-        for (int x = 1; x < WIDTH; ++x)
-        {
-            Color *current = &bitmap[POS(x, y)];
-
-            if (IS_COLOR(current, TERRA_EARTH))
-            {
-                int new_seed = rand()%100 > 98;
-                if (new_seed)
-                    world_set_terrain(world, x, y, TERRA_STONE);
-            }
-            else if (IS_COLOR(current, TERRA_STONE))
-            {
-                int length = 1;
-                for (; length + x < WIDTH; ++length)
-                {
-                    Color next_color = bitmap[POS(x + length, y)];
-                    if (!color_are_equal(next_color, TERRA_STONE))
-                        break;
-
-                }
-                int should_grow   = rand()%100 > 50;
-                int should_shrink = rand()%100 > 70;
-                if (should_shrink)
-                {
-                    world_set_terrain(world, x, y, TERRA_EARTH);
-                    world_set_terrain(world, x+length-1, y, TERRA_EARTH);
-                }
-                else if (should_grow)
-                {
-                    world_set_terrain(world, x-1, y, TERRA_STONE);
-                    world_set_terrain(world, x+length, y, TERRA_STONE);
-                }
-            }
-        }
+        world->depth = 0;
+        UnloadImageColors(world->current_bitmap);
+        world->current_bitmap = world->next_bitmap;
+        world->next_bitmap = LoadImageColors(world->image);
     }
-    world->pos_remainder -= num_lines_to_scroll;
 }
 
 void world_update(World *world, Mole *mole)
@@ -101,6 +91,11 @@ void world_draw(World* world) {
     Rectangle srcRect = {0, 0, WIDTH, HEIGHT};
     Rectangle dstRect = {0, 0, GetScreenWidth(), GetScreenHeight()};
     Vector2 origin = {0, 0};
-    UpdateTexture(world->screen_texture, world->bitmap);
+    
+    Rectangle upper_screen = {0, 0, WIDTH, HEIGHT - world->depth};
+    Rectangle lower_screen = {0, HEIGHT - world->depth, WIDTH, world->depth};
+    UpdateTextureRec(world->screen_texture, upper_screen, world->current_bitmap + (world->depth * WIDTH));
+    UpdateTextureRec(world->screen_texture, lower_screen, world->next_bitmap);
     DrawTexturePro(world->screen_texture, srcRect, dstRect, origin, 0.0f, WHITE);
 }
+
