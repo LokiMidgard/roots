@@ -18,8 +18,11 @@ int color_are_equal(Color c1, Color c2)
 #include "world.h"
 #include "mole.h"
 
-Mole mole;
-World world;
+
+Mole   mole;
+World  world;
+Sprite lose;
+
 
 #include "console.c"
 #include "input.c"
@@ -28,11 +31,6 @@ World world;
 #include "mole.c"
 
 
-//------------------------------------------------------------------------------
-// Local Variables Definition (local to this module)
-//----------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-Sprite lose;
 
 void UpdateDrawFrame()
 {
