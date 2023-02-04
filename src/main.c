@@ -40,7 +40,7 @@ void world_scroll(Color *world)
         Color *next = &world[POS(x + 1, y)];
         // Color last    = world[POS(x-1,y)];
 
-        if (current->r == GRAY.r)
+        if (current->r == TERRA_STONE.r)
         {
             if (rand() % 15 < 8)
                 world[POS(x, y)] = TERRA_STONE;
@@ -53,6 +53,38 @@ void world_scroll(Color *world)
                 world[POS(x, y)] = TERRA_STONE;
         }
     }
+}
+
+void mole_update(Sprite *mole, Vector2 *movement, Color *world)
+{
+    // dig
+    int mole_width = (mole->image.width / mole->number_of_frames);
+    int mole_height = mole->image.height;
+    Vector2 new_mole_position = Vector2Add(mole->position, *movement);
+    bool collide = false;
+    for (int offsetX = -mole_width / 2; offsetX < mole_width / 2; ++offsetX)
+        for (int offsetY = -mole_height / 2; offsetY < mole_height / 2; ++offsetY)
+        {
+            if ((offsetY != -mole_height / 2 && offsetY != mole_height / 2 - 1) || (offsetX != -mole_width / 2 && offsetX != mole_width / 2 - 1))
+            {
+                Color c = world[POS((int)new_mole_position.x + offsetX, (int)new_mole_position.y + offsetY)];
+                if (c.r == TERRA_STONE.r)
+                {
+                    collide = true;
+                }
+            }
+        }
+    if (collide)
+    {
+        *movement = Vector2Zero();
+    }
+    for (int offsetX = -mole_width / 2; offsetX < mole_width / 2; ++offsetX)
+        for (int offsetY = -mole_height / 2; offsetY < mole_height / 2; ++offsetY)
+        {
+            if ((offsetY != -mole_height / 2 && offsetY != mole_height / 2 - 1) || (offsetX != -mole_width / 2 && offsetX != mole_width / 2 - 1))
+                world[POS((int)new_mole_position.x + offsetX, (int)new_mole_position.y + offsetY)] = TERRA_TUNEL;
+        }
+    sprite_update(mole, movement);
 }
 
 int main()
@@ -118,15 +150,9 @@ int main()
 
         movement = Vector2Normalize(movement);
 
-        world_scroll(world);
-        sprite_update(&mole, &movement);
+        mole_update(&mole, &movement, world);
 
-        // dig
-        for (int offsetX = -(mole.image.width/mole.number_of_frames) / 2; offsetX < (mole.image.width/mole.number_of_frames) / 2; ++offsetX)
-            for (int offsetY = -mole.image.height / 2; offsetY < mole.image.height / 2; ++offsetY)
-            {
-                world[POS((int)mole.position.x + offsetX, (int)mole.position.y + offsetY)] = TERRA_TUNEL;
-            }
+        world_scroll(world);
 
         BeginDrawing();
         // ClearBackground(RAYWHITE);
