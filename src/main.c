@@ -6,6 +6,9 @@
 #include "raymath.h"
 
 #include "config.h"
+#include "sprite.h"
+#include "world.h"
+
 #include "console.c"
 #include "sprite.c"
 #include "world.c"
@@ -19,7 +22,6 @@
 //----------------------------------------------------------------------------------
 Sprite mole;
 World world;
-
 
 void mole_update(Sprite *mole, Vector2 *movement, Color *bitmap)
 {

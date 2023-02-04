@@ -1,21 +1,11 @@
 #include <stdio.h>
 #include "raylib.h"
 #include "config.h"
-
-typedef struct World {
-    float speed;
-    float pos_remainder;
-    Image image;
-    Color* bitmap;
-    Texture2D screen_texture;
-} World;
-
-float world_spd = 0.3f;
-float world_pos_remainder = 0.0f;
+#include "world.h"
 
 void world_init(World* world) {
     world->speed = 0.3f;
-    world->pos_remainder = 0;
+    world->pos_remainder = 100;
     world->image = GenImageColor(WIDTH, HEIGHT, TERRA_EARTH);
     world->bitmap = LoadImageColors(world->image);
     world->screen_texture = LoadTextureFromImage(world->image);
@@ -29,9 +19,6 @@ void world_init(World* world) {
             world->bitmap[POS(x + offset, y)] = TERRA_STONE;
         }
     }
-
-    // pre-scroll some lines
-    world->pos_remainder = 100;
 }
 
 void world_scroll(World *world, Sprite *mole)

@@ -3,7 +3,6 @@
 int __stdcall AllocConsole(void);
 void __stdcall FreeConsole(void);
 
-
 void InitConsole() {
     FILE *ConsoleIn  = 0;
     FILE *ConsoleOut = 0;
