@@ -3,6 +3,7 @@
 
 #include "raylib.h"
 #include "raymath.h"
+#include "sprite.h"
 
 #define INPUT_KEYBOARD 0
 #define INPUT_MOUSE 1
@@ -12,6 +13,8 @@
 #define KBD_BUTTON_1 KEY_COMMA
 
 void input_set_device(int device);
+void input_set_mouse_center(Sprite* sprite);
+
 Vector2 input_get_dir();
 bool input_is_button_pressed(int button);
 

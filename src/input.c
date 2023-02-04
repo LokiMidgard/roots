@@ -2,10 +2,12 @@
 #include "input.h"
 
 int g_device = INPUT_KEYBOARD;
+Sprite* g_sprite = (Sprite*)0;
+int g_mouse_deadzone = 20;
 
-void input_set_device(int device) {
-    g_device = device;
-}
+void input_set_device(int device) { g_device = device; }
+void input_set_mouse_center(Sprite* sprite) { g_sprite = sprite; }
+void input_set_mouse_deadzone(int deadzone) { g_mouse_deadzone = deadzone; }
 
 Vector2 input_get_dir() {
     Vector2 dir = { 0, 0 };
@@ -20,10 +22,13 @@ Vector2 input_get_dir() {
     
         case INPUT_MOUSE:
             dir = GetMousePosition();
-            dir.x -= (WIDTH >> 1);
-            dir.y -= (HEIGHT >> 1);
-            if (abs(dir.x) < (WIDTH / 10)) dir.x = 0;
-            if (abs(dir.y) < (HEIGHT / 10)) dir.y = 0;
+            dir.x *= WIDTH/(float)GetScreenWidth();
+            dir.y *= HEIGHT/(float)GetScreenHeight();
+            dir.x -= g_sprite ? g_sprite->position.x : (WIDTH >> 1);
+            dir.y -= g_sprite ? g_sprite->position.y : (HEIGHT >> 1);
+
+            if (abs(dir.x) < g_mouse_deadzone) dir.x = 0;
+            if (abs(dir.y) < g_mouse_deadzone) dir.y = 0;
             break;
 
         case INPUT_GAMEPAD:
