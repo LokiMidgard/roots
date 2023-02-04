@@ -27,6 +27,8 @@
 float world_spd = 0.3f;
 float world_pos_remainder = 0.0f;
 
+#define IS_COLOR(pos, col) (pos->r == col.r && pos->g == col.g && pos->b == col.b)
+
 void world_scroll(Color *world)
 {
     int num_lines_to_scroll = (int)world_pos_remainder;
@@ -43,17 +45,24 @@ void world_scroll(Color *world)
         for (int x = 1; x < WIDTH - 1; ++x)
         {
             Color *current = &world[POS(x, y)];
-            Color *next = &world[POS(x + 1, y)];
-            // Color last    = world[POS(x-1,y)];
+            Color *right    = &world[POS(x + 1, y)];
+            Color *left    = &world[POS(x-1,y)];
+            Color *above   = &world[POS(x, y-1)];
 
-            if (current->r == GRAY.r)
+            if (IS_COLOR(current, TERRA_STONE))
             {
-                if (rand() % 15 < 8)
+                if (rand() % 15 < 8) {
                     world[POS(x, y)] = TERRA_STONE;
-                else
-                    world[POS(x, y)] = TERRA_EARTH;
+                } else {
+                    if (IS_COLOR(above, TERRA_STONE) && !IS_COLOR(left, TERRA_STONE)) {
+                        int offset = rand() % 3 - 1;
+                        world[POS(x + offset, y)] = TERRA_STONE;
+                    } else {
+                        world[POS(x, y)] = TERRA_EARTH;
+                    }
+                }
             }
-            if (next->r == GRAY.r)
+            if (IS_COLOR(right, TERRA_STONE))
             {
                 if (rand() % 15 < 8)
                     world[POS(x, y)] = TERRA_STONE;
@@ -76,7 +85,7 @@ int main()
      ****************************************************************************/
     InitConsole();
     SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
-    InitWindow(SWIDTH, SHEIGHT, "raylib");
+    InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "raylib");
     SetTargetFPS(FPS);
 
 #if defined(PLATFORM_WEB)
@@ -102,7 +111,7 @@ int main()
     }
 
     // pre-scroll some lines
-    world_pos_remainder = 10;
+    world_pos_remainder = 100;
     world_scroll(world);
 
     /***************************************************************************

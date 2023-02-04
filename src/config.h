@@ -5,8 +5,8 @@
 #define WIDTH (960)
 #define HEIGHT (540)
 #define SCALE (1.5f)
-#define SWIDTH ((int)(WIDTH*SCALE))
-#define SHEIGHT ((int)(HEIGHT*SCALE))
+#define WINDOW_WIDTH ((int)(WIDTH*SCALE))
+#define WINDOW_HEIGHT ((int)(HEIGHT*SCALE))
 #define POS(x, y) ((y) * (WIDTH) + (x))
 
 #define NUM_SEEDS (30)
