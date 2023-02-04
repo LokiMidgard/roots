@@ -110,7 +110,7 @@ void mole_update(Sprite *mole, Vector2 *movement, Color *world)
         for (int offsetY = -mole_height / 2; offsetY < mole_height / 2; ++offsetY)
         {
             if ((offsetY != -mole_height / 2 && offsetY != mole_height / 2 - 1) || (offsetX != -mole_width / 2 && offsetX != mole_width / 2 - 1))
-                world[POS((int)new_mole_position.x + offsetX, (int)new_mole_position.y + offsetY)] = TERRA_TUNEL;
+                world[POS((int)mole->position.x + offsetX, (int)mole->position.y + offsetY)] = TERRA_TUNEL;
         }
 
     sprite_update(mole, movement);
