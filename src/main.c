@@ -12,77 +12,99 @@
 //----------------------------------------------------------------------------------
 // Local Variables Definition (local to this module)
 //----------------------------------------------------------------------------------
-#define screenWidth 960
-#define screenHeight 540
-Image screen = {0};
+#define WIDTH (960)
+#define HEIGHT (540)
+#define POS(x,y) ((y)*(WIDTH)+(x))
 
-int number_of_seeds = 0;
-int root_seeds[screenWidth];
-Color *world = 0;
+#define NUM_SEEDS (30)
 
-void update_last_world_line()
+void scroll_world(Color* world)
 {
-    memmove((char *)world, (char *)(world + screenWidth), (screenWidth * (screenHeight-1))*sizeof(Color));
-    for (int x = 1; x < screenWidth - 1; ++x)
+    // move world 1 pixel up
+    char *dst = (char *)world;
+    char *src = (char *)(world + WIDTH);
+    size_t num_bytes = sizeof(Color) * WIDTH * (HEIGHT-1);
+    memmove(dst, src, num_bytes);
+
+    // draw new bottom line
+    int y = HEIGHT - 1;
+    for (int x = 1; x < WIDTH - 1; ++x)
     {
-        int y = screenHeight - 1;
-        Color current = world[y * screenWidth + x];
-        Color next    = world[y * screenWidth + x + 1];
-        Color last    = world[y * screenWidth + x - 1];
+        Color current = world[POS(x,y)];
+        Color next    = world[POS(x+1, y)];
+        // Color last    = world[POS(x-1,y)];
+
         if (current.r == GRAY.r)
         {
             if (rand()%15 < 8)
-                world[y * screenWidth + x] = GRAY;
+                world[POS(x,y)] = GRAY;
             else
-                world[y * screenWidth + x] = BROWN;
+                world[POS(x,y)] = BROWN;
         }
         if (next.r == GRAY.r)
         {
             if (rand()%15 < 8)
-                world[y * screenWidth + x] = GRAY;
+                world[POS(x,y)] = GRAY;
         }
     }
 }
 
 int main() 
 {
+    /***************************************************************************
+    * Init technical stuff
+    ****************************************************************************/
     InitConsole();
-    InitWindow(screenWidth, screenHeight, "raylib");
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
+    InitWindow(WIDTH, HEIGHT, "raylib");
 
 #if defined(PLATFORM_WEB)
     emscripten_set_main_loop(UpdateDrawFrame, 60, 1);
 #else
     SetTargetFPS(60);
 
-    screen = GenImageColor(screenWidth, screenHeight, BROWN);
-    Texture2D screen_texture = LoadTextureFromImage(screen);
+    /***************************************************************************
+    * Create inital world
+    ****************************************************************************/
+    Image world_image = GenImageColor(WIDTH, HEIGHT, BROWN);
+    Texture2D screen_texture = LoadTextureFromImage(world_image);
+    Color *world = LoadImageColors(world_image);
 
-
-    world = LoadImageColors(screen);
-    number_of_seeds = 30;
-    for (int index = 0; index < number_of_seeds; ++index)
+    // draw initial bottom line
+    for (int index = 0; index < NUM_SEEDS; ++index)
     {
-        int x = rand() % screenWidth;
-        int y = screenHeight - 1;
+        int x = rand() % WIDTH;
+        int y = HEIGHT - 1;
         for (int offset = -3; offset < 3; ++offset)
         {
-            world[x+offset + y * screenWidth] = GRAY;
+            world[POS(x+offset, y)] = GRAY;
         }
     }
 
+    // pre-scroll some lines
     for (int index = 0; index < 10; ++index)
     {
-        update_last_world_line();
+        scroll_world(world);
     }
 
-    // Main game loop
+    /***************************************************************************
+    * Main Loop
+    ****************************************************************************/
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
-        update_last_world_line();
+        scroll_world(world);
+
         BeginDrawing();
         //ClearBackground(RAYWHITE);
+
         UpdateTexture(screen_texture, world);
-        DrawTexture(screen_texture, 0, 0, WHITE);
+
+        // texture to screen with scaling
+        Rectangle srcRect = {0, 0, WIDTH, HEIGHT};
+        Rectangle dstRect = {0, 0, GetScreenWidth(), GetScreenHeight()};
+        Vector2 origin = {0, 0};
+        DrawTexturePro(screen_texture, srcRect, dstRect, origin, 0.0f, WHITE);
+
         EndDrawing();
     }
 #endif
@@ -90,8 +112,8 @@ int main()
     // De-Initialization
     //--------------------------------------------------------------------------------------
     CloseWindow();                  // Close window and OpenGL context
-                                    //--------------------------------------------------------------------------------------
     FreeConsole();
+    //--------------------------------------------------------------------------------------
 
     return 0;
 }
