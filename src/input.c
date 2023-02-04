@@ -6,6 +6,9 @@ Sprite* g_sprite = (Sprite*)0;
 int g_mouse_deadzone = 20;
 int g_gamepad = 0;
 
+int oldWidth = 0;
+int oldHeight = 0;
+
 bool input_set_device(int device) {
     switch(device) {
         case INPUT_GAMEPAD:
@@ -28,6 +31,19 @@ int input_get_device() {
 
 Vector2 input_get_dir() {
     Vector2 dir = { 0, 0 };
+
+    if (IsKeyPressed(KEY_F)) {
+        if (!IsWindowFullscreen()) {
+            oldWidth = GetScreenWidth();
+            oldHeight = GetScreenHeight();
+            int mon = GetCurrentMonitor();
+            SetWindowSize(GetMonitorWidth(mon), GetMonitorHeight(mon));
+            ToggleFullscreen();
+        } else {
+            ToggleFullscreen();
+            SetWindowSize(oldWidth, oldHeight);
+        }
+    }
 
     int device = input_get_device();
 
