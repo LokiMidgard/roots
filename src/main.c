@@ -12,6 +12,7 @@
 //----------------------------------------------------------------------------------
 // Local Variables Definition (local to this module)
 //----------------------------------------------------------------------------------
+#define FPS (60)
 #define WIDTH (960)
 #define HEIGHT (540)
 #define POS(x,y) ((y)*(WIDTH)+(x))
@@ -30,18 +31,18 @@ void scroll_world(Color* world)
     int y = HEIGHT - 1;
     for (int x = 1; x < WIDTH - 1; ++x)
     {
-        Color current = world[POS(x,y)];
-        Color next    = world[POS(x+1, y)];
+        Color* current = &world[POS(x,y)];
+        Color* next    = &world[POS(x+1, y)];
         // Color last    = world[POS(x-1,y)];
 
-        if (current.r == GRAY.r)
+        if (current->r == GRAY.r)
         {
             if (rand()%15 < 8)
                 world[POS(x,y)] = GRAY;
             else
                 world[POS(x,y)] = BROWN;
         }
-        if (next.r == GRAY.r)
+        if (next->r == GRAY.r)
         {
             if (rand()%15 < 8)
                 world[POS(x,y)] = GRAY;
@@ -57,11 +58,11 @@ int main()
     InitConsole();
     SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
     InitWindow(WIDTH, HEIGHT, "raylib");
+    SetTargetFPS(FPS);
 
 #if defined(PLATFORM_WEB)
-    emscripten_set_main_loop(UpdateDrawFrame, 60, 1);
+    emscripten_set_main_loop(UpdateDrawFrame, FPS, 1);
 #else
-    SetTargetFPS(60);
 
     /***************************************************************************
     * Create inital world
@@ -71,7 +72,7 @@ int main()
     Color *world = LoadImageColors(world_image);
 
     // draw initial bottom line
-    for (int index = 0; index < NUM_SEEDS; ++index)
+    for (int i = 0; i < NUM_SEEDS; ++i)
     {
         int x = rand() % WIDTH;
         int y = HEIGHT - 1;
@@ -82,7 +83,7 @@ int main()
     }
 
     // pre-scroll some lines
-    for (int index = 0; index < 10; ++index)
+    for (int i = 0; i < 10; ++i)
     {
         scroll_world(world);
     }
@@ -109,11 +110,11 @@ int main()
     }
 #endif
 
-    // De-Initialization
-    //--------------------------------------------------------------------------------------
-    CloseWindow();                  // Close window and OpenGL context
+    /***************************************************************************
+    * Cleanup
+    ****************************************************************************/
+    CloseWindow();
     FreeConsole();
-    //--------------------------------------------------------------------------------------
 
     return 0;
 }
