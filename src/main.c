@@ -16,17 +16,15 @@
 //----------------------------------------------------------------------------------
 // Local Variables Definition (local to this module)
 //----------------------------------------------------------------------------------
-#define FPS (60)
-#define WIDTH (960)
-#define HEIGHT (540)
-#define POS(x, y) ((y) * (WIDTH) + (x))
 
 #define TERRA_EARTH (BROWN)
 #define TERRA_TUNEL (DARKBROWN)
 #define TERRA_STONE (GRAY)
 #define TERRA_ROOT (BLACK)
 
-void scroll_world(Color *world)
+#define NUM_SEEDS (30)
+
+void world_scroll(Color *world)
 {
     // move world 1 pixel up
     char *dst = (char *)world;
@@ -92,7 +90,7 @@ int main()
     // pre-scroll some lines
     for (int i = 0; i < 10; ++i)
     {
-        scroll_world(world);
+        world_scroll(world);
     }
 
     /***************************************************************************
@@ -120,7 +118,7 @@ int main()
 
         movement = Vector2Normalize(movement);
 
-        scroll_world(world);
+        world_scroll(world);
         sprite_update(&mole, &movement);
 
         // dig
