@@ -5,8 +5,25 @@ int g_device = INPUT_KEYBOARD;
 Sprite* g_sprite = (Sprite*)0;
 int g_mouse_deadzone = 20;
 
-void input_set_device(int device) { g_device = device; }
+bool input_set_device(int device) {
+    switch(device) {
+        case INPUT_GAMEPAD:
+            if (IsGamepadAvailable(0)) {
+                g_device = device;
+            } else {
+                printf("No Gamepad found");
+                return false;
+            }
+            break;
+        default:
+            g_device = device;
+            break;
+    }
+    return true;
+}
+
 void input_set_mouse_center(Sprite* sprite) { g_sprite = sprite; }
+
 void input_set_mouse_deadzone(int deadzone) { g_mouse_deadzone = deadzone; }
 
 Vector2 input_get_dir() {
@@ -32,6 +49,8 @@ Vector2 input_get_dir() {
             break;
 
         case INPUT_GAMEPAD:
+            dir.x = GetGamepadAxisMovement(0, 0);
+            dir.y = GetGamepadAxisMovement(0, 1);
         break;
     }
 
@@ -50,4 +69,13 @@ bool input_is_button_pressed(int button) {
             return IsMouseButtonDown(button);
     }
     return false;
+}
+
+const char* input_get_device_name() {
+    switch(g_device) {
+        case INPUT_GAMEPAD: return "Gamepad";
+        case INPUT_MOUSE: return "Mouse";
+        case INPUT_KEYBOARD: return "Keyboard";
+    }
+    return "Unknown";
 }

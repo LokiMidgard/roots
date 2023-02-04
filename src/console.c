@@ -1,7 +1,7 @@
+#include "console.h"
 #include <stdio.h>
 
 int __stdcall AllocConsole(void);
-void __stdcall FreeConsole(void);
 
 void InitConsole() {
     FILE *ConsoleIn  = 0;
