@@ -23,35 +23,49 @@
 
 #define NUM_SEEDS (30)
 
+float world_spd = 0.3f;
+float world_pos_remainder = 0.0f;
+
 void world_scroll(Color *world)
 {
-    // move world 1 pixel up
-    char *dst = (char *)world;
-    char *src = (char *)(world + WIDTH);
-    size_t num_bytes = sizeof(Color) * WIDTH * (HEIGHT - 1);
-    memmove(dst, src, num_bytes);
-
-    // draw new bottom line
-    int y = HEIGHT - 1;
-    for (int x = 1; x < WIDTH - 1; ++x)
+    int num_lines_to_scroll = (int)world_pos_remainder;
+    for(int i=0; i<num_lines_to_scroll; ++i)
     {
-        Color *current = &world[POS(x, y)];
-        Color *next = &world[POS(x + 1, y)];
-        // Color last    = world[POS(x-1,y)];
+        // move world 1 pixel up
+        char *dst = (char *)world;
+        char *src = (char *)(world + WIDTH);
+        size_t num_bytes = sizeof(Color) * WIDTH * (HEIGHT - 1);
+        memmove(dst, src, num_bytes);
 
-        if (current->r == GRAY.r)
+        // draw new bottom line
+        int y = HEIGHT - 1;
+        for (int x = 1; x < WIDTH - 1; ++x)
         {
-            if (rand() % 15 < 8)
-                world[POS(x, y)] = GRAY;
-            else
-                world[POS(x, y)] = BROWN;
-        }
-        if (next->r == GRAY.r)
-        {
-            if (rand() % 15 < 8)
-                world[POS(x, y)] = GRAY;
+            Color *current = &world[POS(x, y)];
+            Color *next = &world[POS(x + 1, y)];
+            // Color last    = world[POS(x-1,y)];
+
+            if (current->r == GRAY.r)
+            {
+                if (rand() % 15 < 8)
+                    world[POS(x, y)] = GRAY;
+                else
+                    world[POS(x, y)] = BROWN;
+            }
+            if (next->r == GRAY.r)
+            {
+                if (rand() % 15 < 8)
+                    world[POS(x, y)] = GRAY;
+            }
         }
     }
+    world_pos_remainder -= num_lines_to_scroll;
+}
+
+void world_update(Color* world)
+{
+    world_pos_remainder += world_spd;
+    world_scroll(world);
 }
 
 int main()
@@ -87,10 +101,8 @@ int main()
     }
 
     // pre-scroll some lines
-    for (int i = 0; i < 10; ++i)
-    {
-        world_scroll(world);
-    }
+    world_pos_remainder = 10;
+    world_scroll(world);
 
     /***************************************************************************
      * Create character
@@ -117,7 +129,7 @@ int main()
 
         movement = Vector2Normalize(movement);
 
-        world_scroll(world);
+        world_update(world);
         sprite_update(&mole, &movement);
 
         BeginDrawing();
