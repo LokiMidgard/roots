@@ -61,6 +61,7 @@ int main()
     InitConsole();
     SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "raylib");
+    InitAudioDevice();
     SetTargetFPS(FPS);
 
     /***************************************************************************
