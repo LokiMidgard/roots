@@ -25,6 +25,7 @@
 //----------------------------------------------------------------------------------
 Mole mole;
 World world;
+Sprite lose;
 
 void UpdateDrawFrame()
 {
@@ -37,18 +38,23 @@ void UpdateDrawFrame()
     if (input_is_button_pressed(1))
         mole.speedBonus=300;
 
-    // update
-    world_update(&world, &mole);
-    mole_update(&mole, &movement, world.bitmap);
-
+    if(mole.health>0){
+        // update
+        world_update(&world, &mole);
+        mole_update(&mole, &movement, world.bitmap);
+    }
     // draw
     BeginDrawing();
 
         world_draw(&world);
         mole_draw(&mole);
         char text[256] = {0};
-        snprintf(text, 256, "depth: %2.2d\n", world.depth);
+        snprintf(text, 256, "depth: %2.2d\npoints: %d", world.depth, mole.points);
         DrawText(text, 10, 10, 14, WHITE);
+     
+     if(mole.health<=0){
+        sprite_draw(&lose);
+    }
 
 
     EndDrawing();
@@ -71,6 +77,8 @@ int main()
      ****************************************************************************/
     mole_init(&mole, 30, 30);
     world_init(&world);
+    sprite_init(&lose, "resources/lose.png",1, WIDTH/2, HEIGHT/2, 15, 0);
+
 
 #if defined(PLATFORM_WEB)
     emscripten_set_main_loop(UpdateDrawFrame, FPS, 1);

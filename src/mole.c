@@ -52,7 +52,6 @@ void mole_update(Mole *mole, Vector2 *movement, Color *bitmap)
                     else
                     {
                         terain_multiplyer = fmin(terain_multiplyer, 0.05f);
-                        
                     }
                 }
                 else if (IS_COLOR(current, TERRA_EARTH))
