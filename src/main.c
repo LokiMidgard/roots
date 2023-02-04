@@ -84,7 +84,7 @@ int main()
      ****************************************************************************/
     mole_init(&mole, 30, 30);
     world_init(&world);
-    sprite_init(&lose, "resources/lose.png",1, WIDTH/2, HEIGHT/2, 15, 0);
+    sprite_init(&lose, "resources/lose.png", 660, 1, WIDTH/2, HEIGHT/2, 15, 0);
 
     input_set_mouse_center(&mole.sprite);
     input_set_device(INPUT_GAMEPAD);

@@ -3,11 +3,12 @@
 #include "sprite.h"
 #include "config.h"
 
-void sprite_init(Sprite *s, const char *file, int num_of_frames, int x, int y, int speed, float rotation)
+void sprite_init(Sprite *s, const char *file, int frame_width, int num_of_frames, int x, int y, int speed, float rotation)
 {
     s->counter = 0;
     s->image = LoadTexture(file);
     s->number_of_frames = num_of_frames;
+    s->frame_width = frame_width;
     s->position.x = x;
     s->position.y = y;
     s->speed = speed;
@@ -19,7 +20,7 @@ void sprite_draw(Sprite *s)
 {
     // calculate current frame
     int current_frame = s->counter / s->speed;
-    int frame_width = s->image.width / s->number_of_frames;
+    int frame_width = s->frame_width;
     int frame_height = s->image.height;
     Rectangle frame = {current_frame * frame_width, 0, frame_width, frame_height};
     Rectangle dstRect = {
