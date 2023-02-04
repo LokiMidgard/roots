@@ -10,7 +10,7 @@ typedef struct Mole
     int points;
     float health;
     float speed;
-    // bonuses have a valu indicating the number of frames they have effect.
+    // bonuses have a value indicating the number of frames they have effect.
     float speedBonus;
     float stoneEaterBonus;
     
@@ -19,9 +19,10 @@ typedef struct Mole
     Sound snd_explode;
 
     bool explode_req;
+    float explode_time;
 } Mole;
 
-void mole_update(Mole *mole, Vector2 *movement, Color *bitmap);
+void mole_update(Mole *mole, Vector2 *movement);
 void mole_init(Mole *mole, float x, float y);
 void mole_draw(Mole* mole);
 void mole_explode(Mole* mole);

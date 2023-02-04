@@ -6,6 +6,10 @@
 #if defined(PLATFORM_WEB)
 #include <emscripten/emscripten.h>
 #endif
+int color_are_equal(Color c1, Color c2)
+{
+    return c1.r == c2.r && c1.g == c2.g && c1.b == c2.b;
+}
 
 #include "config.h"
 #include "console.h"
@@ -14,8 +18,11 @@
 #include "world.h"
 #include "mole.h"
 
-Mole mole;
-World world;
+
+Mole   mole;
+World  world;
+Sprite lose;
+
 
 #include "console.c"
 #include "input.c"
@@ -24,11 +31,6 @@ World world;
 #include "mole.c"
 
 
-//------------------------------------------------------------------------------
-// Local Variables Definition (local to this module)
-//----------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-Sprite lose;
 
 void UpdateDrawFrame()
 {
@@ -47,7 +49,7 @@ void UpdateDrawFrame()
     if(mole.health>0){
         // update
         world_update(&world, &mole);
-        mole_update(&mole, &movement, world.current_bitmap);
+        mole_update(&mole, &movement);
     }
     // draw
     BeginDrawing();
@@ -55,7 +57,7 @@ void UpdateDrawFrame()
         world_draw(&world);
         mole_draw(&mole);
         char text[256] = {0};
-        snprintf(text, 256, "depth: %2.2d\npoints: %d\ninput: %s\nfullscreen: F\nexit: ESC", world.depth, mole.points, input_get_device_name());
+        snprintf(text, 256, "depth: %2.2d\npoints: %d\nhealth: %.f\ninput: %s\nfullscreen: F\nexit: ESC", world.depth, mole.points, mole.health, input_get_device_name());
         DrawText(text, 10, 10, 14, WHITE);
         
      if(mole.health<=0){
