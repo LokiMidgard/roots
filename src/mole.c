@@ -22,7 +22,7 @@ void mole_init(Mole *mole, float x, float y)
     mole->speedBonus = 0;
     mole->stoneEaterBonus = 0;
 
-    mole->explode_req = false;
+    mole->explode_req = 0;
 }
 
 void mole_update(Mole *mole, Vector2 *movement, Color *bitmap)
@@ -100,9 +100,20 @@ void mole_update(Mole *mole, Vector2 *movement, Color *bitmap)
 
 
     if (mole->explode_req) {
-        world_dig(&world, sprite->position.x, sprite->position.y, 50);
-        PlaySound(mole->snd_explode);
+        mole->explode_time = 3.1415f;
+        if (!IsSoundPlaying(mole->snd_explode)) {
+            PlaySound(mole->snd_explode);
+        }
         mole->explode_req = false;
+    }
+
+    if (mole->explode_time > 0) {
+        mole->explode_time -= 0.09;
+        if (mole->explode_time <= 0) {
+            mole->explode_time = 0;
+        }
+        float radius = sin(mole->explode_time) * 50;
+        world_dig(&world, sprite->position.x, sprite->position.y, radius);
     }
 
     if (mole->stoneEaterBonus > 0 && mole->speedBonus > 0)
@@ -149,5 +160,8 @@ void mole_draw(Mole *mole)
 }
 
 void mole_explode(Mole* mole) {
-    mole->explode_req = true;
+    if (!mole->explode_req && mole->explode_time == 0) {
+        mole->explode_req = true;
+        mole->explode_time = 3.1415f;
+    }
 }

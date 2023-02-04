@@ -19,6 +19,7 @@ typedef struct Mole
     Sound snd_explode;
 
     bool explode_req;
+    float explode_time;
 } Mole;
 
 void mole_update(Mole *mole, Vector2 *movement, Color *bitmap);
