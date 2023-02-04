@@ -51,7 +51,7 @@ void UpdateDrawFrame()
     if(mole.health>0){
         // update
         world_update(&world, &mole);
-        mole_update(&mole, &movement, world.current_bitmap);
+        mole_update(&mole, &movement);
     }
     // draw
     BeginDrawing();

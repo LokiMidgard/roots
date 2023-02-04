@@ -25,7 +25,7 @@ void mole_init(Mole *mole, float x, float y)
     mole->explode_req = 0;
 }
 
-void mole_update(Mole *mole, Vector2 *movement, Color *bitmap)
+void mole_update(Mole *mole, Vector2 *movement)
 {
     Sprite *sprite = &mole->sprite;
 
