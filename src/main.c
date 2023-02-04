@@ -12,8 +12,8 @@ void __stdcall FreeConsole(void);
 //----------------------------------------------------------------------------------
 // Local Variables Definition (local to this module)
 //----------------------------------------------------------------------------------
-const int screenWidth = 960;
-const int screenHeight = 540;
+#define screenWidth 960
+#define screenHeight 540
 Image screen = {0};
 
 
@@ -47,20 +47,22 @@ int main()
     screen = GenImageColor(screenWidth, screenHeight, DARKBLUE);
     Texture2D screen_texture = LoadTextureFromImage(screen);
 
-    Color brush[10*10] = {0};
-    for (int index = 0; index < 10*10; ++index)
+    Color *image = LoadImageColors(screen);
+    for (int y = 0; y < 540; ++y)
+    for (int x = 0; x < 960; ++x)
     {
-        brush[index] = BLACK;
+        Color color = BLACK;
+        if ((y-1) % 10 == 0 || y % 10 == 0 || (y+1) % 10 == 0)
+            color = BLUE;
+        image[x + y * 960] = color;
     }
+
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
         BeginDrawing();
         //ClearBackground(RAYWHITE);
-        int x = GetMouseX();
-        int y = GetMouseY();
-        Rectangle target = {x, y, 10.0f, 10.0f};
-        UpdateTextureRec(screen_texture, target, brush);
+        UpdateTexture(screen_texture, image);
         DrawTexture(screen_texture, 0, 0, WHITE);
         EndDrawing();
     }
