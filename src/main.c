@@ -16,10 +16,11 @@
 //----------------------------------------------------------------------------------
 // Local Variables Definition (local to this module)
 //----------------------------------------------------------------------------------
-#define FPS (60)
-#define WIDTH (960)
-#define HEIGHT (540)
-#define POS(x, y) ((y) * (WIDTH) + (x))
+
+#define TERRA_EARTH (BROWN)
+#define TERRA_TUNEL (DARKBROWN)
+#define TERRA_STONE (GRAY)
+#define TERRA_ROOT (BLACK)
 
 #define NUM_SEEDS (30)
 
@@ -48,14 +49,14 @@ void world_scroll(Color *world)
             if (current->r == GRAY.r)
             {
                 if (rand() % 15 < 8)
-                    world[POS(x, y)] = GRAY;
+                    world[POS(x, y)] = TERRA_STONE;
                 else
-                    world[POS(x, y)] = BROWN;
+                    world[POS(x, y)] = TERRA_EARTH;
             }
             if (next->r == GRAY.r)
             {
                 if (rand() % 15 < 8)
-                    world[POS(x, y)] = GRAY;
+                    world[POS(x, y)] = TERRA_STONE;
             }
         }
     }
@@ -85,7 +86,7 @@ int main()
     /***************************************************************************
      * Create inital world
      ****************************************************************************/
-    Image world_image = GenImageColor(WIDTH, HEIGHT, BROWN);
+    Image world_image = GenImageColor(WIDTH, HEIGHT, TERRA_EARTH);
     Texture2D screen_texture = LoadTextureFromImage(world_image);
     Color *world = LoadImageColors(world_image);
 
@@ -96,7 +97,7 @@ int main()
         int y = HEIGHT - 1;
         for (int offset = -3; offset < 3; ++offset)
         {
-            world[POS(x + offset, y)] = GRAY;
+            world[POS(x + offset, y)] = TERRA_STONE;
         }
     }
 
@@ -108,8 +109,8 @@ int main()
      * Create character
      ****************************************************************************/
     Sprite mole;
-    sprite_init(&mole, "resources/mole.png", 8, 30,30,15,0);
-    
+    sprite_init(&mole, "resources/mole.png", 8, 30, 30, 15, 0);
+
     /***************************************************************************
      * Main Loop
      ****************************************************************************/
@@ -131,6 +132,13 @@ int main()
 
         world_update(world);
         sprite_update(&mole, &movement);
+
+        // dig
+        for (int offsetX = -(mole.image.width/mole.number_of_frames) / 2; offsetX < (mole.image.width/mole.number_of_frames) / 2; ++offsetX)
+            for (int offsetY = -mole.image.height / 2; offsetY < mole.image.height / 2; ++offsetY)
+            {
+                world[POS((int)mole.position.x + offsetX, (int)mole.position.y + offsetY)] = TERRA_TUNEL;
+            }
 
         BeginDrawing();
         // ClearBackground(RAYWHITE);
