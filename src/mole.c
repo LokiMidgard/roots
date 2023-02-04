@@ -3,12 +3,19 @@
 #include "config.h"
 #include "mole.h"
 
-void mole_update(Sprite *mole, Vector2 *movement, Color *bitmap)
+void mole_init(Mole* mole) {
+    sprite_init(&mole->sprite, "resources/mole.png", 8, 30, 30, 15, 0);
+    mole->snd_dig = LoadSound("resources/dig01.wav");
+}
+
+void mole_update(Mole *mole, Vector2 *movement, Color *bitmap)
 {
+    Sprite* sprite = &mole->sprite;
+
     // dig
-    int mole_width = (mole->image.width / mole->number_of_frames);
-    int mole_height = mole->image.height;
-    Vector2 new_mole_position = Vector2Add(mole->position, *movement);
+    int mole_width = (sprite->image.width / sprite->number_of_frames);
+    int mole_height = sprite->image.height;
+    Vector2 new_mole_position = Vector2Add(sprite->position, *movement);
     bool collide = false;
     for (int offsetX = -mole_width / 2; offsetX < mole_width / 2; ++offsetX)
         for (int offsetY = -mole_height / 2; offsetY < mole_height / 2; ++offsetY)
@@ -30,27 +37,31 @@ void mole_update(Sprite *mole, Vector2 *movement, Color *bitmap)
         for (int offsetY = -mole_height / 2; offsetY < mole_height / 2; ++offsetY)
         {
             if ((offsetY != -mole_height / 2 && offsetY != mole_height / 2 - 1) || (offsetX != -mole_width / 2 && offsetX != mole_width / 2 - 1))
-                bitmap[POS((int)mole->position.x + offsetX, (int)mole->position.y + offsetY)] = TERRA_TUNEL;
+                bitmap[POS((int)sprite->position.x + offsetX, (int)sprite->position.y + offsetY)] = TERRA_TUNEL;
         }
 
-    sprite_update(mole, movement);
+    sprite_update(&mole->sprite, movement);
 
     // ensure position is in bounds
-    if (mole->position.x < mole->image.width / mole->number_of_frames)
+    if (sprite->position.x < sprite->image.width / sprite->number_of_frames)
     {
-        mole->position.x = mole->image.width / mole->number_of_frames;
+        sprite->position.x = sprite->image.width / sprite->number_of_frames;
     }
-    if (mole->position.y < mole->image.height)
+    if (sprite->position.y < sprite->image.height)
     {
-        mole->position.y = mole->image.height;
+        sprite->position.y = sprite->image.height;
     }
 
-    if (mole->position.x > WIDTH - mole->image.width / mole->number_of_frames)
+    if (sprite->position.x > WIDTH - sprite->image.width / sprite->number_of_frames)
     {
-        mole->position.x = WIDTH - mole->image.width / mole->number_of_frames;
+        sprite->position.x = WIDTH - sprite->image.width / sprite->number_of_frames;
     }
-    if (mole->position.y > HEIGHT - mole->image.height)
+    if (sprite->position.y > HEIGHT - sprite->image.height)
     {
-        mole->position.y = HEIGHT - mole->image.height;
+        sprite->position.y = HEIGHT - sprite->image.height;
     }
+}
+
+void mole_draw(Mole* mole) {
+    sprite_draw(&mole->sprite);
 }

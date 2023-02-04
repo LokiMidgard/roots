@@ -2,6 +2,7 @@
 #include "raylib.h"
 #include "config.h"
 #include "world.h"
+#include "mole.h"
 
 void world_init(World* world) {
     world->speed = 0.3f;
@@ -72,10 +73,10 @@ void world_scroll(World *world, Sprite *mole)
     world->pos_remainder -= num_lines_to_scroll;
 }
 
-void world_update(World *world, Sprite *mole)
+void world_update(World *world, Mole *mole)
 {
     world->pos_remainder += world->speed;
-    world_scroll(world, mole);
+    world_scroll(world, &mole->sprite);
 }
 
 void world_draw(World* world) {

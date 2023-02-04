@@ -4,6 +4,11 @@
 #include "raylib.h"
 #include "sprite.h"
 
-void mole_update(Sprite *mole, Vector2 *movement, Color *bitmap);
+typedef struct Mole {
+    Sprite sprite;
+    Sound snd_dig;
+} Mole;
+
+void mole_update(Mole *mole, Vector2 *movement, Color *bitmap);
 
 #endif
