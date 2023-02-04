@@ -97,13 +97,8 @@ int main()
      * Create character
      ****************************************************************************/
     Sprite mole;
-    mole.counter = 0;
-    mole.image = LoadTexture("resources/mole.png");
-    mole.number_of_frames = 8;
-    mole.position.x = 30;
-    mole.position.y = 30;
-    mole.speed = 15;
-
+    sprite_init(&mole, "resources/mole.png", 8, 30,30,15,0);
+    
     /***************************************************************************
      * Main Loop
      ****************************************************************************/

@@ -45,8 +45,7 @@ void sprite_update(Sprite *s, Vector2 *movement)
     if (movement->x != 0 || movement->y != 0)
     {
         Vector2 one = {0, -1};
-        s->rotation = Vector2Angle(one, *move) * RAD2DEG;
-        printf("\n %f \n (%f %f)", s->rotation, movement->x, movement->y);
+        s->rotation = Vector2Angle(one, *movement) * RAD2DEG;
         s->position = Vector2Add(s->position, *movement);
     }
 }
