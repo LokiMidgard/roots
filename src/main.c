@@ -21,9 +21,9 @@
 #include <emscripten/emscripten.h>
 #endif
 
-//----------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Local Variables Definition (local to this module)
-//----------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 Mole mole;
 World world;
 Sprite lose;
@@ -69,7 +69,7 @@ int main()
     InitConsole();
     SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "raylib");
-    //InitAudioDevice();
+    // InitAudioDevice();
     SetTargetFPS(FPS);
 
     /***************************************************************************

@@ -1,6 +1,8 @@
 #ifndef ROOTS_CONFIG_H
 #define ROOTS_CONFIG_H
 
+#include "raylib.h"
+
 #define FPS (60)
 #define WIDTH (960)
 #define HEIGHT (540)
