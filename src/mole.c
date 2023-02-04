@@ -67,6 +67,12 @@ void mole_update(Mole *mole, Vector2 *movement)
         }
 
     Dig dig = world_dig(&world, sprite->position.x, sprite->position.y, mole_width);
+    for(int t = EARTH; t < TerrainTypeSize; ++t) {
+        int num = (int)(dig.types[t] * 0.1f);
+        if (num > 0) {
+            particles_emit(&mole->part_dig, num, sprite->position.x, sprite->position.y, TerrainTypeToColor[t]);
+        }
+    }
 
     terain_multiplyer -= dig.types[EARTH] * 0.01f;
     terain_multiplyer -= dig.types[STONE] * 0.03f;
@@ -99,16 +105,19 @@ void mole_update(Mole *mole, Vector2 *movement)
         }
     }
 
-    world_dig(&world, sprite->position.x, sprite->position.y, mole_width);
-    particles_emit(&mole->part_dig, 5, sprite->position.x, sprite->position.y);
-
     if (mole->explode_time > 0) {
         mole->explode_time -= 0.09;
         if (mole->explode_time <= 0) {
             mole->explode_time = 0;
         }
         float radius = sin(mole->explode_time) * 50;
-        world_dig(&world, sprite->position.x, sprite->position.y, radius);
+        Dig d = world_dig(&world, sprite->position.x, sprite->position.y, radius);
+        for(int t = EARTH; t < TerrainTypeSize; ++t) {
+            int num = (int)(d.types[t] * 0.1f);
+            if (num > 0) {
+                particles_emit(&mole->part_dig, num, sprite->position.x, sprite->position.y, TerrainTypeToColor[t]);
+            }
+        }
     }
 
     if (mole->stoneEaterBonus > 0 && mole->speedBonus > 0)

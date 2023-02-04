@@ -30,7 +30,7 @@ Color TerrainTypeToColor[TerrainTypeSize] =
     GREEN,
     BLUE,
     RED,
-    CLITERAL(Color) {50, 61, 93, 255},
+    CLITERAL(Color) {237, 214, 92, 255},
 };
 
 Color

@@ -85,13 +85,14 @@ Dig world_dig(World *world, int x, int y, int radius)
     {
         for (int offsetY = -radius; offsetY < radius; ++offsetY)
         {
-            Color *c = world_get_terrain(world, x + offsetX, y + offsetY);
-            if (color_are_equal(*c, TERRA_EARTH))
-                dig.types[EARTH] += 1;
-            if (color_are_equal(*c, TERRA_STONE))
-                dig.types[STONE] += 1;
             if (sqrt(offsetX * offsetX + offsetY * offsetY) <= radius)
             {
+                Color *c = world_get_terrain(world, x + offsetX, y + offsetY);
+                for(int t = EARTH; t < TerrainTypeSize; ++t) {
+                    if (t == TUNNEL) continue;
+                    if (color_are_equal(*c, terrain_type_to_color(t)))
+                        dig.types[t] += 1;
+                }
                 world_set_terrain(world, x + offsetX, y + offsetY, TERRA_TUNEL);
             }
         }
