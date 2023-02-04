@@ -18,6 +18,7 @@
 #define TERRA_EMERALD (GREEN)
 #define TERRA_QUICK_STONE (BLUE)
 #define TERRA_DIG_STONE (RED)
+#define TERRA_SAND CLITERAL(Color) { 50, 61, 93, 255}
 
 #define NUM_SEEDS (30)
 

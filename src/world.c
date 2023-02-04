@@ -8,10 +8,20 @@ void world_init(World *world)
 {
     world->speed = 0.3f;
     world->pos_remainder = 100;
-    world->image = LoadImage("resources/tile.png");
-    world->current_bitmap = LoadImageColors(world->image);
-    world->next_bitmap = LoadImageColors(world->image);
-    world->screen_texture = LoadTextureFromImage(world->image);
+    int index = 0;
+    index = world->number_of_images++;
+    world->images[index] = LoadImage("resources/tile_1.png");
+    index = world->number_of_images++;
+    world->images[index] = LoadImage("resources/tile_2.png");
+    index = world->number_of_images++;
+    world->images[index] = LoadImage("resources/tile_3.png");
+    index = world->number_of_images++;
+    world->images[index] = LoadImage("resources/tile_4.png");
+    index = world->number_of_images++;
+    world->images[index] = LoadImage("resources/tile_5.png");
+    world->current_bitmap = LoadImageColors(world->images[0]);
+    world->next_bitmap = LoadImageColors(world->images[1]);
+    world->screen_texture = LoadTextureFromImage(world->images[0]);
 
     for (int i = 0; i < NUM_SEEDS; ++i)
     {
@@ -80,7 +90,9 @@ void world_scroll(World *world, Sprite *mole)
             world->depth = 0;
             UnloadImageColors(world->current_bitmap);
             world->current_bitmap = world->next_bitmap;
-            world->next_bitmap = LoadImageColors(world->image);
+            int selected_image = rand()%world->number_of_images;
+            printf("selected: %d\n", selected_image);
+            world->next_bitmap = LoadImageColors(world->images[selected_image]);
         }
     }
 }
