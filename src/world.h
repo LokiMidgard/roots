@@ -2,7 +2,7 @@
 #define ROOTS_WORLD_H
 
 #include "raylib.h"
-#include "sprite.h"
+#include "mole.h"
 
 typedef struct World {
     float speed;
@@ -14,7 +14,7 @@ typedef struct World {
 } World;
 
 void world_init(World* world);
-void world_update(World *world, Sprite *mole);
+void world_update(World *world, Mole *mole);
 void world_draw(World* world);
 
 #endif

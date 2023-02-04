@@ -21,7 +21,7 @@
 //----------------------------------------------------------------------------------
 // Local Variables Definition (local to this module)
 //----------------------------------------------------------------------------------
-Sprite mole;
+Mole mole;
 World world;
 
 void UpdateDrawFrame()
@@ -48,7 +48,7 @@ void UpdateDrawFrame()
         BeginDrawing();
 
         world_draw(&world);
-        sprite_draw(&mole);
+        mole_draw(&mole);
         char text[256] = {0};
         snprintf(text, 256, "depth: %2.2d\n", world.depth);
         DrawText(text, 10, 10, 14, WHITE);
@@ -70,7 +70,7 @@ int main()
     /***************************************************************************
      * Init stuff
      ****************************************************************************/
-    sprite_init(&mole, "resources/mole.png", 8, 30, 30, 15, 0);
+    mole_init(&mole);
     world_init(&world);
 
 #if defined(PLATFORM_WEB)
