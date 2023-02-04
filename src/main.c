@@ -36,7 +36,9 @@ void draw_sprite(Sprite *s)
     int frame_width = s->image.width / s->number_of_frames;
     int frame_height = s->image.height;
     Rectangle frame = {current_frame * frame_width, 0, frame_width, frame_height};
-    DrawTextureRec(s->image, frame, s->position, WHITE);
+    Rectangle dstRect = {s->position.x * GetScreenWidth() / WIDTH, s->position.y * GetScreenHeight() / HEIGHT, frame_width * GetScreenWidth() / WIDTH, frame_height * GetScreenHeight() / HEIGHT};
+    Vector2 origin = {0, 0};
+    DrawTexturePro(s->image, frame, dstRect, origin, 0.0f, WHITE);
 }
 void update_sprite(Sprite *s)
 {
