@@ -29,6 +29,7 @@ void world_scroll(World *world, Sprite *mole)
     mole->position.y -= num_lines_to_scroll;
     for (int i = 0; i < num_lines_to_scroll; ++i)
     {
+        world->depth += 1;
         // move world 1 pixel up
         char *dst = (char *)bitmap;
         char *src = (char *)(bitmap + WIDTH);

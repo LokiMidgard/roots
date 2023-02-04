@@ -49,6 +49,10 @@ void UpdateDrawFrame()
 
         world_draw(&world);
         mole_draw(&mole);
+        char text[256] = {0};
+        snprintf(text, 256, "depth: %2.2d\n", world.depth);
+        DrawText(text, 10, 10, 14, WHITE);
+
 
         EndDrawing();
 }
