@@ -7,7 +7,7 @@
 typedef struct Mole
 {
     Sprite sprite;
-    float points;
+    int points;
     float health;
     float speed;
     // bonuses have a valu indicating the number of frames they have effect.
