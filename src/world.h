@@ -4,6 +4,21 @@
 #include "raylib.h"
 #include "mole.h"
 
+typedef enum TerrainType
+{
+    EARTH,
+    TUNNEL,
+    STONE,
+    ROOT,
+    ROOT_TIP,
+    ROOT_KNOT,
+    EMERALD,
+    QUICK_STONE,
+    DIG_STONE,
+    SAND,
+    TerrainTypeSize,
+} TerrainType;
+
 typedef struct World
 {
     float speed;
@@ -18,6 +33,11 @@ typedef struct World
     int centerSpeed;
     int rightSpeed;
 } World;
+
+typedef struct Dig
+{
+    int types[TerrainTypeSize];
+} Dig;
 
 void world_init(World *world);
 void world_update(World *world, Mole *mole);

@@ -78,21 +78,24 @@ world_get_terrain(World *world, int x, int y)
     return bitmap + POS(x, y);
 }
 
-void world_dig(World* world, int x, int y, int radius) {
+Dig world_dig(World* world, int x, int y, int radius) {
+    Dig dig = {0};
     for (int offsetX = -radius; offsetX < radius; ++offsetX) {
         for (int offsetY = -radius; offsetY < radius; ++offsetY)
         {
+            Color *c = world_get_terrain(world, x + offsetX, y + offsetY);
+            if (color_are_equal(*c, TERRA_EARTH))
+                dig.types[EARTH] += 1;
+            if (color_are_equal(*c, TERRA_STONE))
+                dig.types[STONE] += 1;
             if (sqrt(offsetX*offsetX + offsetY*offsetY) <= radius) {
                 world_set_terrain(world, x + offsetX, y + offsetY, TERRA_TUNEL);
             }
         }
     }
+    return(dig);
 }
 
-int color_are_equal(Color c1, Color c2)
-{
-    return c1.r == c2.r && c1.g == c2.g && c1.b == c2.b;
-}
 
 void world_scroll(World *world, Sprite *mole)
 {
@@ -107,7 +110,6 @@ void world_scroll(World *world, Sprite *mole)
             UnloadImageColors(world->current_bitmap);
             world->current_bitmap = world->next_bitmap;
             int selected_image = rand()%world->number_of_images;
-            printf("selected: %d\n", selected_image);
             world->next_bitmap = LoadImageColors(world->images[selected_image]);
         }
     }
@@ -140,7 +142,6 @@ void world_update(World *world, Mole *mole)
             {
                 if (x < WIDTH / 3)
                 {
-
                     if (rand() % 100 > world->leftSpeed)
                         continue;
                 }

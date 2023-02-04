@@ -6,6 +6,10 @@
 #if defined(PLATFORM_WEB)
 #include <emscripten/emscripten.h>
 #endif
+int color_are_equal(Color c1, Color c2)
+{
+    return c1.r == c2.r && c1.g == c2.g && c1.b == c2.b;
+}
 
 #include "config.h"
 #include "console.h"
