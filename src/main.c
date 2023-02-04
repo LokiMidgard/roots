@@ -64,7 +64,7 @@ int main()
     /***************************************************************************
      * Init stuff
      ****************************************************************************/
-    sprite_init(&mole, "resources/mole.png", 8, 30, 30, 15, 0);
+    sprite_init(&mole, "resources/mole.png", 8, 30, 30, 30, 0);
     world_init(&world);
 
 #if defined(PLATFORM_WEB)
