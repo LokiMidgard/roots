@@ -4,7 +4,10 @@
 #include <string.h>
 #include "raylib.h"
 #include "raymath.h"
+
+#include "config.h"
 #include "console.c"
+#include "sprite.c"
 
 #if defined(PLATFORM_WEB)
 #include <emscripten/emscripten.h>
