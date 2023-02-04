@@ -45,22 +45,21 @@ void mole_update(Mole *mole, Vector2 *movement, Color *bitmap)
         {
             if ((offsetY != -mole_height / 2 && offsetY != mole_height / 2 - 1) || (offsetX != -mole_width / 2 && offsetX != mole_width / 2 - 1))
             {
-                //Color *current = &bitmap[POS((int)new_mole_position.x + offsetX, (int)new_mole_position.y + offsetY)];
                 Color *current = world_get_terrain(&world, (int)new_mole_position.x + offsetX, (int)new_mole_position.y + offsetY);
                 if (IS_COLOR(current, TERRA_STONE))
                 {
                     if (mole->stoneEaterBonus > 0)
                     {
-                        terain_multiplyer = fmin(terain_multiplyer, 0.25f);
+                        terain_multiplyer -= 0.01f;
                     }
                     else
                     {
-                        terain_multiplyer = fmin(terain_multiplyer, 0.05f);
+                        terain_multiplyer -= 0.04f;
                     }
                 }
                 else if (IS_COLOR(current, TERRA_EARTH))
                 {
-                    terain_multiplyer = fmin(terain_multiplyer, 0.5f);
+                    terain_multiplyer -= 0.02f;
                 }
                 else if (IS_COLOR(current, TERRA_ROOT))
                 {
@@ -81,6 +80,7 @@ void mole_update(Mole *mole, Vector2 *movement, Color *bitmap)
             }
         }
 
+    terain_multiplyer = fmaxf(0.1f, terain_multiplyer);
     // calculate bonuses
     if (mole->speedBonus > 0)
     {

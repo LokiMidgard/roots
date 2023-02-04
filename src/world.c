@@ -4,26 +4,6 @@
 #include "world.h"
 #include "mole.h"
 
-void world_init(World *world)
-{
-    world->speed = 0.3f;
-    world->pos_remainder = 100;
-    world->image = LoadImage("resources/tile.png");
-    world->current_bitmap = LoadImageColors(world->image);
-    world->next_bitmap = LoadImageColors(world->image);
-    world->screen_texture = LoadTextureFromImage(world->image);
-
-    for (int i = 0; i < NUM_SEEDS; ++i)
-    {
-        // int x = rand() % WIDTH;
-        // int y = HEIGHT - 1;
-        for (int offset = -3; offset < 3; ++offset)
-        {
-            // world->bitmap[POS(x + offset, y)] = TERRA_STONE;
-        }
-    }
-}
-
 void world_set_terrain(World *world, int x, int y, Color color)
 {
     Color *bitmap = world->current_bitmap;
@@ -41,6 +21,41 @@ void world_set_terrain(World *world, int x, int y, Color color)
     if (x < 0 || y < 0 || x >= WIDTH || y >= HEIGHT)
         return;
     bitmap[POS(x, y)] = color;
+}
+
+void world_init(World *world)
+{
+    world->speed = 0.3f;
+    world->pos_remainder = 100;
+    int index = 0;
+    index = world->number_of_images++;
+    world->images[index] = LoadImage("resources/tile_1.png");
+    index = world->number_of_images++;
+    world->images[index] = LoadImage("resources/tile_2.png");
+    index = world->number_of_images++;
+    world->images[index] = LoadImage("resources/tile_3.png");
+    index = world->number_of_images++;
+    world->images[index] = LoadImage("resources/tile_4.png");
+    index = world->number_of_images++;
+    world->images[index] = LoadImage("resources/tile_5.png");
+    world->current_bitmap = LoadImageColors(world->images[0]);
+    world->next_bitmap = LoadImageColors(world->images[1]);
+    world->screen_texture = LoadTextureFromImage(world->images[0]);
+
+    world->leftSpeed = 20;
+    world->rightSpeed = 20;
+    world->centerSpeed = 20;
+
+    for (int i = 0; i < NUM_SEEDS; ++i)
+    {
+        int x = rand() % WIDTH;
+        int y = HEIGHT - 1;
+        world_set_terrain(world, x, y, TERRA_ROOT_TIP);
+        for (int offset = -3; offset < 3; ++offset)
+        {
+            // world->bitmap[POS(x + offset, y)] = TERRA_STONE;
+        }
+    }
 }
 
 Color *
@@ -91,15 +106,105 @@ void world_scroll(World *world, Sprite *mole)
             world->depth = 0;
             UnloadImageColors(world->current_bitmap);
             world->current_bitmap = world->next_bitmap;
-            world->next_bitmap = LoadImageColors(world->image);
+            int selected_image = rand()%world->number_of_images;
+            printf("selected: %d\n", selected_image);
+            world->next_bitmap = LoadImageColors(world->images[selected_image]);
         }
     }
 }
-
 void world_update(World *world, Mole *mole)
 {
+
+    int alternate = -1;
+
     world->pos_remainder += world->speed;
     world_scroll(world, &mole->sprite);
+
+    if (rand() % 1000 < 1)
+    {
+        world->leftSpeed = rand() % 20+10;
+        world->rightSpeed = rand() % 20+10;
+        world->centerSpeed = 60 - world->rightSpeed - world->leftSpeed;
+
+        printf("left: %d\ncenter: %d\nright: %d\n", world->leftSpeed, world->centerSpeed, world->rightSpeed);
+    }
+
+    // update pixles
+    for (int x = 0; x < WIDTH; x++)
+        for (int y = HEIGHT - 1; y > 0; y--)
+        {
+            alternate *= -1;
+
+            Color *current = world_get_terrain(world, x, y);
+            if (IS_COLOR(current, TERRA_ROOT_TIP))
+            {
+                if (x < WIDTH / 3)
+                {
+
+                    if (rand() % 100 > world->leftSpeed)
+                        continue;
+                }
+                else if (x < 2 * WIDTH / 3)
+                {
+                    if (rand() % 100 > world->centerSpeed)
+                        continue;
+                }
+                else
+                {
+                    if (rand() % 100 > world->rightSpeed)
+                        continue;
+                }
+
+                if (rand() % 100 < 5)
+                {
+                    world_set_terrain(world, x, y, TERRA_ROOT_KNOT);
+                }
+                else
+                {
+                    world_set_terrain(world, x, y, TERRA_ROOT);
+                }
+
+                if (rand() % 100 < 40)
+                {
+                    world_set_terrain(world, x, y + 1, TERRA_ROOT_TIP);
+                }
+                else if ((rand() % 1 < 1 && x > 0) || x >= WIDTH - 1)
+                {
+                    world_set_terrain(world, x - 1 * alternate, y + 1, TERRA_ROOT_TIP);
+                }
+                else
+                {
+                    world_set_terrain(world, x + 1 * alternate, y + 1, TERRA_ROOT_TIP);
+                }
+            }
+            else if (IS_COLOR(current, TERRA_ROOT_KNOT))
+            {
+                if (rand() % 100 > 5)
+                    continue;
+
+                if (rand() % 100 < 2)
+                {
+                    world_set_terrain(world, x, y, TERRA_ROOT_KNOT);
+                }
+                else
+                {
+                    world_set_terrain(world, x, y, TERRA_ROOT);
+                }
+
+                if (rand() % 100 < 40)
+                {
+                    world_set_terrain(world, x, y + 1, TERRA_ROOT_TIP);
+                }
+                else if ((rand() % 1 < 1 && x > 0) || x >= WIDTH - 1)
+                {
+                    world_set_terrain(world, x - 1 * alternate, y + 1, TERRA_ROOT_TIP);
+                }
+                else
+                {
+                    world_set_terrain(world, x + 1 * alternate, y + 1, TERRA_ROOT_TIP);
+                }
+            }
+        }
 }
 
 void world_draw(World *world)

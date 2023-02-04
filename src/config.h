@@ -14,10 +14,13 @@
 #define TERRA_EARTH (BROWN)
 #define TERRA_TUNEL (DARKBROWN)
 #define TERRA_STONE (GRAY)
-#define TERRA_ROOT (BLACK)
+#define TERRA_ROOT (CLITERAL(Color){ 0, 0, 0, 20 })
+#define TERRA_ROOT_TIP (CLITERAL(Color){ 0, 1, 255, 255 })
+#define TERRA_ROOT_KNOT (CLITERAL(Color){ 0, 255, 1, 255 })
 #define TERRA_EMERALD (GREEN)
 #define TERRA_QUICK_STONE (BLUE)
 #define TERRA_DIG_STONE (RED)
+#define TERRA_SAND CLITERAL(Color) { 50, 61, 93, 255}
 
 #define NUM_SEEDS (30)
 
