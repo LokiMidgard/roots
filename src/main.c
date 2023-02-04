@@ -1,9 +1,7 @@
 #include <stdio.h>
 #include <conio.h>
 #include "raylib.h"
-
-int __stdcall AllocConsole(void);
-void __stdcall FreeConsole(void);
+#include "console.c"
 
 #if defined(PLATFORM_WEB)
     #include <emscripten/emscripten.h>
@@ -16,26 +14,15 @@ const int screenWidth = 960;
 const int screenHeight = 540;
 Image screen = {0};
 
-
 //----------------------------------------------------------------------------------
 // Main entry point
 //----------------------------------------------------------------------------------
 int main() 
 {
-    FILE *ConsoleIn  = 0;
-    FILE *ConsoleOut = 0;
-    FILE *ConsoleErr = 0;
-    AllocConsole();
-    freopen_s(&ConsoleIn, "CONIN$", "r", stdin);
-    freopen_s(&ConsoleOut, "CONOUT$", "w", stdout);
-    freopen_s(&ConsoleErr, "CONOUT$", "w", stderr);
-
-
     // Initialization
     //--------------------------------------------------------------------------------------
-
+    InitConsole();
     InitWindow(screenWidth, screenHeight, "raylib");
-
     //--------------------------------------------------------------------------------------
 
 #if defined(PLATFORM_WEB)
@@ -52,6 +39,7 @@ int main()
     {
         brush[index] = BLACK;
     }
+
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
@@ -69,7 +57,7 @@ int main()
     // De-Initialization
     //--------------------------------------------------------------------------------------
     CloseWindow();                  // Close window and OpenGL context
-                                    //--------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------
     FreeConsole();
 
     return 0;
