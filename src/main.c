@@ -3,6 +3,7 @@
 #include <conio.h>
 #include <string.h>
 #include "raylib.h"
+#include "raymath.h"
 #include "console.c"
 
 #if defined(PLATFORM_WEB)
@@ -39,7 +40,7 @@ void draw_sprite(Sprite *s)
 }
 void update_sprite(Sprite *s)
 {
-    s->counter = (s->counter +1 )% (s->number_of_frames*s->speed);
+    s->counter = (s->counter + 1) % (s->number_of_frames * s->speed);
 }
 
 void scroll_world(Color *world)
@@ -128,12 +129,26 @@ int main()
     while (!WindowShouldClose()) // Detect window close button or ESC key
     {
         scroll_world(world);
+        update_sprite(&mole);
+
+        // controles
+        Vector2 movement = {0, 0};
+
+        if (IsKeyDown(KEY_RIGHT))
+            movement.x = movement.x + 1;
+        if (IsKeyDown(KEY_LEFT))
+            movement.x = movement.x - 1;
+        if (IsKeyDown(KEY_UP))
+            movement.y = movement.y - 1;
+        if (IsKeyDown(KEY_DOWN))
+            movement.y = movement.y + 1;
+
+        mole.position = Vector2Add(mole.position, movement);
 
         BeginDrawing();
         // ClearBackground(RAYWHITE);
 
         UpdateTexture(screen_texture, world);
-        update_sprite(&mole);
 
         // texture to screen with scaling
         Rectangle srcRect = {0, 0, WIDTH, HEIGHT};
