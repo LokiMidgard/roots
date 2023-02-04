@@ -20,6 +20,12 @@ void mole_update(Mole *mole, Vector2 *movement, Color *bitmap)
     // set movement speed of mole
     *movement = Vector2Scale(*movement, 3.0f);
 
+    if (Vector2Length(*movement) > 0.5) {
+        if (!IsSoundPlaying(mole->snd_dig)) {
+            PlaySound(mole->snd_dig);
+        }
+    }
+
     float terain_multiplyer = 1.0f;
     for (int offsetX = -mole_width / 2; offsetX < mole_width / 2; ++offsetX)
         for (int offsetY = -mole_height / 2; offsetY < mole_height / 2; ++offsetY)
