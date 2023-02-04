@@ -113,7 +113,9 @@ void mole_update(Mole *mole, Vector2 *movement, Color *bitmap)
 
     if (mole->explode_req) {
         world_dig(&world, sprite->position.x, sprite->position.y, 50);
-        PlaySound(mole->snd_explode);
+        if (!IsSoundPlaying(mole->snd_explode)) {
+            PlaySound(mole->snd_explode);
+        }
         mole->explode_req = false;
     }
 
