@@ -116,14 +116,11 @@ void world_scroll(World *world, Sprite *mole)
         }
     }
 }
-void world_update(World *world, Mole *mole)
+
+void
+update_roots(World *world)
 {
-
     int alternate = -1;
-
-    world->pos_remainder += world->speed;
-    world_scroll(world, &mole->sprite);
-
     if (rand() % 1000 < 1)
     {
         world->leftSpeed = rand() % (HEIGHT - 100) + 50;
@@ -142,11 +139,11 @@ void world_update(World *world, Mole *mole)
             Color *current = world_get_terrain(world, x, y);
             if (IS_COLOR(current, TERRA_ROOT_TIP))
             {
-                int targetHeight = x < WIDTH / 3
-                                       ? world->leftSpeed
-                                   : x < 2 * WIDTH / 3
-                                       ? world->centerSpeed
-                                       : world->leftSpeed;
+                int targetHeight = x < (WIDTH / 3)
+                    ? world->leftSpeed
+                    : (x < 2 * WIDTH / 3)
+                    ? world->centerSpeed
+                    : world->leftSpeed;
 
                 // if (rand() % targetHeight < y)
                 //     continue;
@@ -154,9 +151,9 @@ void world_update(World *world, Mole *mole)
                     continue;
 
                 unsigned char direction = current->a & 7;
-                unsigned char age = current->a > 3;
+                unsigned char age = current->a >> 3;
 
-                if (age > 5 + (rand() % 5))
+                if (age > (5 + (rand() % 5)))
                 {
                     age = 0;
                     direction = rand() % 7;
@@ -165,7 +162,7 @@ void world_update(World *world, Mole *mole)
 
                 direction = 0;
 
-                if (rand() % 1000 < 5)
+                if ((rand() % 1000) < 5)
                 {
                     world_set_terrain(world, x, y, TERRA_ROOT_KNOT);
                 }
@@ -179,7 +176,7 @@ void world_update(World *world, Mole *mole)
                 r += 600 * (float)direction / 7;
 
                 Color new_tip = TERRA_ROOT_TIP;
-                new_tip.a = age < 3 | direction;
+                new_tip.a = (age << 3) | direction;
 
                 if (r > 333 && r < 666)
                 {
@@ -222,6 +219,15 @@ void world_update(World *world, Mole *mole)
                 }
             }
         }
+}
+
+void world_update(World *world, Mole *mole)
+{
+
+
+    world->pos_remainder += world->speed;
+    world_scroll(world, &mole->sprite);
+    update_roots(world);
 }
 
 void world_draw(World *world)
