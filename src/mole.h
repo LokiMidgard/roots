@@ -3,6 +3,7 @@
 
 #include "raylib.h"
 #include "sprite.h"
+#include "particles.h"
 
 typedef struct Mole
 {
@@ -18,8 +19,8 @@ typedef struct Mole
     Sound snd_collide;
     Sound snd_explode;
 
-    bool explode_req;
     float explode_time;
+    Particles part_dig;
 } Mole;
 
 void mole_update(Mole *mole, Vector2 *movement);

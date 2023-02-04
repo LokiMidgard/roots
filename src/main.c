@@ -17,6 +17,7 @@ int color_are_equal(Color c1, Color c2)
 #include "sprite.h"
 #include "world.h"
 #include "mole.h"
+#include "particles.h"
 
 
 Mole   mole;
@@ -29,7 +30,7 @@ Sprite lose;
 #include "sprite.c"
 #include "world.c"
 #include "mole.c"
-
+#include "particles.c"
 
 
 void UpdateDrawFrame()

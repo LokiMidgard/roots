@@ -22,7 +22,8 @@ void mole_init(Mole *mole, float x, float y)
     mole->speedBonus = 0;
     mole->stoneEaterBonus = 0;
 
-    mole->explode_req = 0;
+    mole->explode_time = 0;
+    particles_init(&mole->part_dig);
 }
 
 void mole_update(Mole *mole, Vector2 *movement)
@@ -66,6 +67,12 @@ void mole_update(Mole *mole, Vector2 *movement)
         }
 
     Dig dig = world_dig(&world, sprite->position.x, sprite->position.y, mole_width);
+    for(int t = EARTH; t < TerrainTypeSize; ++t) {
+        int num = (int)(dig.types[t] * 0.1f);
+        if (num > 0) {
+            particles_emit(&mole->part_dig, num, sprite->position.x, sprite->position.y, TerrainTypeToColor[t]);
+        }
+    }
 
     terain_multiplyer -= dig.types[EARTH] * 0.01f;
     terain_multiplyer -= dig.types[STONE] * 0.03f;
@@ -98,22 +105,19 @@ void mole_update(Mole *mole, Vector2 *movement)
         }
     }
 
-
-    if (mole->explode_req) {
-        mole->explode_time = 3.1415f;
-        if (!IsSoundPlaying(mole->snd_explode)) {
-            PlaySound(mole->snd_explode);
-        }
-        mole->explode_req = false;
-    }
-
     if (mole->explode_time > 0) {
         mole->explode_time -= 0.09;
         if (mole->explode_time <= 0) {
             mole->explode_time = 0;
         }
         float radius = sin(mole->explode_time) * 50;
-        world_dig(&world, sprite->position.x, sprite->position.y, radius);
+        Dig d = world_dig(&world, sprite->position.x, sprite->position.y, radius);
+        for(int t = EARTH; t < TerrainTypeSize; ++t) {
+            int num = (int)(d.types[t] * 0.1f);
+            if (num > 0) {
+                particles_emit(&mole->part_dig, num, sprite->position.x, sprite->position.y, TerrainTypeToColor[t]);
+            }
+        }
     }
 
     if (mole->stoneEaterBonus > 0 && mole->speedBonus > 0)
@@ -152,16 +156,21 @@ void mole_update(Mole *mole, Vector2 *movement)
     {
         sprite->position.y = HEIGHT - sprite->image.height;
     }
+
+    particles_update(&mole->part_dig);
 }
 
 void mole_draw(Mole *mole)
 {
     sprite_draw(&mole->sprite);
+    particles_draw(&mole->part_dig);
 }
 
 void mole_explode(Mole* mole) {
-    if (!mole->explode_req && mole->explode_time == 0) {
-        mole->explode_req = true;
+    if (mole->explode_time == 0) {
         mole->explode_time = 3.1415f;
+        if (!IsSoundPlaying(mole->snd_explode)) {
+            PlaySound(mole->snd_explode);
+        }
     }
 }

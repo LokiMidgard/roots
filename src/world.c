@@ -4,6 +4,9 @@
 #include "world.h"
 #include "mole.h"
 
+#define max(a, b) (((a) > (b)) ? (a) : (b))
+#define min(a, b) (((a) < (b)) ? (a) : (b))
+
 void world_set_terrain(World *world, int x, int y, Color color)
 {
     Color *bitmap = world->current_bitmap;
@@ -85,13 +88,14 @@ Dig world_dig(World *world, int x, int y, int radius)
     {
         for (int offsetY = -radius; offsetY < radius; ++offsetY)
         {
-            Color *c = world_get_terrain(world, x + offsetX, y + offsetY);
-            if (color_are_equal(*c, TERRA_EARTH))
-                dig.types[EARTH] += 1;
-            if (color_are_equal(*c, TERRA_STONE))
-                dig.types[STONE] += 1;
             if (sqrt(offsetX * offsetX + offsetY * offsetY) <= radius)
             {
+                Color *c = world_get_terrain(world, x + offsetX, y + offsetY);
+                for(int t = EARTH; t < TerrainTypeSize; ++t) {
+                    if (t == TUNNEL) continue;
+                    if (color_are_equal(*c, terrain_type_to_color(t)))
+                        dig.types[t] += 1;
+                }
                 world_set_terrain(world, x + offsetX, y + offsetY, TERRA_TUNEL);
             }
         }
@@ -117,8 +121,7 @@ void world_scroll(World *world, Sprite *mole)
     }
 }
 
-void
-update_roots(World *world)
+void update_roots(World *world)
 {
     int alternate = -1;
     if (rand() % 1000 < 1)
@@ -140,10 +143,10 @@ update_roots(World *world)
             if (IS_COLOR(current, TERRA_ROOT_TIP))
             {
                 int targetHeight = x < (WIDTH / 3)
-                    ? world->leftSpeed
-                    : (x < 2 * WIDTH / 3)
-                    ? world->centerSpeed
-                    : world->leftSpeed;
+                                       ? world->leftSpeed
+                                   : (x < 2 * WIDTH / 3)
+                                       ? world->centerSpeed
+                                       : world->leftSpeed;
 
                 // if (rand() % targetHeight < y)
                 //     continue;
@@ -153,14 +156,12 @@ update_roots(World *world)
                 unsigned char direction = current->a & 7;
                 unsigned char age = current->a >> 3;
 
-                if (age > (5 + (rand() % 5)))
+                if (age > (15 + (rand() % 5)))
                 {
                     age = 0;
                     direction = rand() % 7;
                 }
                 age++;
-
-                direction = 0;
 
                 if ((rand() % 1000) < 5)
                 {
@@ -184,11 +185,11 @@ update_roots(World *world)
                 }
                 else if ((r < 666 && x > 0) || x >= WIDTH - 1)
                 {
-                    world_set_terrain(world, x - 1 * alternate, y + 1, new_tip);
+                    world_set_terrain(world, x - 1, y + 1, new_tip);
                 }
                 else
                 {
-                    world_set_terrain(world, x + 1 * alternate, y + 1, new_tip);
+                    world_set_terrain(world, x + 1, y + 1, new_tip);
                 }
             }
             else if (IS_COLOR(current, TERRA_ROOT_KNOT))
@@ -218,12 +219,35 @@ update_roots(World *world)
                     world_set_terrain(world, x + 1 * alternate, y + 1, TERRA_ROOT_TIP);
                 }
             }
+            else if (IS_COLOR(current, TERRA_ROOT))
+            {
+                int age = 255-current->a;
+                Color new_color = TERRA_ROOT;
+                new_color.a = max(0, current->a - 1);
+
+                world_set_terrain(world, x, y, new_color);
+
+                if (age == 150)
+                {
+                //  printf("\nage: %d",age);
+                    if (!IS_COLOR(world_get_terrain(world, x + 1, y), TERRA_ROOT))
+                    {
+                        world_set_terrain(world, x + 1, y, TERRA_ROOT);
+                    }
+                }
+                if (age == 200)
+                {
+                    if (!IS_COLOR(world_get_terrain(world, x - 1, y), TERRA_ROOT))
+                    {
+                        world_set_terrain(world, x - 1, y, TERRA_ROOT);
+                    }
+                }
+            }
         }
 }
 
 void world_update(World *world, Mole *mole)
 {
-
 
     world->pos_remainder += world->speed;
     world_scroll(world, &mole->sprite);
