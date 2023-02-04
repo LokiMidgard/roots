@@ -19,6 +19,39 @@ typedef enum TerrainType
     TerrainTypeSize,
 } TerrainType;
 
+Color TerrainTypeToColor[TerrainTypeSize] =
+{
+    BROWN,
+    DARKBROWN,
+    GRAY,
+    CLITERAL(Color) {0, 0, 0, 20},
+    CLITERAL(Color) {0, 1, 255, 255},
+    CLITERAL(Color) {0, 255, 1, 255},
+    GREEN,
+    BLUE,
+    RED,
+    CLITERAL(Color) {50, 61, 93, 255},
+};
+
+Color
+terrain_type_to_color(TerrainType t)
+{
+    return(TerrainTypeToColor[t]);
+}
+
+TerrainType
+color_to_terrain_type(Color c)
+{
+    for (int TerrainType = 0;
+         TerrainType < TerrainTypeSize;
+         ++TerrainType)
+    {
+        if (color_are_equal(c, TerrainTypeToColor[TerrainType]))
+            return(TerrainType);
+    }
+    return(TerrainTypeSize);
+};
+
 typedef struct World
 {
     float speed;
