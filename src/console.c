@@ -1,7 +1,8 @@
 #include "console.h"
-#include <stdio.h>
 
+#if !defined(PLATFORM_WEB)
 int __stdcall AllocConsole(void);
+void __stdcall FreeConsole(void);
 
 void InitConsole() {
     FILE *ConsoleIn  = 0;
@@ -12,3 +13,12 @@ void InitConsole() {
     freopen_s(&ConsoleOut, "CONOUT$", "w", stdout);
     freopen_s(&ConsoleErr, "CONOUT$", "w", stderr);
 }
+
+void CloseConsole() {
+    FreeConsole();
+}
+
+#else
+void InitConsole() {}
+void CloseConsole() {}
+#endif
