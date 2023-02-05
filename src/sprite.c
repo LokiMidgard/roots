@@ -35,10 +35,10 @@ void sprite_init_static_with_origin(Sprite *s, const char *file, int x, int y, V
 void sprite_draw(Sprite *s)
 {
     // calculate current frame
-    int current_frame = (s->number_of_frames > 0 && s->speed > 0) ? s->counter / s->speed : 0;
+    //int current_frame = (s->number_of_frames > 0 && s->speed > 0) ? s->counter / s->speed : 0;
     int frame_width = s->frame_width;
     int frame_height = s->image.height;
-    Rectangle frame = {current_frame * frame_width, 0, frame_width, frame_height};
+    Rectangle frame = {s->current_frame * frame_width, 0, frame_width, frame_height};
     Rectangle dstRect = {
         s->position.x * GetScreenWidth() / WIDTH,   // x
         s->position.y * GetScreenHeight() / HEIGHT, // y
@@ -51,7 +51,13 @@ void sprite_draw(Sprite *s)
 
 void sprite_update(Sprite *s, Vector2 movement)
 {
-    s->counter = (s->counter + 1) % (s->number_of_frames * s->speed);
+    s->counter += 1;
+    if (s->counter > s->speed && s->speed > 0)
+    {
+        s->counter = 0;
+        s->current_frame = (s->current_frame + 1) % s->number_of_frames;
+    }
+    //s->counter = (s->counter + 1) % (s->number_of_frames * s->speed);
     if (movement.x != 0 || movement.y != 0)
     {
         Vector2 one = {0, -1};

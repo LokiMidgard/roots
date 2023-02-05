@@ -212,7 +212,6 @@ void update_roots(World *world)
 {
     int alternate = -1;
 
-printf("rand test %d\n", utils_random_int(0,1));
     // update pixles
     for (int x = 0; x < WIDTH; x++)
         for (int y = HEIGHT - 1; y > 0; y--)

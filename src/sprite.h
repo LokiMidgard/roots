@@ -9,6 +9,7 @@ typedef struct Sprite
     Vector2 origin;
     int speed;
     int counter;
+    int current_frame;
     Texture2D image;
     int number_of_frames;
     int frame_width;

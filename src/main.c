@@ -31,7 +31,7 @@ World world;
 Stuff stuff;
 Sprite lose;
 Hud hud;
-
+Music music;
 int inventory[st_size];
 Sound snd_pickup;
 
@@ -49,6 +49,8 @@ Sound snd_pickup;
 
 void UpdateDrawFrame()
 {
+    UpdateMusicStream(music);  
+
     // handle input
     Vector2 movement = input_get_dir();
 
@@ -117,6 +119,7 @@ int main()
     InitAudioDevice();
     SetTargetFPS(FPS);
 
+
     /***************************************************************************
      * Init stuff
      ****************************************************************************/
@@ -131,6 +134,10 @@ int main()
 
     input_set_mouse_center(&mole.sprite);
     input_set_device(INPUT_GAMEPAD);
+
+    music = LoadMusicStream("resources/bgm/doom.ogg");
+    SetMusicVolume(music, 0.3f);
+    PlayMusicStream(music);
 
 #if defined(PLATFORM_WEB)
     emscripten_set_main_loop(UpdateDrawFrame, FPS, 1);
