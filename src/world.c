@@ -44,7 +44,11 @@ void world_init(World *world)
     world->current_bitmap = LoadImageColors(world->images[0]);
     world->next_bitmap = LoadImageColors(world->images[1]);
     world->screen_texture = LoadTextureFromImage(world->images[0]);
-    world->shader = LoadShader("resources/shader.fs");
+    
+    world->shader = LoadShader(0, "resources/shader.fs");
+    world->texLoc = GetShaderLocation(world->shader, "texture_sand");
+    world->sand_texture = LoadTextureFromImage(LoadImage("resources/sand.png"));
+
 
     world->leftSpeed = 20;
     world->rightSpeed = 20;
@@ -266,6 +270,7 @@ void world_draw(World *world)
     UpdateTextureRec(world->screen_texture, upper_screen, world->current_bitmap + (world->depth * WIDTH));
     UpdateTextureRec(world->screen_texture, lower_screen, world->next_bitmap);
     BeginShaderMode(world->shader);
+    SetShaderValueTexture(world->shader, world->texLoc, world->sand_texture);
     DrawTexturePro(world->screen_texture, srcRect, dstRect, origin, 0.0f, WHITE);
     EndShaderMode();
 }

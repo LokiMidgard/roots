@@ -61,7 +61,11 @@ typedef struct World
     Color* current_bitmap;
     Color* next_bitmap;
     Texture2D screen_texture;
+    
     Shader shader;
+    int texLoc;
+    Texture2D sand_texture;
+    
     int depth;
     int leftSpeed;
     int centerSpeed;
