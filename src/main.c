@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#if !defined(PLATFORM_WEB)
 #include <conio.h>
+#endif
 #include <string.h>
 #include "raylib.h"
 #if defined(PLATFORM_WEB)
@@ -12,7 +14,9 @@ int color_are_equal(Color c1, Color c2)
 }
 
 #include "config.h"
+#if !defined(PLATFORM_WEB)
 #include "console.h"
+#endif
 #include "input.h"
 #include "sprite.h"
 #include "world.h"
@@ -25,7 +29,9 @@ World  world;
 Sprite lose;
 
 
+#if !defined(PLATFORM_WEB)
 #include "console.c"
+#endif
 #include "input.c"
 #include "sprite.c"
 #include "world.c"
@@ -60,6 +66,7 @@ void UpdateDrawFrame()
         char text[256] = {0};
         snprintf(text, 256, "depth: %2.2d\npoints: %d\nhealth: %.f\ninput: %s\nfullscreen: F\nexit: ESC", world.depth, mole.points, mole.health, input_get_device_name());
         DrawText(text, 10, 10, 14, WHITE);
+        DrawFPS(WIDTH/2, 10);
         
      if(mole.health<=0){
         sprite_draw(&lose);
@@ -74,7 +81,9 @@ int main()
     /***************************************************************************
      * Init technical stuff
      ****************************************************************************/
+#if !defined(PLATFORM_WEB)
     InitConsole();
+#endif
     SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "raylib");
     InitAudioDevice();
@@ -85,7 +94,7 @@ int main()
      ****************************************************************************/
     mole_init(&mole, WIDTH/2, HEIGHT+60);
     world_init(&world);
-    sprite_init(&lose, "resources/lose.png",1, WIDTH/2, HEIGHT/2, 15, 0);
+    sprite_init(&lose, "resources/lose.png", 660, 1, WIDTH/2, HEIGHT/2, 15, 0);
 
     input_set_mouse_center(&mole.sprite);
     input_set_device(INPUT_GAMEPAD);
@@ -103,7 +112,9 @@ int main()
      * Cleanup
      ****************************************************************************/
     CloseWindow();
+#if !defined(PLATFORM_WEB)
     FreeConsole();
+#endif
 
     return 0;
 }
