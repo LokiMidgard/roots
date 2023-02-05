@@ -33,6 +33,7 @@ Sprite lose;
 Hud hud;
 Music music;
 int inventory[st_size];
+Sound snd_pickup;
 
 bool started = false;
 
@@ -88,7 +89,14 @@ void UpdateDrawFrame()
                                pickup_radius,
                                &picked_up_type);
     if (success)
+    {
         inventory[picked_up_type] += 1;
+        if (!IsSoundPlaying(snd_pickup))
+        {
+            SetSoundPitch(snd_pickup, 0.7 + (rand() % 60 / 100.0f));
+            PlaySound(snd_pickup);
+        }
+    }
 
     // draw
 
@@ -123,7 +131,10 @@ int main()
     /***************************************************************************
      * Init stuff
      ****************************************************************************/
+    snd_pickup = LoadSound("resources/pickup.wav");
+    SetSoundVolume(snd_pickup, 0.3f);
     hud_init(&hud, inventory);
+
     mole_init(&mole, WIDTH / 2, HEIGHT + 60);
     world_init(&world);
     sprite_init(&lose, "resources/lose.png", 660, 1, WIDTH / 2, HEIGHT / 2, 15, 0);
