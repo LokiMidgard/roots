@@ -46,6 +46,8 @@ void main()
     vec4 c0 = texture(t0, fragTexCoord);
     vec4 t = texture(t0, fragTexCoord + vec2(0, -PH));
     vec4 b = texture(t0, fragTexCoord + vec2(0, PH));
+    vec4 l = texture(t0, fragTexCoord + vec2(-PW, 0));
+    vec4 r = texture(t0, fragTexCoord + vec2(PW, 0));
 
     vec2 offset =  vec2(0, isTunel(c0) ? scroll_position * 0.5 : scroll_position);
     vec2 offsetCoord = vec2(fragTexCoord + offset);
@@ -66,7 +68,7 @@ void main()
     vec4 rootColor = vec4(1.0f/2.0f-(c0.z/2.0f),1.0f/4.0f-(c0.z/4.0f),1.0f/2.0f-(c0.z/2.0f),255.0f);
 
     finalColor = isRoot(c0) ? rootColor
-        : !isTunel(c0) && isTunel(t) ? vec4(texelColor1.xyz * 2.0f, texelColor1.a)
-        : !isTunel(c0) && isTunel(b) ? vec4(texelColor1.xyz * 0.4f, texelColor1.a)
+        : c0 != t ? vec4(texelColor1.xyz * 1.7f, texelColor1.a)
+        : c0 != b ? vec4(texelColor1.xyz * 0.6f, texelColor1.a)
         : texelColor1;
 }
