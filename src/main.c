@@ -28,6 +28,7 @@ Stuff stuff;
 Sprite lose;
 Hud hud;
 Music music;
+Font fontBm;
 Sound snd_intro;
 Sound snd_lost;
 Inventory inventory;
@@ -81,6 +82,7 @@ void MainLoop()
 
         snprintf(hud.debug_text, 256, "depth: %2.2d\npoints: %d\nhealth: %.f\ninput: %s\nfullscreen: F\nexit: ESC", world.depth, (int)mole.points, mole.health, input_get_device_name(&input));
         hud_update(&hud);
+        stuff_update(&stuff, world.last_scroll);
 
         if (mole.health <= 0) {
             if (!died) {
@@ -90,16 +92,16 @@ void MainLoop()
         }
     }
 
-    if (!started) {
+    if (!started)
+    {
         Vector2 dir = input_get_dir(&input);
         if (dir.x != 0 || dir.y != 0 || input_is_button_pressed(&input, 0) || input_is_button_pressed(&input, 1) || input_is_button_pressed(&input, 2))
         {
             started = true;
         }
     }
-    
-    stuff_update(&stuff, world.last_scroll);
-    
+
+
     // check for collisions
     float pickup_radius = 10.0f;
     StuffType picked_up_type;
@@ -112,15 +114,21 @@ void MainLoop()
 
     // draw
     BeginDrawing();
-        ClearBackground(MAGENTA);
-        world_draw(&world);
-        stuff_draw(&stuff);
-        mole_draw(&mole);
-        hud_draw(&hud, &stuff);
+    ClearBackground(MAGENTA);
+    world_draw(&world);
+    stuff_draw(&stuff);
+    mole_draw(&mole);
+    hud_draw(&hud, &stuff);
 
-        if (mole.health <= 0) {
-            sprite_draw(&lose);
-        }
+    if (mole.health <= 0)
+    {
+        sprite_draw(&lose);
+        char points[10];
+        snprintf(points, 10, "%d", (int)mole.points);
+        Vector2 measurment = MeasureTextEx(fontBm, points, (float)fontBm.baseSize, 2);
+        DrawTextEx(fontBm, points, (Vector2){(WIDTH / 2 -measurment.x/2 )* GetScreenWidth() / WIDTH, (HEIGHT / 2)* GetScreenHeight() / HEIGHT}, (float)fontBm.baseSize, 2, WHITE);
+    }
+
     EndDrawing();
 }
 
@@ -142,7 +150,8 @@ int main()
     hud_init(&hud, &inventory);
     mole_init(&mole, WIDTH / 2, HEIGHT + 60);
     world_init(&world);
-    sprite_init(&lose, "resources/lose.png", 660, 1, WIDTH / 2, HEIGHT / 2, 15, 0);
+    Vector2 origin = {0.5, 0.5};
+    sprite_init_static_with_origin(&lose, "resources/lose.png", WIDTH / 2, HEIGHT / 2 - 80, origin);
     stuff_init(&stuff);
     inventory_init(&inventory);
 
@@ -156,6 +165,8 @@ int main()
     music = LoadMusicStream("resources/bgm/doom.ogg");
     SetMusicVolume(music, 0.3f);
     PlayMusicStream(music);
+
+    fontBm = LoadFont("resources/fonts/eater/eater-number.fnt");
 
 #if defined(PLATFORM_WEB)
     emscripten_set_main_loop(MainLoop, FPS, 1);
