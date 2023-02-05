@@ -300,7 +300,6 @@ void update_roots(World *world)
 
                 if (age == 150)
                 {
-                    //  printf("\nage: %d",age);
                     if (world_get_terrain(world, x + 1, y)->r > 3)
                     {
                         world_set_terrain(world, x + 1, y, TERRA_ROOT);

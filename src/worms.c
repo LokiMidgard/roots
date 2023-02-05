@@ -8,7 +8,6 @@ void init_worm(Worms* worms, int x, int y) {
             worms->alive[i] = true;
             worms->pos[i].x = x;
             worms->pos[i].y = y;
-            printf("Worm created at: %.f, %.f", worms->pos[i].x, worms->pos[i].y);
             return;
         }
     }
@@ -37,7 +36,6 @@ void worms_update(Worms* worms, int last_scroll) {
 void worms_draw(Worms* worms) {
     for(int i=0; i<MAX_WORMS; ++i) {
         if (worms->alive[i]) {
-            printf("Worm drawn at %.f, %.f\n", worms->pos[i].x, worms->pos[i].y);
             Rectangle srcRect = { 0, 0, 8, 8};
             Rectangle dstRect = {
                 worms->pos[i].x * GetScreenWidth() / WIDTH,     // x

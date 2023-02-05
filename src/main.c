@@ -23,10 +23,12 @@ int color_are_equal(Color c1, Color c2)
 #include "mole.h"
 #include "worms.h"
 #include "particles.h"
+#include "hud.h"
 
 Mole mole;
 World world;
 Sprite lose;
+Hud hud;
 
 #if !defined(PLATFORM_WEB)
 #include "console.c"
@@ -37,6 +39,7 @@ Sprite lose;
 #include "mole.c"
 #include "worms.c"
 #include "particles.c"
+#include "hud.c"
 
 void UpdateDrawFrame()
 {
@@ -58,6 +61,9 @@ void UpdateDrawFrame()
         world_update(&world);
         mole.sprite.position.y -= world.last_scroll;
         mole_update(&mole, movement);
+
+        snprintf(hud.debug_text, 256, "depth: %2.2d\npoints: %d\nhealth: %.f\ninput: %s\nfullscreen: F\nexit: ESC", world.depth, mole.points, mole.health, input_get_device_name());
+        hud_update(&hud);
     }
 
     // draw
@@ -66,10 +72,7 @@ void UpdateDrawFrame()
         ClearBackground(MAGENTA);
         world_draw(&world);
         mole_draw(&mole);
-        char text[256] = {0};
-        snprintf(text, 256, "depth: %2.2d\npoints: %d\nhealth: %.f\ninput: %s\nfullscreen: F\nexit: ESC", world.depth, mole.points, mole.health, input_get_device_name());
-        DrawText(text, 10, 10, 14, WHITE);
-        DrawFPS(WIDTH/2, 10);
+        hud_draw(&hud);
         
      if(mole.health<=0){
         sprite_draw(&lose);
@@ -94,6 +97,7 @@ int main()
     /***************************************************************************
      * Init stuff
      ****************************************************************************/
+    hud_init(&hud);
     mole_init(&mole, WIDTH/2, HEIGHT+60);
     world_init(&world);
     sprite_init(&lose, "resources/lose.png", 660, 1, WIDTH/2, HEIGHT/2, 15, 0);
