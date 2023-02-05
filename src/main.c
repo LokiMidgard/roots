@@ -34,6 +34,8 @@ Hud hud;
 Music music;
 int inventory[st_size];
 
+bool started = false;
+
 #if !defined(PLATFORM_WEB)
 #include "console.c"
 #endif
@@ -48,7 +50,7 @@ int inventory[st_size];
 
 void UpdateDrawFrame()
 {
-    UpdateMusicStream(music);  
+    UpdateMusicStream(music);
 
     // handle input
     Vector2 movement = input_get_dir();
@@ -62,7 +64,12 @@ void UpdateDrawFrame()
     if (input_is_button_pressed(2))
         mole_explode(&mole);
 
-    if (mole.health > 0)
+    if (!started && (input_get_dir().x != 0 || input_get_dir().y != 0 || input_is_button_pressed(0) || input_is_button_pressed(1) || input_is_button_pressed(2)))
+    {
+        started = true;
+    }
+
+    if (mole.health > 0 && started)
     {
         // update
         world_update(&world);
@@ -86,13 +93,14 @@ void UpdateDrawFrame()
     // draw
 
     BeginDrawing();
-        ClearBackground(MAGENTA);
-        world_draw(&world);
-        stuff_draw(&stuff);
-        mole_draw(&mole);
-        hud_draw(&hud, &stuff);
-        
-     if(mole.health<=0){
+    ClearBackground(MAGENTA);
+    world_draw(&world);
+    stuff_draw(&stuff);
+    mole_draw(&mole);
+    hud_draw(&hud, &stuff);
+
+    if (mole.health <= 0)
+    {
         sprite_draw(&lose);
     }
 
@@ -112,14 +120,13 @@ int main()
     InitAudioDevice();
     SetTargetFPS(FPS);
 
-
     /***************************************************************************
      * Init stuff
      ****************************************************************************/
     hud_init(&hud, inventory);
-    mole_init(&mole, WIDTH/2, HEIGHT+60);
+    mole_init(&mole, WIDTH / 2, HEIGHT + 60);
     world_init(&world);
-    sprite_init(&lose, "resources/lose.png", 660, 1, WIDTH/2, HEIGHT/2, 15, 0);
+    sprite_init(&lose, "resources/lose.png", 660, 1, WIDTH / 2, HEIGHT / 2, 15, 0);
     stuff_init(&stuff);
 
     input_set_mouse_center(&mole.sprite);
