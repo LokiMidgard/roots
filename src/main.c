@@ -66,6 +66,7 @@ void UpdateDrawFrame()
         char text[256] = {0};
         snprintf(text, 256, "depth: %2.2d\npoints: %d\nhealth: %.f\ninput: %s\nfullscreen: F\nexit: ESC", world.depth, mole.points, mole.health, input_get_device_name());
         DrawText(text, 10, 10, 14, WHITE);
+        DrawFPS(WIDTH/2, 10);
         
      if(mole.health<=0){
         sprite_draw(&lose);
