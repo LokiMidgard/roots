@@ -41,7 +41,7 @@ void hud_draw(Hud* hud, Stuff *stuff) {
         float left_offset = 30.0f;
         float top_offset  = 32.0f;
         float offset      = 30.0f;
-        int count = inventory[type];
+        int count = hud->inventory[type];
         int source_start_x = type * 8;
         Rectangle srcRect = {source_start_x, 0, 8, 8};
         Rectangle dstRectStuff = {
@@ -52,8 +52,8 @@ void hud_draw(Hud* hud, Stuff *stuff) {
         };
         if (type >= 5)
         {
-            dstRectStuff.x += 200;
-            dstRectStuff.y += 200;
+            dstRectStuff.x += 70;
+            dstRectStuff.y -= 5*offset;
         }
 
         Vector2 origin = {0, 0};
