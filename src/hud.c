@@ -33,20 +33,20 @@ void hud_draw(Hud* hud, Stuff *stuff) {
     int count = 0;
     int gap = 16;
     const char** texts = TextSplit((const char*)hud->debug_text, '\n', &count);
-    float width = dstRect.width / count;
-    dstRect.width = width - gap;
-    for(int i=0; i<count; ++i) {
-        dstRect.x = 8 + (gap * 0.5) + (i*width);
-        DrawTextureNPatch(hud->tex_ninepatch, hud->np_info, dstRect, origin, 0.0f, WHITE);
-        DrawText(texts[i], dstRect.x + hud->np_info.left + 2, dstRect.y + hud->np_info.top + 2, 12, BLACK);
+    if (count > 0) {
+        float width = dstRect.width / count;
+        dstRect.width = width - gap;
+        for(int i=0; i<count; ++i) {
+            dstRect.x = 8 + (gap * 0.5) + (i*width);
+            DrawTextureNPatch(hud->tex_ninepatch, hud->np_info, dstRect, origin, 0.0f, WHITE);
+            DrawText(texts[i], dstRect.x + hud->np_info.left + 2, dstRect.y + hud->np_info.top + 2, 12, BLACK);
+        }
     }
 
     // fps
     // DrawFPS(WIDTH/2, 10);
 
     // items
-    //DrawTextureNPatch(hud->tex_ninepatch, hud->np_info, dstRect, origin, 0.0f, WHITE);
-    
     float top_right_hud_size = 90.0f;
     Rectangle top_right_hud =
     {
