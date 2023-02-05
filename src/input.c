@@ -5,6 +5,7 @@ int g_device = INPUT_KEYBOARD;
 Sprite* g_sprite = (Sprite*)0;
 int g_mouse_deadzone = 20;
 int g_gamepad = 0;
+float g_gamepad_deadzone = 0.2f;
 
 int oldWidth = 0;
 int oldHeight = 0;
@@ -49,10 +50,10 @@ Vector2 input_get_dir() {
 
     switch(device) {
         case INPUT_KEYBOARD:
-            if (IsKeyDown(KEY_RIGHT)) dir.x = 1;
-            if (IsKeyDown(KEY_LEFT)) dir.x = -1;
-            if (IsKeyDown(KEY_UP)) dir.y = -1;
-            if (IsKeyDown(KEY_DOWN)) dir.y = 1;
+            if (IsKeyDown(KEY_RIGHT)) dir.x = 1.0f;
+            if (IsKeyDown(KEY_LEFT)) dir.x = -1.0f;
+            if (IsKeyDown(KEY_UP)) dir.y = -1.0f;
+            if (IsKeyDown(KEY_DOWN)) dir.y = 1.0f;
             break;
     
         case INPUT_MOUSE:
@@ -69,6 +70,9 @@ Vector2 input_get_dir() {
         case INPUT_GAMEPAD:
             dir.x = GetGamepadAxisMovement(g_gamepad, GAMEPAD_AXIS_LEFT_X);
             dir.y = GetGamepadAxisMovement(g_gamepad, GAMEPAD_AXIS_LEFT_Y);
+
+            if (fabsf(dir.x) < g_gamepad_deadzone) dir.x = 0.0f;
+            if (fabsf(dir.y) < g_gamepad_deadzone) dir.y = 0.0f;
             break;
     }
 

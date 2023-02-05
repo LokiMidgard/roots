@@ -68,6 +68,7 @@ typedef struct World
     int texLoc;
     Texture2D sand_texture;
     
+    int current_scroll;
     int depth;
     int leftSpeed;
     int centerSpeed;

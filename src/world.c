@@ -10,7 +10,7 @@
 void world_set_terrain(World *world, int x, int y, Color color)
 {
     Color *bitmap = world->current_bitmap;
-    int scroll_amount = world->depth;
+    int scroll_amount = world->current_scroll;
     int from_the_top = HEIGHT - scroll_amount;
     if (y >= from_the_top)
     {
@@ -19,7 +19,7 @@ void world_set_terrain(World *world, int x, int y, Color color)
     }
     else
     {
-        y += world->depth;
+        y += world->current_scroll;
     }
     if (x < 0 || y < 0 || x >= WIDTH || y >= HEIGHT)
         return;
@@ -88,7 +88,7 @@ Color *
 world_get_terrain(World *world, int x, int y)
 {
     Color *bitmap = world->current_bitmap;
-    int scroll_amount = world->depth;
+    int scroll_amount = world->current_scroll;
     int from_the_top = HEIGHT - scroll_amount;
     if (y >= from_the_top)
     {
@@ -97,7 +97,7 @@ world_get_terrain(World *world, int x, int y)
     }
     else
     {
-        y += world->depth;
+        y += world->current_scroll;
     }
     if (x < 0 || y < 0 || x >= WIDTH || y >= HEIGHT)
         return &TERRA_EARTH;
@@ -140,11 +140,12 @@ void world_scroll(World *world, Sprite *mole)
         }
 
         world->pos_remainder -= 1;
+        world->current_scroll += 1;
         world->depth += 1;
         mole->position.y -= 1;
-        if (world->depth == HEIGHT)
+        if (world->current_scroll == HEIGHT)
         {
-            world->depth = 0;
+            world->current_scroll = 0;
             UnloadImageColors(world->current_bitmap);
             world->current_bitmap = world->next_bitmap;
             int selected_image = rand() % world->number_of_images;
@@ -292,9 +293,9 @@ void world_draw(World *world)
     Rectangle dstRect = {0, 0, GetScreenWidth(), GetScreenHeight()};
     Vector2 origin = {0, 0};
 
-    Rectangle upper_screen = {0, 0, WIDTH, HEIGHT - world->depth};
-    Rectangle lower_screen = {0, HEIGHT - world->depth, WIDTH, world->depth};
-    UpdateTextureRec(world->screen_texture, upper_screen, world->current_bitmap + (world->depth * WIDTH));
+    Rectangle upper_screen = {0, 0, WIDTH, HEIGHT - world->current_scroll};
+    Rectangle lower_screen = {0, HEIGHT - world->current_scroll, WIDTH, world->current_scroll};
+    UpdateTextureRec(world->screen_texture, upper_screen, world->current_bitmap + (world->current_scroll * WIDTH));
     UpdateTextureRec(world->screen_texture, lower_screen, world->next_bitmap);
     BeginShaderMode(world->shader);
     SetShaderValueTexture(world->shader, world->texLoc, world->sand_texture);

@@ -7,6 +7,7 @@
 
 typedef struct Mole
 {
+    Vector2 world_position;
     Sprite sprite;
     int points;
     float health;
