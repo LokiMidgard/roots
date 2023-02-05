@@ -47,6 +47,10 @@ void world_reset(World *world)
     {
         world->bg[index].position.y = 350.0f;
     }
+    for (int index = 0; index < world->number_of_fg; ++index)
+    {
+        world->fg[index].position.y = 350.0f;
+    }
 
     // init roots
     for (int i = 0; i < NUM_SEEDS; ++i)

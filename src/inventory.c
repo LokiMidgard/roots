@@ -1,5 +1,13 @@
 #include "inventory.h"
 
+void inventory_reset(Inventory* inventory)
+{
+    for (int index = 0; index < st_size; ++index)
+    {
+        inventory->pickups[index] = 0;
+    }
+}
+
 void inventory_init(Inventory* inventory) {
     inventory->sounds[st_BOMB] = LoadSoundEx("resources/speech/bomb.wav", 3.0f);
     inventory->sounds[st_STAR] = LoadSoundEx("resources/speech/star.wav", 3.0f);

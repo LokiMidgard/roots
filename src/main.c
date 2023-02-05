@@ -51,6 +51,7 @@ void reset_game()
 {
     mole_reset(&mole, WIDTH / 2, HEIGHT + 60);
     world_reset(&world);
+    inventory_reset(&inventory);
     endScreenTimer = 0;
 }
 
