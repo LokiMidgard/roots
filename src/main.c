@@ -50,25 +50,28 @@ void MainLoop()
     Vector2 movement = input_get_dir(&input);
 
     if (started) {
-        if (input_is_button_pressed(&input, 0))
+        if (input_is_button_pressed(&input, 0)) {
             mole.stoneEaterBonus = 600;
-
-        if (input_is_button_pressed(&input, 1))
-            mole.speedBonus = 300;
-
-        if (input_is_button_pressed(&input, 2))
-            mole_explode(&mole);
-
-        if (mole.health > 0)
-        {
-            // update
-            world_update(&world);
-            mole.sprite.position.y -= world.last_scroll;
-            mole_update(&mole, movement);
-
-            snprintf(hud.debug_text, 256, "depth: %2.2d\npoints: %d\nhealth: %.f\ninput: %s\nfullscreen: F\nexit: ESC", world.depth, (int)mole.points, mole.health, input_get_device_name(&input));
-            hud_update(&hud);
         }
+
+        if (input_is_button_pressed(&input, 1)) {
+            mole.speedBonus = 300;
+        }
+
+        if (input_is_button_pressed(&input, 2)) {
+            mole_explode(&mole);
+        }
+    }
+    
+    if (started && mole.health > 0)
+    {
+        // update
+        world_update(&world);
+        mole.sprite.position.y -= world.last_scroll;
+        mole_update(&mole, movement);
+
+        snprintf(hud.debug_text, 256, "depth: %2.2d\npoints: %d\nhealth: %.f\ninput: %s\nfullscreen: F\nexit: ESC", world.depth, (int)mole.points, mole.health, input_get_device_name(&input));
+        hud_update(&hud);
     }
 
     if (!started) {
