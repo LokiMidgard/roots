@@ -22,6 +22,8 @@ typedef struct Mole
 
     // sound
     Sound snd_dig;
+    Sound snd_dig_earth;
+    Sound snd_dig_stone;
     Sound snd_collide;
     Sound snd_explode;
     Sound snd_hurt;

@@ -71,7 +71,7 @@ void stuff_draw(Stuff* stuff) {
     {
         StuffType type = stuff->type[index];
         int source_start_x = type * 8;
-        Rectangle srcRect = { source_start_x, 0, 8, 8};
+        Rectangle srcRect = {source_start_x + 0.5f, 0.5f, 7.0f, 7.0f};
         Rectangle dstRect = {
             (stuff->pos[index].x-4) * GetScreenWidth() / WIDTH,     // x
             (stuff->pos[index].y-4) * GetScreenHeight() / HEIGHT,   // y

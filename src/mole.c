@@ -6,8 +6,11 @@
 
 void mole_init(Mole *mole, float x, float y)
 {
-    mole->snd_dig = LoadSound("resources/dig01.wav");
-    SetSoundVolume(mole->snd_dig, 0.1f);
+    mole->snd_dig_earth = LoadSound("resources/dig03.mp3");
+    SetSoundVolume(mole->snd_dig, 0.7f);
+    mole->snd_dig_stone = LoadSound("resources/dig_stone.mp3");
+    SetSoundVolume(mole->snd_dig, 0.7f);
+    mole->snd_dig = mole->snd_dig_earth;
     mole->snd_collide = LoadSound("resources/crumble.wav");
     SetSoundVolume(mole->snd_collide, 0.5f);
     mole->snd_explode = LoadSound("resources/explode.wav");
@@ -107,8 +110,15 @@ void mole_update(Mole *mole, Vector2 movement)
         mole->stoneEaterBonus -= 1;
     }
 
+    if (dig.types[EARTH] > 1 && dig.types[STONE] > 1)
+    {
+        if(dig.types[STONE] > dig.types[EARTH])
+            mole->snd_dig = mole->snd_dig_stone;
+        else
+            mole->snd_dig = mole->snd_dig_earth;
+    }
     float speed = Vector2Length(movement);
-    if (speed > 0.5f)
+    if (fabsf(movement.x) > 0.0f || fabsf(movement.y) > 0.0f)
     {
         mole->sprite.speed = 5;
         if (!IsSoundPlaying(mole->snd_dig))
@@ -117,12 +127,6 @@ void mole_update(Mole *mole, Vector2 movement)
     else
     {
         mole->sprite.speed = 0;
-    }
-
-    if (dig_speed_penalty == max_dig_speed_penalty)
-    {
-        if (!IsSoundPlaying(mole->snd_collide))
-            PlaySound(mole->snd_collide);
     }
 
     if (mole->explode_time > 0)
