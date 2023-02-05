@@ -145,11 +145,11 @@ void mole_update(Mole *mole, Vector2 movement)
 
     if (mole->stoneEaterBonus > 0 && mole->speedBonus > 0)
     {
-        sprite->tint = PURPLE;
+        sprite->tint = ORANGE;
     }
     else if (mole->speedBonus > 0)
     {
-        sprite->tint = BLUE;
+        sprite->tint = YELLOW;
     }
     else if (mole->stoneEaterBonus > 0)
     {

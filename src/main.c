@@ -28,6 +28,7 @@ Stuff stuff;
 Sprite lose;
 Hud hud;
 Music music;
+Sound intro;
 Inventory inventory;
 
 bool started = false;
@@ -51,18 +52,24 @@ void MainLoop()
 
     if (started) {
         if (input_is_button_pressed(&input, 0)) {
-            mole.stoneEaterBonus = 600;
+            if (inventory_use(&inventory, st_MEAT)) {
+                mole.stoneEaterBonus = 600;
+            }
         }
 
         if (input_is_button_pressed(&input, 1)) {
-            mole.speedBonus = 300;
+            if (inventory_use(&inventory, st_STAR)) {
+                mole.speedBonus = 300;
+            }
         }
 
         if (input_is_button_pressed(&input, 2)) {
-            mole_explode(&mole);
+            if (inventory_use(&inventory, st_BOMB)) {
+                mole_explode(&mole);
+            }
         }
     }
-    
+
     if (started && mole.health > 0)
     {
         // update
@@ -131,6 +138,9 @@ int main()
 
     input_set_mouse_center(&input, &mole.sprite);
     input_set_device(&input, INPUT_GAMEPAD);
+
+    intro = LoadSoundEx("resources/speech/roots.wav", 2.0f);
+    PlaySound(intro);
 
     music = LoadMusicStream("resources/bgm/doom.ogg");
     SetMusicVolume(music, 0.3f);

@@ -6,6 +6,7 @@
 
 typedef struct Inventory {
     int pickups[st_size];
+    Sound sounds[st_size];
     Sound snd_pickup;
 } Inventory;
 
