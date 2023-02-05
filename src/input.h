@@ -22,6 +22,7 @@ void input_set_mouse_center(Sprite* sprite);
 
 Vector2 input_get_dir();
 bool input_is_button_pressed(int button);
+bool input_is_button_down(int button);
 
 const char* input_get_device_name();
 

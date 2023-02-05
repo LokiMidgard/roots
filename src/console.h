@@ -2,7 +2,8 @@
 #define ROOTS_CONSOLE_H
 
 #if !defined(PLATFORM_WEB)
-#include <conio.h>
+#include "conio.h"
+#include "stdio.h"
 #endif
 
 void InitConsole();

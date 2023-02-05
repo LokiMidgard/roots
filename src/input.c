@@ -79,7 +79,7 @@ Vector2 input_get_dir() {
     return Vector2Normalize(dir);
 }
 
-bool input_is_button_pressed(int button) {
+bool input_is_button_down(int button) {
     switch(input_get_device()) {
         case INPUT_KEYBOARD:
             switch(button) {
@@ -95,6 +95,27 @@ bool input_is_button_pressed(int button) {
                 case 0: return IsGamepadButtonDown(g_gamepad, GPD_BUTTON_0);
                 case 1: return IsGamepadButtonDown(g_gamepad, GPD_BUTTON_1);
                 case 2: return IsGamepadButtonDown(g_gamepad, GPD_BUTTON_2);
+            }
+    }
+    return false;
+}
+
+bool input_is_button_pressed(int button) {
+    switch(input_get_device()) {
+        case INPUT_KEYBOARD:
+            switch(button) {
+                case 0: return IsKeyPressed(KBD_BUTTON_0);
+                case 1: return IsKeyPressed(KBD_BUTTON_1);
+                case 2: return IsKeyPressed(KBD_BUTTON_2);
+            }
+            break;
+        case INPUT_MOUSE:
+            return IsMouseButtonPressed(button);
+        case INPUT_GAMEPAD:
+            switch(button) {
+                case 0: return IsGamepadButtonPressed(g_gamepad, GPD_BUTTON_0);
+                case 1: return IsGamepadButtonPressed(g_gamepad, GPD_BUTTON_1);
+                case 2: return IsGamepadButtonPressed(g_gamepad, GPD_BUTTON_2);
             }
     }
     return false;
