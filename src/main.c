@@ -28,10 +28,12 @@ Stuff stuff;
 Sprite lose;
 Hud hud;
 Music music;
-Sound intro;
+Sound snd_intro;
+Sound snd_lost;
 Inventory inventory;
 
 bool started = false;
+bool died = false;
 
 #include "console.c"
 #include "input.c"
@@ -79,6 +81,13 @@ void MainLoop()
 
         snprintf(hud.debug_text, 256, "depth: %2.2d\npoints: %d\nhealth: %.f\ninput: %s\nfullscreen: F\nexit: ESC", world.depth, (int)mole.points, mole.health, input_get_device_name(&input));
         hud_update(&hud);
+
+        if (mole.health <= 0) {
+            if (!died) {
+                PlaySound(snd_lost);
+                died = true;
+            }
+        }
     }
 
     if (!started) {
@@ -109,8 +118,9 @@ void MainLoop()
         mole_draw(&mole);
         hud_draw(&hud, &stuff);
 
-        if (mole.health <= 0)
+        if (mole.health <= 0) {
             sprite_draw(&lose);
+        }
     EndDrawing();
 }
 
@@ -139,8 +149,9 @@ int main()
     input_set_mouse_center(&input, &mole.sprite);
     input_set_device(&input, INPUT_GAMEPAD);
 
-    intro = LoadSoundEx("resources/speech/roots.wav", 2.0f);
-    PlaySound(intro);
+    snd_intro = LoadSoundEx("resources/speech/roots.wav", 2.0f);
+    snd_lost = LoadSoundEx("resources/speech/lost.wav", 2.0f);
+    PlaySound(snd_intro);
 
     music = LoadMusicStream("resources/bgm/doom.ogg");
     SetMusicVolume(music, 0.3f);
