@@ -64,11 +64,13 @@ void main()
     vec2 scale =  vec2(offsetCoord.x * TM_WF, offsetCoord.y * TM_HF);
     scale =  vec2(mod(scale.x, T_WM) + index.x * T_WM, mod(scale.y, T_HM) + index.y * T_HM);
 
-    vec4 texelColor1 = texture(texture_map, scale);
+    vec4 c1 = texture(texture_map, scale);
     vec4 rootColor = vec4(1.0f/2.0f-(c0.z/2.0f),1.0f/4.0f-(c0.z/4.0f),1.0f/2.0f-(c0.z/2.0f),255.0f);
 
     finalColor = isRoot(c0) ? rootColor
-        : c0 != t ? vec4(texelColor1.xyz * 1.7f, texelColor1.a)
-        : c0 != b ? vec4(texelColor1.xyz * 0.6f, texelColor1.a)
-        : texelColor1;
+        : !isTunel(c0) && (c0 != t || c0 != l) ? vec4(c1.xyz * 1.7f, c1.a)
+        : !isTunel(c0) && (c0 != b || c0 != r) ? vec4(c1.xyz * 0.6f, c1.a)
+        : isTunel(c0) && (c0 != t || c0 != l) ? vec4(c1.xyz * 0.5f, c1.a)
+        : isTunel(c0) && (c0 != b || c0 != r) ? vec4(c1.xyz * 1.9f, c1.a)
+        : c1;
 }

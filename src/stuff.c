@@ -9,6 +9,8 @@ void spawn_stuff(Stuff* stuff, int x, int y, StuffType type) {
     stuff->pos[index].x = x;
     stuff->pos[index].y = y;
     stuff->type[index] = type;
+
+    world_dig(&world, x-4, y-4, 12);
 }
 
 void stuff_init(Stuff* stuff) {
@@ -72,11 +74,12 @@ void stuff_draw(Stuff* stuff) {
         StuffType type = stuff->type[index];
         int source_start_x = type * 8;
         Rectangle srcRect = {source_start_x + 0.5f, 0.5f, 7.0f, 7.0f};
+        float offset = (1.0 + sin(GetTime() * 6));
         Rectangle dstRect = {
-            (stuff->pos[index].x-4),     // x
-            (stuff->pos[index].y-4),   // y
-            8,                   // width
-            8                  // height
+            (stuff->pos[index].x-4) - offset,     // x
+            (stuff->pos[index].y-4) - offset,   // y
+            8 + offset*2,                   // width
+            8 + offset*2                  // height
         };
         Vector2 origin = {4, 4};
         DrawTexturePro(stuff->tex, srcRect, dstRect, origin, 0, WHITE);
