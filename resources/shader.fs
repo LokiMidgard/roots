@@ -97,7 +97,7 @@ vec4 texelColor0 = texture(t0, fragTexCoord);
     vec4 texelColor1 = texture(texture_map, scale2);
     
 
-    vec4 root = vec4(texelColor0.z/2,texelColor0.z/4,texelColor0.z/2,255.0f);
+    vec4 root = vec4(1.0f/2.0f-(texelColor0.z/2.0f),1.0f/4.0f-(texelColor0.z/4.0f),1.0f/2.0f-(texelColor0.z/2.0f),255.0f);
 
     bool isRoot = texelColor0.x < 3/255.0f
         && texelColor0.w > 0/255.0f;

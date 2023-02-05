@@ -48,7 +48,6 @@ void world_init(World *world)
     for (int image_index = 0; image_index < index; ++image_index)
         ImageFormat(world->images + image_index, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
 
-
     world->current_bitmap = LoadImageColors(image);
     world->next_bitmap = LoadImageColors(world->images[1]);
     world->screen_texture = LoadTextureFromImage(world->images[0]);
@@ -166,9 +165,12 @@ Dig world_dig(World *world, int x, int y, int radius)
 
 int world_scroll(World *world)
 {
-    if (world->scrolling_paused > 0) {
+    if (world->scrolling_paused > 0)
+    {
         --world->scrolling_paused;
-    } else {
+    }
+    else
+    {
         world->pos_remainder += world->speed;
     }
 
@@ -296,20 +298,22 @@ void update_roots(World *world)
             {
                 int age = current->b;
                 Color new_color = TERRA_ROOT;
-                new_color.b = max(0, current->b + 1);
+                new_color.b = Clamp(current->b + 1, 0, 254);
 
                 world_set_terrain(world, x, y, new_color);
 
                 if (age == 150)
                 {
-                    if (world_get_terrain(world, x + 1, y)->r > 3)
+                    Color *right = world_get_terrain(world, x + 1, y);
+                    if (right->r > 3 || right->b < age)
                     {
                         world_set_terrain(world, x + 1, y, TERRA_ROOT);
                     }
                 }
                 if (age == 200)
                 {
-                    if (world_get_terrain(world, x - 1, y)->r > 3)
+                    Color *left = world_get_terrain(world, x - 1, y);
+                    if (left->r > 3 || left->b < age)
                     {
                         world_set_terrain(world, x - 1, y, TERRA_ROOT);
                     }
@@ -317,7 +321,6 @@ void update_roots(World *world)
             }
         }
 }
-
 
 void world_update(World *world)
 {
@@ -349,7 +352,7 @@ void world_draw(World *world)
     DrawTexturePro(world->screen_texture, srcRect, dstRect, origin, 0.0f, WHITE);
     EndShaderMode();
 
-    //worms_draw(&world->worms);
+    // worms_draw(&world->worms);
 
     for (int i = 0; i < world->number_of_fg; i++)
     {
