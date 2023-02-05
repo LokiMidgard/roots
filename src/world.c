@@ -250,7 +250,6 @@ void update_roots(World *world)
     max_root_height = 0;
 
     int distance_to_mole = mole.sprite.position.y - last_max_root_height;
-    printf("distance to mole: %d\n", distance_to_mole);
     for (int x = 0; x < WIDTH; x++)
         for (int y = HEIGHT - 1; y > 0; y--)
         {
