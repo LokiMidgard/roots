@@ -156,6 +156,8 @@ void MainLoop()
     world_draw(&world);
     stuff_draw(&stuff);
     mole_draw(&mole);
+    hud_draw(&hud, &stuff);
+
 
     if (mole.health <= 0)
     {
@@ -183,7 +185,6 @@ void MainLoop()
     EndTextureMode();
     ClearBackground(BLACK);
     screen_draw(&screen);
-    hud_draw(&hud, &stuff);
     EndDrawing();
 }
 

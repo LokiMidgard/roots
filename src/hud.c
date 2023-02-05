@@ -1,6 +1,9 @@
 #include "config.h"
 #include "hud.h"
 
+#define _WIDTH WIDTH        // GetScreenWidth()
+#define _HEIGHT HEIGHT      // GetSCreenHeight()
+
 void hud_init(Hud* hud, Inventory* inventory) {
     int size = 128;
     int border = 16;
@@ -20,11 +23,11 @@ void hud_update(Hud* hud) {
 }
 
 void hud_draw(Hud* hud, Stuff *stuff) {
-    int w = GetScreenWidth() - 16;
+    int w = _WIDTH - 16;
     int h = 40;
 
     int x = 8;
-    int y = GetScreenHeight() -8 - h;
+    int y = _HEIGHT -8 - h;
 
     Rectangle dstRect = { x, y, w, h };
     Vector2 origin = { 0, 0 };
@@ -39,7 +42,7 @@ void hud_draw(Hud* hud, Stuff *stuff) {
         for(int i=0; i<count; ++i) {
             dstRect.x = 8 + (gap * 0.5) + (i*width);
             DrawTextureNPatch(hud->tex_ninepatch, hud->np_info, dstRect, origin, 0.0f, WHITE);
-            DrawText(texts[i], dstRect.x + hud->np_info.left + 2, dstRect.y + hud->np_info.top + 2, 12, BLACK);
+            DrawText(texts[i], dstRect.x + hud->np_info.left + 4, dstRect.y + hud->np_info.top - 1, 12, BLACK);
         }
     }
 
@@ -50,7 +53,7 @@ void hud_draw(Hud* hud, Stuff *stuff) {
     float top_right_hud_size = 90.0f;
     Rectangle top_right_hud =
     {
-        GetScreenWidth() - top_right_hud_size - 16,
+        _WIDTH - top_right_hud_size - 16,
         16,
         top_right_hud_size,
         top_right_hud_size
