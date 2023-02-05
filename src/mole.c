@@ -14,7 +14,7 @@ void mole_init(Mole *mole, float x, float y)
     mole->health = 100;
     mole->points = 0;
     mole->speed = 3;
-    sprite_init(&mole->sprite, "resources/mole.png", 8, 30, 30, 15, 0);
+    sprite_init(&mole->sprite, "resources/mole.png", 8, 8, 30, 30, 15, 0);
 
     Vector2 position = {x, y};
     mole->sprite.position = position;
