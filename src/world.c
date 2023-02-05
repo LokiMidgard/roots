@@ -360,6 +360,10 @@ void update_roots(World *world)
 
 void world_update(World *world)
 {
+    float speed = Remap((float)mole.sprite.position.y, 0.0f, 500.0f, 0.3f, 1.8f);
+    if ((float)mole.sprite.position.y > 500.0f)
+        speed = Remap((float)mole.sprite.position.y, 500.0f, 540.0f, 1.8f, 5.0f);
+    world->speed = speed;
     world->last_scroll = world_scroll(world);
     update_roots(world);
     worms_update(&world->worms, world->last_scroll);
