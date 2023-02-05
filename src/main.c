@@ -137,6 +137,10 @@ void MainLoop()
 
     if (mole.health <= 0)
     {
+        float border_x = WIDTH / 10.0f;
+        float border_y = HEIGHT / 10.0f;
+        Color background_color = {0, 0, 0, 200}; 
+        DrawRectangle(border_x, border_y, WIDTH - 2 * border_x, HEIGHT - 2 * border_y, background_color);
         endScreenTimer++;
         if (endScreenTimer > 150)
         {
