@@ -16,11 +16,13 @@ out vec4 finalColor;
 #define HEIGHT 540
 #define HW (WIDTH * 0.5f)
 #define HH (HEIGHT * 0.5f)
+#define PW (1.0f / WIDTH)
+#define PH (1.0f / HEIGHT)
 #define check(c,r,g,b) (c.x == r/255.0f && c.y == g/255.0f && c.z == b/255.0f)
 
 void main()
 {
     vec4 c0 = texture(t0, fragTexCoord);
-    float att = min(1.0f, fragTexCoord.y * 6.0f);
+    float att = min(1.0f, fragTexCoord.y * 10.0f);
     finalColor = vec4(c0.x * att, c0.y * att, c0.z * att, c0.w);
 }
