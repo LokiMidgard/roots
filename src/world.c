@@ -3,6 +3,7 @@
 #include "config.h"
 #include "world.h"
 #include "mole.h"
+#include "utils.h"
 
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 #define min(a, b) (((a) < (b)) ? (a) : (b))
@@ -208,6 +209,7 @@ void update_roots(World *world)
 {
     int alternate = -1;
 
+printf("rand test %d\n", utils_random_int(0,1));
     // update pixles
     for (int x = 0; x < WIDTH; x++)
         for (int y = HEIGHT - 1; y > 0; y--)
@@ -225,20 +227,20 @@ void update_roots(World *world)
 
                 // if (rand() % targetHeight < y)
                 //     continue;
-                if (rand() % 100 > 25)
+                if (utils_random_int(0,100) > 25)
                     continue;
 
                 unsigned char direction = current->g & 7;
                 unsigned char age = current->g >> 3;
 
-                if (age > (15 + (rand() % 5)))
+                if (age > utils_random_int(15,20))
                 {
                     age = 0;
-                    direction = rand() % 7;
+                    direction = utils_random_int(0,7);
                 }
                 age++;
 
-                if ((rand() % 1000) < 5)
+                if ((utils_random_int(0,1000)) < 5)
                 {
                     world_set_terrain(world, x, y, TERRA_ROOT_KNOT);
                 }
@@ -247,7 +249,7 @@ void update_roots(World *world)
                     world_set_terrain(world, x, y, TERRA_ROOT);
                 }
 
-                int r = rand() % 1000;
+                int r = utils_random_int(0,1000);
                 r -= 300;
                 r += 600 * (float)direction / 7;
 
@@ -269,10 +271,10 @@ void update_roots(World *world)
             }
             else if (current->r == TERRA_ROOT_KNOT.r)
             {
-                if (rand() % 100 > 5)
+                if (utils_random_int(0,100) % 100 > 5)
                     continue;
 
-                if (rand() % 100 < 2)
+                if (utils_random_int(0,100) < 2)
                 {
                     world_set_terrain(world, x, y, TERRA_ROOT_KNOT);
                 }
@@ -281,11 +283,11 @@ void update_roots(World *world)
                     world_set_terrain(world, x, y, TERRA_ROOT);
                 }
 
-                if (rand() % 100 < 40)
+                if (utils_random_int(0,100) < 40)
                 {
                     world_set_terrain(world, x, y + 1, TERRA_ROOT_TIP);
                 }
-                else if ((rand() % 1 < 1 && x > 0) || x >= WIDTH - 1)
+                else if ((utils_random_int(0,100) % 1 < 1 && x > 0) || x >= WIDTH - 1)
                 {
                     world_set_terrain(world, x - 1 * alternate, y + 1, TERRA_ROOT_TIP);
                 }
