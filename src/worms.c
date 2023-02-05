@@ -15,7 +15,7 @@ void init_worm(Worms* worms, int x, int y) {
 }
 
 void worms_init(Worms* worms) {
-    worms->tex = LoadTexture("resources/worm.png");
+    worms->tex = LoadTexture("resources/stuff.png");
     for (int i=0; i<3; ++i) {
         init_worm(worms, 30 + (rand() % (WIDTH-60)), HEIGHT - (rand() % 50));
     }
@@ -37,7 +37,6 @@ void worms_update(Worms* worms, int last_scroll) {
 void worms_draw(Worms* worms) {
     for(int i=0; i<MAX_WORMS; ++i) {
         if (worms->alive[i]) {
-            printf("Worm drawn at %.f, %.f\n", worms->pos[i].x, worms->pos[i].y);
             Rectangle srcRect = { 0, 0, 8, 8};
             Rectangle dstRect = {
                 worms->pos[i].x * GetScreenWidth() / WIDTH,     // x

@@ -22,10 +22,12 @@ int color_are_equal(Color c1, Color c2)
 #include "world.h"
 #include "mole.h"
 #include "worms.h"
+#include "stuff.h"
 #include "particles.h"
 
 Mole mole;
 World world;
+Stuff stuff;
 Sprite lose;
 
 #if !defined(PLATFORM_WEB)
@@ -37,6 +39,7 @@ Sprite lose;
 #include "mole.c"
 #include "worms.c"
 #include "particles.c"
+#include "stuff.c"
 
 void UpdateDrawFrame()
 {
@@ -59,12 +62,17 @@ void UpdateDrawFrame()
         mole.sprite.position.y -= world.last_scroll;
         mole_update(&mole, movement);
     }
+    stuff_update(&stuff, world.last_scroll);
+    // check for collisions
+    float pickup_radius = 10.0f;
+    stuff_pickup(&stuff, mole.sprite.position, pickup_radius);
 
     // draw
 
     BeginDrawing();
         ClearBackground(MAGENTA);
         world_draw(&world);
+        stuff_draw(&stuff);
         mole_draw(&mole);
         char text[256] = {0};
         snprintf(text, 256, "depth: %2.2d\npoints: %d\nhealth: %.f\ninput: %s\nfullscreen: F\nexit: ESC", world.depth, mole.points, mole.health, input_get_device_name());
@@ -97,6 +105,7 @@ int main()
     mole_init(&mole, WIDTH/2, HEIGHT+60);
     world_init(&world);
     sprite_init(&lose, "resources/lose.png", 660, 1, WIDTH/2, HEIGHT/2, 15, 0);
+    stuff_init(&stuff);
 
     input_set_mouse_center(&mole.sprite);
     input_set_device(INPUT_GAMEPAD);
