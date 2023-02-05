@@ -1,4 +1,5 @@
 #include "particles.h"
+#include "config.h"
 
 void init(Particles* p, int i, int x, int y, Color color, float boost) {
         p->pos[i].x = x + (0.1f * (rand() % 100)) - 5;
