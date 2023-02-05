@@ -149,7 +149,7 @@ void MainLoop()
         char points[10];
         snprintf(points, 10, "%d", (int)mole.points);
         Vector2 measurment = MeasureTextEx(fontBm, points, (float)fontBm.baseSize, 2);
-        DrawTextEx(fontBm, points, (Vector2){(WIDTH / 2 - measurment.x / 2) * GetScreenWidth() / WIDTH, (HEIGHT / 2) * GetScreenHeight() / HEIGHT}, (float)fontBm.baseSize, 2, WHITE);
+        DrawTextEx(fontBm, points, (Vector2){(WIDTH / 2 - measurment.x / 2) * GetScreenWidth() / WIDTH, (HEIGHT / 2- measurment.y / 2  + 20) * GetScreenHeight() / HEIGHT}, (float)fontBm.baseSize, 2, WHITE);
     }
 
     EndDrawing();
@@ -171,8 +171,8 @@ int main()
      * Init stuff
      ****************************************************************************/
     Vector2 origin = {0.5, 0.5};
-    sprite_init_static_with_origin(&lose, "resources/lose.png", WIDTH / 2, HEIGHT / 2 - 80, origin);
-    sprite_init_static_with_origin(&continueS, "resources/continue.png", WIDTH / 2, HEIGHT / 2 - 80, origin);
+    sprite_init_static_with_origin(&lose, "resources/lose.png", WIDTH / 2, HEIGHT / 2 - 180, origin);
+    sprite_init_static_with_origin(&continueS, "resources/continue.png", WIDTH / 2, HEIGHT / 2 + 180, origin);
     input_init(&input);
 
     init_game();
