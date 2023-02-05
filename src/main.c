@@ -26,11 +26,13 @@ World world;
 Input input;
 Stuff stuff;
 Sprite lose;
+Sprite continueS;
 Hud hud;
 Music music;
 Font fontBm;
 Sound intro;
 Inventory inventory;
+int endScreenTimer;
 
 bool started = false;
 
@@ -51,21 +53,28 @@ void MainLoop()
 
     Vector2 movement = input_get_dir(&input);
 
-    if (started) {
-        if (input_is_button_pressed(&input, 0)) {
-            if (inventory_use(&inventory, st_MEAT)) {
+    if (started)
+    {
+        if (input_is_button_pressed(&input, 0))
+        {
+            if (inventory_use(&inventory, st_MEAT))
+            {
                 mole.stoneEaterBonus = 600;
             }
         }
 
-        if (input_is_button_pressed(&input, 1)) {
-            if (inventory_use(&inventory, st_STAR)) {
+        if (input_is_button_pressed(&input, 1))
+        {
+            if (inventory_use(&inventory, st_STAR))
+            {
                 mole.speedBonus = 300;
             }
         }
 
-        if (input_is_button_pressed(&input, 2)) {
-            if (inventory_use(&inventory, st_BOMB)) {
+        if (input_is_button_pressed(&input, 2))
+        {
+            if (inventory_use(&inventory, st_BOMB))
+            {
                 mole_explode(&mole);
             }
         }
@@ -85,13 +94,11 @@ void MainLoop()
 
     if (!started)
     {
-        Vector2 dir = input_get_dir(&input);
-        if (dir.x != 0 || dir.y != 0 || input_is_button_pressed(&input, 0) || input_is_button_pressed(&input, 1) || input_is_button_pressed(&input, 2))
+        if (input_any(&input))
         {
             started = true;
         }
     }
-
 
     // check for collisions
     float pickup_radius = 10.0f;
@@ -113,14 +120,33 @@ void MainLoop()
 
     if (mole.health <= 0)
     {
+        endScreenTimer++;
+        if (endScreenTimer > 150)
+        {
+            sprite_draw(&continueS);
+        }
+        if (input_any(&input) && endScreenTimer > 150)
+        {
+            initGameLogitc();
+        }
         sprite_draw(&lose);
         char points[10];
         snprintf(points, 10, "%d", (int)mole.points);
         Vector2 measurment = MeasureTextEx(fontBm, points, (float)fontBm.baseSize, 2);
-        DrawTextEx(fontBm, points, (Vector2){(WIDTH / 2 -measurment.x/2 )* GetScreenWidth() / WIDTH, (HEIGHT / 2)* GetScreenHeight() / HEIGHT}, (float)fontBm.baseSize, 2, WHITE);
+        DrawTextEx(fontBm, points, (Vector2){(WIDTH / 2 - measurment.x / 2) * GetScreenWidth() / WIDTH, (HEIGHT / 2) * GetScreenHeight() / HEIGHT}, (float)fontBm.baseSize, 2, WHITE);
     }
 
     EndDrawing();
+}
+
+void initGameLogitc()
+{
+    hud_init(&hud, &inventory);
+    mole_init(&mole, WIDTH / 2, HEIGHT + 60);
+    world_init(&world);
+    endScreenTimer = 0;
+    stuff_init(&stuff);
+    inventory_init(&inventory);
 }
 
 int main()
@@ -137,14 +163,12 @@ int main()
     /***************************************************************************
      * Init stuff
      ****************************************************************************/
-    input_init(&input);
-    hud_init(&hud, &inventory);
-    mole_init(&mole, WIDTH / 2, HEIGHT + 60);
-    world_init(&world);
     Vector2 origin = {0.5, 0.5};
     sprite_init_static_with_origin(&lose, "resources/lose.png", WIDTH / 2, HEIGHT / 2 - 80, origin);
-    stuff_init(&stuff);
-    inventory_init(&inventory);
+    sprite_init_static_with_origin(&continueS, "resources/continue.png", WIDTH / 2, HEIGHT / 2 - 80, origin);
+    input_init(&input);
+
+    initGameLogitc();
 
     input_set_mouse_center(&input, &mole.sprite);
     input_set_device(&input, INPUT_GAMEPAD);

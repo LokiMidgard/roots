@@ -35,6 +35,12 @@ int input_get_device(Input* input) {
     return input->device == INPUT_GAMEPAD && !IsGamepadAvailable(input->gamepad) ? INPUT_KEYBOARD : input->device;
 }
 
+bool input_any(Input *input)
+{
+    Vector2 dir = input_get_dir(input);
+    return (dir.x != 0 || dir.y != 0 || input_is_button_pressed(&input, 0) || input_is_button_pressed(&input, 1) || input_is_button_pressed(&input, 2));
+}
+
 Vector2 input_get_dir(Input* input) {
     Vector2 dir = { 0, 0 };
 
