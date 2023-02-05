@@ -29,7 +29,8 @@ void world_set_terrain(World *world, int x, int y, Color color)
 void world_init(World *world)
 {
     world->speed = 0.3f;
-    world->pos_remainder = -100;
+    world->pos_remainder = 0;
+    world->scrolling_paused = 100;
 
     int index = 0;
     Image image = LoadImage("resources/tile_0.png");
@@ -47,7 +48,6 @@ void world_init(World *world)
     world->next_bitmap = LoadImageColors(world->images[1]);
     world->screen_texture = LoadTextureFromImage(world->images[0]);
 
-    world->worm_texture = LoadTexture("resources/worm.png");
     index = 0;
     index = world->number_of_bg++;
     Vector2 origin = {0, 1};
@@ -86,10 +86,7 @@ void world_init(World *world)
     world->shader_earth_location = GetShaderLocation(world->shader, "texture_earth");
     world->earth_texture = LoadTextureFromImage(LoadImage("resources/earth.png"));
 
-    world->leftSpeed = 20;
-    world->rightSpeed = 20;
-    world->centerSpeed = 20;
-
+    // init roots
     for (int i = 0; i < NUM_SEEDS; ++i)
     {
         int x = rand() % WIDTH;
@@ -100,6 +97,9 @@ void world_init(World *world)
             // world->bitmap[POS(x + offset, y)] = TERRA_STONE;
         }
     }
+
+    // init worms
+    worms_init(&world->worms);
 }
 
 Color *
@@ -161,9 +161,16 @@ Dig world_dig(World *world, int x, int y, int radius)
     return (dig);
 }
 
-void world_scroll(World *world, Sprite *mole)
+int world_scroll(World *world)
 {
-    for (int i = 0; i < world->pos_remainder; i++)
+    if (world->scrolling_paused > 0) {
+        --world->scrolling_paused;
+    } else {
+        world->pos_remainder += world->speed;
+    }
+
+    int lines_to_scroll = world->pos_remainder;
+    for (int i = 0; i < lines_to_scroll; i++)
     {
         Sprite *bg;
         for (int i = 0; i < world->number_of_bg; i++)
@@ -180,7 +187,6 @@ void world_scroll(World *world, Sprite *mole)
         world->pos_remainder -= 1;
         world->current_scroll += 1;
         world->depth += 1;
-        mole->position.y -= 1;
         if (world->current_scroll == HEIGHT)
         {
             world->current_scroll = 0;
@@ -190,19 +196,12 @@ void world_scroll(World *world, Sprite *mole)
             world->next_bitmap = LoadImageColors(world->images[selected_image]);
         }
     }
+    return lines_to_scroll;
 }
 
 void update_roots(World *world)
 {
     int alternate = -1;
-    if (rand() % 1000 < 1)
-    {
-        world->leftSpeed = rand() % (HEIGHT - 100) + 50;
-        world->rightSpeed = rand() % (HEIGHT - 100) + 50;
-        world->centerSpeed = rand() % (HEIGHT - 100) + 50;
-
-        printf("left: %d\ncenter: %d\nright: %d\n", world->leftSpeed, world->centerSpeed, world->rightSpeed);
-    }
 
     // update pixles
     for (int x = 0; x < WIDTH; x++)
@@ -317,19 +316,12 @@ void update_roots(World *world)
         }
 }
 
-void update_worms(World *world)
-{
-    if (world->number_of_active_worms < 3)
-        world->number_of_active_worms += 1;
-}
 
-void world_update(World *world, Mole *mole)
+void world_update(World *world)
 {
-
-    world->pos_remainder += world->speed;
-    world_scroll(world, &mole->sprite);
+    world->last_scroll = world_scroll(world);
     update_roots(world);
-    update_worms(world);
+    worms_update(&world->worms, world->last_scroll);
 }
 
 void world_draw(World *world)
@@ -356,12 +348,7 @@ void world_draw(World *world)
     DrawTexturePro(world->screen_texture, srcRect, dstRect, origin, 0.0f, WHITE);
     EndShaderMode();
 
-    for (int index = 0; index < world->number_of_active_worms; ++index)
-    {
-        Rectangle source = {0, 0, 8, 8};
-        Vector2 target_position = {100.0f, 100.0f};
-        DrawTextureRec(world->worm_texture, source, target_position, WHITE);
-    }
+    worms_draw(&world->worms);
 
     for (int i = 0; i < world->number_of_fg; i++)
     {

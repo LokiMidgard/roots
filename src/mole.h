@@ -7,19 +7,25 @@
 
 typedef struct Mole
 {
-    Vector2 world_position;
+    // graphics
     Sprite sprite;
+    
+    // physics
+    float speed;
+
+    // game logic
     int points;
     float health;
-    float speed;
     // bonuses have a value indicating the number of frames they have effect.
     float speedBonus;
     float stoneEaterBonus;
-    
+
+    // sound
     Sound snd_dig;
     Sound snd_collide;
     Sound snd_explode;
 
+    // fx
     float explode_time;
     Particles part_dig;
 } Mole;
