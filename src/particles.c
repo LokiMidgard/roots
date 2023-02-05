@@ -1,10 +1,11 @@
 #include "particles.h"
+#include "config.h"
 
-void init(Particles* p, int i, int x, int y, Color color) {
+void init(Particles* p, int i, int x, int y, Color color, float boost) {
         p->pos[i].x = x + (0.1f * (rand() % 100)) - 5;
         p->pos[i].y = y + (0.1f * (rand() % 100)) - 5;
-        p->spd[i].x = 0.03 * (rand() % 100 - 50);
-        p->spd[i].y = -0.01 * (rand() % 100);
+        p->spd[i].x = 0.03 * (rand() % 100 - 50) * boost;
+        p->spd[i].y = -0.01 * (rand() % 100) * boost;
         p->acc[i].x = 0;
         p->acc[i].y = 0.1f;
         p->age[i] = 0;
@@ -13,17 +14,17 @@ void init(Particles* p, int i, int x, int y, Color color) {
 
 void particles_init(Particles* p) {
     for(int i=0; i<NUM_PARTS; ++i) {
-        init(p, i, 0, 0, PINK);
+        init(p, i, 0, 0, PINK, 1);
     }
 }
 
-void particles_emit(Particles* p, int num, int x, int y, Color color) {
+void particles_emit(Particles* p, int num, int x, int y, Color color, float boost) {
     Color c = { (unsigned char)((int)color.r * 0.5f), (unsigned char)((int)color.g * 0.5f), (unsigned char)((int)color.b * 0.5f), 255};
 
     for (int i=0; i<NUM_PARTS; ++i) {
         if (p->age[i] == 0) {
-            init(p, i, x, y, c);
-            p->age[i] = 15;
+            init(p, i, x, y, c, boost);
+            p->age[i] = 15 * boost;
             --num;
         }
         if (num <= 0)
@@ -41,7 +42,7 @@ void particles_update(Particles* p) {
             p->age[i] -= 1;
 
             if (p->age[i] <= 0) {
-                init(p, i, 0, 0, PINK);
+                init(p, i, 0, 0, PINK, 1);
             }
         }
     }
