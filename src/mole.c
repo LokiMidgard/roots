@@ -11,6 +11,9 @@ void mole_init(Mole *mole, float x, float y)
     mole->snd_collide = LoadSound("resources/crumble.wav");
     SetSoundVolume(mole->snd_collide, 0.5f);
     mole->snd_explode = LoadSound("resources/explode.wav");
+    SetSoundVolume(mole->snd_explode, 1.2f);
+    mole->snd_hurt = LoadSound("resources/deep.wav");
+    SetSoundVolume(mole->snd_hurt, 1.0f);
 
     mole->health = 100;
     mole->points = 0;
@@ -55,6 +58,12 @@ void mole_update(Mole *mole, Vector2 movement)
                     new_mole_position.y,
                     mole_width);
     sprite->position = new_mole_position;
+    if (dig.types[ROOT]) {
+        if (!IsSoundPlaying(mole->snd_hurt)) {
+            PlaySound(mole->snd_hurt);
+        }
+        particles_emit(&mole->part_dig, 20, sprite->position.x, sprite->position.y, RED, 1.4f);
+    }
     mole->health -= dig.types[ROOT];
 
     for(int t = 0; t < TerrainTypeSize; ++t) {
