@@ -43,6 +43,11 @@ void world_reset(World *world)
     world->current_bitmap = LoadImageColors(world->first_image);
     world->next_bitmap = LoadImageColors(world->images[0]);
 
+    for (int index = 0; index < world->number_of_bg; ++index)
+    {
+        world->bg[index].position.y = 350.0f;
+    }
+
     // init roots
     for (int i = 0; i < NUM_SEEDS; ++i)
     {
@@ -101,7 +106,7 @@ void world_init(World *world)
         index = world->number_of_bg++;
         sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_3.png", 640, 350, origin);
         index = world->number_of_bg++;
-        origin.x = 0.5;
+        origin.x = 0.5f;
         sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_4.png", WIDTH / 2, 350, origin);
 
         sprite_init_static_with_origin(&world->title, "resources/title.png", WIDTH / 2, 350, origin);
@@ -109,7 +114,7 @@ void world_init(World *world)
 
     { // load foreground images
         int index = 0;
-        Vector2 origin = {0, 0.5f};
+        Vector2 origin = {0.5f, 0.5f};
         index = world->number_of_fg++;
         sprite_init_static_with_origin(&world->fg[index], "resources/forest/fg1.png", WIDTH / 2, 350, origin);
     }
