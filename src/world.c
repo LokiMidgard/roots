@@ -66,6 +66,13 @@ void world_reset(World *world)
 
 }
 
+void world_reload_tilemap(World* world) {
+    UnloadTexture(world->map_texture);
+    Image img = LoadImage("resources/level/tileMap.png");
+    world->map_texture = LoadTextureFromImage(img);
+    UnloadImage(img);
+}
+
 void world_init(World *world)
 {
     world->first_image = LoadImage("resources/level/tile_0.png");
@@ -125,6 +132,8 @@ void world_init(World *world)
     world->shader = LoadShader(0, "resources/shader/shader.fs");
     world->shader_position_location = GetShaderLocation(world->shader, "scroll_position");
     world->shader_map_location = GetShaderLocation(world->shader, "texture_map");
+    
+    world_reload_tilemap(world);
     world->map_texture = LoadTextureFromImage(LoadImage("resources/level/tileMap.png"));
 
     // init worms
