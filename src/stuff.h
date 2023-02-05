@@ -12,10 +12,6 @@ typedef enum StuffType
     st_BOMB,
     st_MEAT,
     st_APPLE,
-    st_BEATLE,
-    st_THING,
-    st_BLUE,
-    st_ORANGE,
     st_size,
 } StuffType;
 

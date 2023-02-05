@@ -111,6 +111,7 @@ bool input_is_button_pressed(Input* input, int button) {
                 case 0: return IsGamepadButtonPressed(input->gamepad, GPD_BUTTON_0);
                 case 1: return IsGamepadButtonPressed(input->gamepad, GPD_BUTTON_1);
                 case 2: return IsGamepadButtonPressed(input->gamepad, GPD_BUTTON_2);
+                case 3: return IsGamepadButtonPressed(input->gamepad, GPD_BUTTON_3);
             }
     }
     return false;
