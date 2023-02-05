@@ -1,11 +1,14 @@
 #include "config.h"
 #include "hud.h"
 
+#define _WIDTH WIDTH        // GetScreenWidth()
+#define _HEIGHT HEIGHT      // GetSCreenHeight()
+
 void hud_init(Hud* hud, Inventory* inventory) {
     int size = 128;
     int border = 16;
 
-    hud->tex_ninepatch = LoadTexture(TextFormat("resources/ninepatch_%i_%i.png", size, border));
+    hud->tex_ninepatch = LoadTexture(TextFormat("resources/ninepatch/ninepatch_%i_%i.png", size, border));
     hud->np_info.source = (Rectangle){ 0.0f, 0.0f, size, size },
     hud->np_info.left = border;
     hud->np_info.top = border;
@@ -20,37 +23,37 @@ void hud_update(Hud* hud) {
 }
 
 void hud_draw(Hud* hud, Stuff *stuff) {
-    int w = GetScreenWidth() - 16;
+    int w = _WIDTH - 16;
     int h = 40;
 
     int x = 8;
-    int y = GetScreenHeight() -8 - h;
+    int y = _HEIGHT -8 - h;
 
     Rectangle dstRect = { x, y, w, h };
     Vector2 origin = { 0, 0 };
 
     // debug text
-    int count = 0;
-    int gap = 16;
-    const char** texts = TextSplit((const char*)hud->debug_text, '\n', &count);
-    float width = dstRect.width / count;
-    dstRect.width = width - gap;
-    for(int i=0; i<count; ++i) {
-        dstRect.x = 8 + (gap * 0.5) + (i*width);
-        DrawTextureNPatch(hud->tex_ninepatch, hud->np_info, dstRect, origin, 0.0f, WHITE);
-        DrawText(texts[i], dstRect.x + hud->np_info.left + 2, dstRect.y + hud->np_info.top + 2, 12, BLACK);
+    if (TextLength(hud->debug_text) > 0) {
+        int count = 0;
+        int gap = 16;
+        const char** texts = TextSplit((const char*)hud->debug_text, '\n', &count);
+        float width = dstRect.width / count;
+        dstRect.width = width - gap;
+        for(int i=0; i<count; ++i) {
+            dstRect.x = 8 + (gap * 0.5) + (i*width);
+            DrawTextureNPatch(hud->tex_ninepatch, hud->np_info, dstRect, origin, 0.0f, WHITE);
+            DrawText(texts[i], dstRect.x + hud->np_info.left + 4, dstRect.y + hud->np_info.top - 1, 12, BLACK);
+        }
     }
 
     // fps
     // DrawFPS(WIDTH/2, 10);
 
     // items
-    //DrawTextureNPatch(hud->tex_ninepatch, hud->np_info, dstRect, origin, 0.0f, WHITE);
-    
     float top_right_hud_size = 90.0f;
     Rectangle top_right_hud =
     {
-        GetScreenWidth() - top_right_hud_size - 16,
+        _WIDTH - top_right_hud_size - 16,
         16,
         top_right_hud_size,
         top_right_hud_size
