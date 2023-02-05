@@ -71,6 +71,8 @@ typedef struct World
     int number_of_fg;
     Sprite fg[10];
 
+    Sprite title;
+
     // rendering
     int current_scroll;             // y-offset used for pixel lookups
     int last_scroll;                // number of lines scrolled in last frame

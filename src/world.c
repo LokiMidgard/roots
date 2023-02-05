@@ -75,6 +75,9 @@ void world_init(World *world)
     origin.x = 0.5;
     sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_4.png", WIDTH / 2, 350, origin);
 
+
+    sprite_init_static_with_origin(&world->title, "resources/title.png", WIDTH / 2, 350, origin);
+
     index = 0;
     origin.y = 0.5;
     index = world->number_of_fg++;
@@ -192,6 +195,8 @@ int world_scroll(World *world)
             bg = &world->fg[i];
             bg->position.y -= 1;
         }
+
+world->title.position.y-=2;
 
         world->pos_remainder -= 1;
         world->current_scroll += 1;
@@ -362,4 +367,6 @@ void world_draw(World *world)
     {
         sprite_draw(&world->fg[i]);
     }
+
+    sprite_draw(&world->title);
 }

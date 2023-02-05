@@ -48,12 +48,31 @@ void mole_update(Mole *mole, Vector2 movement)
                               new_mole_position.x,
                               new_mole_position.y,
                               mole_width);
+
+// Points 
+    mole->points += dig.types[EMERALD]*20;
+    mole->points += dig.types[EARTH]*1;
+    mole->points += dig.types[STONE]*2;
+
+    if (dig.types[QUICK_STONE] > 0)
+    {
+        mole->speedBonus = 300;
+    }
+    if (dig.types[DIG_STONE] > 0)
+    {
+        mole->stoneEaterBonus = 600;
+    }
+
     float dig_speed_penalty = 0.0f;
     dig_speed_penalty += dig.types[EARTH] * 0.02f;
     dig_speed_penalty += dig.types[STONE] * 0.05f;
-    float max_dig_speed_penalty = 0.98f;
+    dig_speed_penalty += dig.types[EMERALD] * 0.05f;
+    dig_speed_penalty += dig.types[QUICK_STONE] * 0.05f;
+    dig_speed_penalty += dig.types[DIG_STONE] * 0.05f;
+    float max_dig_speed_penalty = mole->stoneEaterBonus>0? 0.48f: 0.98f;
     dig_speed_penalty = fminf(max_dig_speed_penalty, dig_speed_penalty);
-    movement = Vector2Scale(movement, (1.0f - dig_speed_penalty));
+    float defaultSpeed = mole->speedBonus>0?1.5f:1.0f;
+    movement = Vector2Scale(movement, (defaultSpeed - dig_speed_penalty));
     new_mole_position = Vector2Add(sprite->position, movement);
 
     dig = world_dig(&world,
@@ -61,17 +80,21 @@ void mole_update(Mole *mole, Vector2 movement)
                     new_mole_position.y,
                     mole_width);
     sprite->position = new_mole_position;
-    if (dig.types[ROOT]) {
-        if (!IsSoundPlaying(mole->snd_hurt)) {
+    if (dig.types[ROOT])
+    {
+        if (!IsSoundPlaying(mole->snd_hurt))
+        {
             PlaySound(mole->snd_hurt);
         }
         particles_emit(&mole->part_dig, 20, sprite->position.x, sprite->position.y, RED, 1.4f);
     }
     mole->health -= dig.types[ROOT];
 
-    for(int t = 0; t < TerrainTypeSize; ++t) {
+    for (int t = 0; t < TerrainTypeSize; ++t)
+    {
         int num = (int)(dig.types[t] * 0.4f);
-        if (num > 0) {
+        if (num > 0)
+        {
             particles_emit(&mole->part_dig, num, sprite->position.x, sprite->position.y, terrain_type_to_color(t), 1);
         }
     }
@@ -106,16 +129,20 @@ void mole_update(Mole *mole, Vector2 movement)
         mole->sprite.speed = 0;
     }
 
-    if (mole->explode_time > 0) {
+    if (mole->explode_time > 0)
+    {
         mole->explode_time -= 0.09;
-        if (mole->explode_time <= 0) {
+        if (mole->explode_time <= 0)
+        {
             mole->explode_time = 0;
         }
         float radius = sin(mole->explode_time) * 50;
         Dig d = world_dig(&world, sprite->position.x, sprite->position.y, radius);
-        for(int t = EARTH; t < TerrainTypeSize; ++t) {
+        for (int t = EARTH; t < TerrainTypeSize; ++t)
+        {
             int num = (int)(d.types[t] * 0.4f);
-            if (num > 0) {
+            if (num > 0)
+            {
                 particles_emit(&mole->part_dig, num, sprite->position.x, sprite->position.y, TerrainTypeToColor[t], 4);
             }
         }
@@ -167,10 +194,13 @@ void mole_draw(Mole *mole)
     particles_draw(&mole->part_dig);
 }
 
-void mole_explode(Mole* mole) {
-    if (mole->explode_time == 0) {
+void mole_explode(Mole *mole)
+{
+    if (mole->explode_time == 0)
+    {
         mole->explode_time = 3.1415f;
-        if (!IsSoundPlaying(mole->snd_explode)) {
+        if (!IsSoundPlaying(mole->snd_explode))
+        {
             PlaySound(mole->snd_explode);
         }
     }
