@@ -51,16 +51,19 @@ void stuff_update(Stuff* stuff, int last_scroll) {
     }
 }
 
-void stuff_pickup(Stuff *stuff, Vector2 position, float pickup_radius)
+int stuff_pickup(Stuff *stuff, Vector2 position, float pickup_radius, StuffType *type)
 {
     for (int index = 0; index < stuff->active_stuff; ++index)
     {
         if (Vector2Length(Vector2Subtract(position, stuff->pos[index])) < pickup_radius)
         {
+            if (type)
+                *type = stuff->type[index];
             stuff_remove(stuff, index);
-            index--;
+            return 1;
         }
     }
+    return 0;
 }
 
 void stuff_draw(Stuff* stuff) {

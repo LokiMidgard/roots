@@ -31,6 +31,7 @@ World world;
 Stuff stuff;
 Sprite lose;
 Hud hud;
+int inventory[st_size];
 
 #if !defined(PLATFORM_WEB)
 #include "console.c"
@@ -71,7 +72,13 @@ void UpdateDrawFrame()
     stuff_update(&stuff, world.last_scroll);
     // check for collisions
     float pickup_radius = 10.0f;
-    stuff_pickup(&stuff, mole.sprite.position, pickup_radius);
+    StuffType picked_up_type;
+    int success = stuff_pickup(&stuff,
+                               mole.sprite.position,
+                               pickup_radius,
+                               &picked_up_type);
+    if (success)
+        inventory[picked_up_type] += 1;
 
     // draw
 
@@ -80,7 +87,7 @@ void UpdateDrawFrame()
         world_draw(&world);
         stuff_draw(&stuff);
         mole_draw(&mole);
-        hud_draw(&hud);
+        hud_draw(&hud, &stuff);
         
      if(mole.health<=0){
         sprite_draw(&lose);
@@ -105,7 +112,7 @@ int main()
     /***************************************************************************
      * Init stuff
      ****************************************************************************/
-    hud_init(&hud);
+    hud_init(&hud, inventory);
     mole_init(&mole, WIDTH/2, HEIGHT+60);
     world_init(&world);
     sprite_init(&lose, "resources/lose.png", 660, 1, WIDTH/2, HEIGHT/2, 15, 0);
