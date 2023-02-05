@@ -58,6 +58,7 @@ void reset_game()
     world_reset(&world);
     inventory_reset(&inventory);
     endScreenTimer = 0;
+    died = false;
 }
 
 void init_game()
