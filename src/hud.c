@@ -24,8 +24,15 @@ void hud_draw(Hud* hud) {
 
     Rectangle dstRect = { x, y, w, h };
     Vector2 origin = { 0, 0 };
+    // debug text
     DrawTextureNPatch(hud->tex_ninepatch, hud->np_info, dstRect, origin, 0.0f, WHITE);
     DrawText(hud->debug_text, dstRect.x + hud->np_info.left + 2, dstRect.y + hud->np_info.top + 2, 20, BLACK);
 
+    // fps
     DrawFPS(WIDTH/2, 10);
+
+    // items
+    dstRect.x = GetScreenWidth() -x - w;
+    DrawTextureNPatch(hud->tex_ninepatch, hud->np_info, dstRect, origin, 0.0f, WHITE);
+
 }
