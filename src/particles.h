@@ -3,7 +3,7 @@
 
 #include "raylib.h"
 
-#define NUM_PARTS 100
+#define NUM_PARTS 1000
 
 typedef struct Particles {
     Vector2 pos[NUM_PARTS];
@@ -14,7 +14,7 @@ typedef struct Particles {
 } Particles;
 
 void particles_init(Particles* p);
-void particles_emit(Particles* p, int num, int x, int y, Color color);
+void particles_emit(Particles* p, int num, int x, int y, Color color, float boost);
 void particles_update(Particles* p);
 void particles_draw(Particles* p);
 
