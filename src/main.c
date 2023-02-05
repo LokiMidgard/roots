@@ -19,6 +19,7 @@
 #include "stuff.h"
 #include "particles.h"
 #include "hud.h"
+#include "inventory.h"
 
 Mole mole;
 World world;
@@ -26,9 +27,7 @@ Stuff stuff;
 Sprite lose;
 Hud hud;
 Music music;
-
-int inventory[st_size];
-Sound snd_pickup;
+Inventory inventory;
 
 bool started = false;
 
@@ -41,6 +40,7 @@ bool started = false;
 #include "stuff.c"
 #include "particles.c"
 #include "hud.c"
+#include "inventory.c"
 
 void MainLoop()
 {
@@ -74,6 +74,7 @@ void MainLoop()
         hud_update(&hud);
     }
     stuff_update(&stuff, world.last_scroll);
+    
     // check for collisions
     float pickup_radius = 10.0f;
     StuffType picked_up_type;
@@ -82,14 +83,7 @@ void MainLoop()
                                pickup_radius,
                                &picked_up_type);
     if (success)
-    {
-        inventory[picked_up_type] += 1;
-        if (!IsSoundPlaying(snd_pickup))
-        {
-            SetSoundPitch(snd_pickup, 0.7 + (rand() % 60 / 100.0f));
-            PlaySound(snd_pickup);
-        }
-    }
+        inventory_add(&inventory, picked_up_type, 1);
 
     // draw
     BeginDrawing();
@@ -120,14 +114,13 @@ int main()
     /***************************************************************************
      * Init stuff
      ****************************************************************************/
-    snd_pickup = LoadSound("resources/pickup.wav");
-    SetSoundVolume(snd_pickup, 0.3f);
-    hud_init(&hud, inventory);
+    hud_init(&hud, &inventory);
 
     mole_init(&mole, WIDTH / 2, HEIGHT + 60);
     world_init(&world);
     sprite_init(&lose, "resources/lose.png", 660, 1, WIDTH / 2, HEIGHT / 2, 15, 0);
     stuff_init(&stuff);
+    inventory_init(&inventory);
 
     input_set_mouse_center(&mole.sprite);
     input_set_device(INPUT_GAMEPAD);

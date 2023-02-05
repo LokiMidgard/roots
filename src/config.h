@@ -24,6 +24,4 @@
 
 #define NUM_SEEDS (30)
 
-#define IS_COLOR(pos, col) (pos->r == col.r && pos->g == col.g && pos->b == col.b)
-
 #endif

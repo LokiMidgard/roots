@@ -1,7 +1,7 @@
 #include "config.h"
 #include "hud.h"
 
-void hud_init(Hud* hud, int *inventory) {
+void hud_init(Hud* hud, Inventory* inventory) {
     int size = 128;
     int border = 16;
     hud->tex_ninepatch = LoadTexture(TextFormat("resources/ninepatch_%i_%i.png", size, border));
@@ -41,7 +41,7 @@ void hud_draw(Hud* hud, Stuff *stuff) {
         float left_offset = 30.0f;
         float top_offset  = 32.0f;
         float offset      = 30.0f;
-        int count = hud->inventory[type];
+        int count = hud->inventory->pickups[type];
         int source_start_x = type * 8;
         Rectangle srcRect = {source_start_x, 0, 8, 8};
         Rectangle dstRectStuff = {
