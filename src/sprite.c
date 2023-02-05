@@ -7,6 +7,7 @@ void sprite_init(Sprite *s, const char *file, int frame_width, int num_of_frames
 {
     s->counter = 0;
     s->image = LoadTexture(file);
+    SetTextureFilter(s->image, TEXTURE_FILTER_BILINEAR);
     s->number_of_frames = num_of_frames;
     s->frame_width = frame_width;
     s->position.x = x;
