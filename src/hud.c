@@ -2,12 +2,14 @@
 #include "hud.h"
 
 void hud_init(Hud* hud) {
-    hud->tex_ninepatch = LoadTexture("resources/ninepatch.png");
-    hud->np_info.source = (Rectangle){ 0.0f, 0.0f, 64.0f, 64.0f },
-    hud->np_info.left = 6;
-    hud->np_info.top = 6;
-    hud->np_info.right = 6;
-    hud->np_info.bottom = 6;
+    int size = 128;
+    int border = 16;
+    hud->tex_ninepatch = LoadTexture(TextFormat("resources/ninepatch_%i_%i.png", size, border));
+    hud->np_info.source = (Rectangle){ 0.0f, 0.0f, size, size },
+    hud->np_info.left = border;
+    hud->np_info.top = border;
+    hud->np_info.right = border;
+    hud->np_info.bottom = border;
     hud->np_info.layout = NPATCH_NINE_PATCH;
 }
 
