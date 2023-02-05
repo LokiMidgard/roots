@@ -30,10 +30,10 @@ void hud_draw(Hud* hud, Stuff *stuff) {
     Vector2 origin = { 0, 0 };
 
     // debug text
-    int count = 0;
-    int gap = 16;
-    const char** texts = TextSplit((const char*)hud->debug_text, '\n', &count);
-    if (count > 0) {
+    if (TextLength(hud->debug_text) > 0) {
+        int count = 0;
+        int gap = 16;
+        const char** texts = TextSplit((const char*)hud->debug_text, '\n', &count);
         float width = dstRect.width / count;
         dstRect.width = width - gap;
         for(int i=0; i<count; ++i) {
