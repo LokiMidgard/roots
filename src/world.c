@@ -234,7 +234,6 @@ int world_scroll(World *world)
             world->current_bitmap = world->next_bitmap;
             int selected_image = rand() % world->number_of_images;
             world->next_bitmap = LoadImageColors(world->images[selected_image]);
-            printf("done changing bitmaps\n");
         }
     }
     return lines_to_scroll;
@@ -261,7 +260,7 @@ void update_roots(World *world)
 
                 // if (rand() % targetHeight < y)
                 //     continue;
-                if (utils_random_int(0, 100) > 25)
+                if (utils_random_int(0, 450) > mole.sprite.position.y)
                     continue;
 
                 unsigned char direction = current->g & 7;
@@ -272,7 +271,7 @@ void update_roots(World *world)
                     age = 0;
                     direction = utils_random_int(0, 7);
                 }
-                age++;
+                age += 1;
 
                 if ((utils_random_int(0, 1000)) < 5)
                 {
@@ -341,7 +340,7 @@ void update_roots(World *world)
                 if (age == 150)
                 {
                     Color *right = world_get_terrain(world, x + 1, y);
-                    if (right->r > 3 || right->b < age)
+                    if (right->r != 3)
                     {
                         world_set_terrain(world, x + 1, y, TERRA_ROOT);
                     }
