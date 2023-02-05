@@ -155,6 +155,9 @@ Dig world_dig(World *world, int x, int y, int radius)
             {
                 Color *c = world_get_terrain(world, x + offsetX, y + offsetY);
                 TerrainType t = color_to_terrain_type(*c);
+                if (t == TerrainTypeSize) {
+                    printf("ERROR: INVALID TERRAIN TYPE!");
+                }
                 dig.types[t] += 1;
                 world_set_terrain(world, x + offsetX, y + offsetY, TERRA_TUNEL);
             }

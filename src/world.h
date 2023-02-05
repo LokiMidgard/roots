@@ -2,6 +2,7 @@
 #define ROOTS_WORLD_H
 
 #include "raylib.h"
+#include "config.h"
 #include "mole.h"
 #include "worms.h"
 
@@ -96,5 +97,8 @@ typedef struct Dig
 void world_init(World *world);
 void world_update(World *world);
 void world_draw(World *world);
+
+Dig world_check_dig(World *world, int x, int y, int radius);
+Dig world_dig(World *world, int x, int y, int radius);
 
 #endif
