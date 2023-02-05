@@ -6,6 +6,21 @@ void screen_init(Screen* screen) {
     SetTextureFilter(screen->buffer.texture, TEXTURE_FILTER_POINT);
 }
 
+void screen_update(Screen* screen) {
+    if (IsKeyPressed(KEY_F)) {
+        if (!IsWindowFullscreen()) {
+            screen->oldWidth = GetScreenWidth();
+            screen->oldHeight = GetScreenHeight();
+            int mon = GetCurrentMonitor();
+            SetWindowSize(GetMonitorWidth(mon), GetMonitorHeight(mon));
+            ToggleFullscreen();
+        } else {
+            ToggleFullscreen();
+            SetWindowSize(screen->oldWidth, screen->oldHeight);
+        }
+    }
+}
+
 void screen_draw(Screen* screen) {
     Rectangle srcRect = { 0, 0, WIDTH, -HEIGHT };
     Rectangle dstRect = {0, 0, GetScreenWidth(), GetScreenHeight()};

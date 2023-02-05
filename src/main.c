@@ -53,6 +53,7 @@ bool died = false;
 void MainLoop()
 {
     UpdateMusicStream(music);
+    screen_update(&screen);
 
     Vector2 movement = input_get_dir(&input);
 
@@ -133,6 +134,7 @@ void MainLoop()
         DrawTextEx(fontBm, points, (Vector2){(WIDTH / 2 -measurment.x/2 ), (HEIGHT / 2)}, (float)fontBm.baseSize, 2, WHITE);
     }
     EndTextureMode();
+    ClearBackground(BLACK);
     screen_draw(&screen);
     EndDrawing();
 }

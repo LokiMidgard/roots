@@ -7,8 +7,6 @@ void input_init(Input* input) {
     input->mouse_deadzone = 20;
     input->gamepad = 0;
     input->gamepad_deadzone = 0.2f;
-    input->oldWidth = 0;
-    input->oldHeight = 0;
 }
 
 bool input_set_device(Input* input, int device) {
@@ -37,20 +35,6 @@ int input_get_device(Input* input) {
 
 Vector2 input_get_dir(Input* input) {
     Vector2 dir = { 0, 0 };
-
-    if (IsKeyPressed(KEY_F)) {
-        if (!IsWindowFullscreen()) {
-            input->oldWidth = GetScreenWidth();
-            input->oldHeight = GetScreenHeight();
-            int mon = GetCurrentMonitor();
-            SetWindowSize(GetMonitorWidth(mon), GetMonitorHeight(mon));
-            ToggleFullscreen();
-        } else {
-            ToggleFullscreen();
-            SetWindowSize(input->oldWidth, input->oldHeight);
-        }
-    }
-
     int device = input_get_device(input);
 
     switch(device) {

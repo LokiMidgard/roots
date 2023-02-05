@@ -5,9 +5,12 @@
 
 typedef struct Screen {
     RenderTexture2D buffer;
+    int oldWidth;
+    int oldHeight;
 } Screen;
 
 void screen_init(Screen* screen);
+void screen_update(Screen* screen);
 void screen_draw(Screen* screen);
 
 #endif

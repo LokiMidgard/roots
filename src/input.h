@@ -23,8 +23,6 @@ typedef struct Input {
     int mouse_deadzone;
     int gamepad;
     float gamepad_deadzone;
-    int oldWidth;
-    int oldHeight;
 } Input;
 
 void input_init(Input* input);
