@@ -31,7 +31,9 @@ World world;
 Stuff stuff;
 Sprite lose;
 Hud hud;
+Music music;
 int inventory[st_size];
+Sound snd_pickup;
 
 #if !defined(PLATFORM_WEB)
 #include "console.c"
@@ -47,6 +49,8 @@ int inventory[st_size];
 
 void UpdateDrawFrame()
 {
+    UpdateMusicStream(music);  
+
     // handle input
     Vector2 movement = input_get_dir();
 
@@ -77,8 +81,14 @@ void UpdateDrawFrame()
                                mole.sprite.position,
                                pickup_radius,
                                &picked_up_type);
-    if (success)
+    if (success) {
         inventory[picked_up_type] += 1;
+        if (!IsSoundPlaying(snd_pickup)) {
+            SetSoundPitch(snd_pickup, 0.7 + (rand() % 60 / 100.0f));
+            PlaySound(snd_pickup);
+        }
+    }
+
 
     // draw
 
@@ -109,10 +119,14 @@ int main()
     InitAudioDevice();
     SetTargetFPS(FPS);
 
+
     /***************************************************************************
      * Init stuff
      ****************************************************************************/
+    snd_pickup = LoadSound("resources/pickup.wav");
+    SetSoundVolume(snd_pickup, 0.3f);
     hud_init(&hud, inventory);
+
     mole_init(&mole, WIDTH/2, HEIGHT+60);
     world_init(&world);
     sprite_init(&lose, "resources/lose.png", 660, 1, WIDTH/2, HEIGHT/2, 15, 0);
@@ -120,6 +134,10 @@ int main()
 
     input_set_mouse_center(&mole.sprite);
     input_set_device(INPUT_GAMEPAD);
+
+    music = LoadMusicStream("resources/bgm/doom.ogg");
+    SetMusicVolume(music, 0.3f);
+    PlayMusicStream(music);
 
 #if defined(PLATFORM_WEB)
     emscripten_set_main_loop(UpdateDrawFrame, FPS, 1);

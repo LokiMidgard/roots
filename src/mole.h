@@ -24,6 +24,7 @@ typedef struct Mole
     Sound snd_dig;
     Sound snd_collide;
     Sound snd_explode;
+    Sound snd_hurt;
 
     // fx
     float explode_time;
