@@ -152,24 +152,26 @@ void MainLoop()
 
     if (mole.health <= 0)
     {
-        float border_x = WIDTH / 10.0f;
-        float border_y = HEIGHT / 10.0f;
-        Color background_color = {0, 0, 0, 200}; 
+        float border_x = 0;//WIDTH / 10.0f;
+        float border_y = 0;//HEIGHT / 10.0f;
+        Color background_color = {0, 0, 0, Clamp(endScreenTimer*1.5f,0,200)}; 
         DrawRectangle(border_x, border_y, WIDTH - 2 * border_x, HEIGHT - 2 * border_y, background_color);
         endScreenTimer++;
         if (endScreenTimer > 150)
         {
+            continueS.tint = (Color){255,255,255,Clamp((endScreenTimer-150)*3.5f,0,255)};
             sprite_draw(&continueS);
         }
         if (input_any(&input) && endScreenTimer > 150)
         {
             reset_game();
         }
+        lose.tint = (Color){255,255,255,Clamp(endScreenTimer*2.5f,0,255)};
         sprite_draw(&lose);
         char points[10];
         snprintf(points, 10, "%d", (int)mole.points);
         Vector2 measurment = MeasureTextEx(fontBm, points, (float)fontBm.baseSize, 2);
-        DrawTextEx(fontBm, points, (Vector2){(WIDTH / 2 -measurment.x/2 ), (HEIGHT / 2)}, (float)fontBm.baseSize, 2, WHITE);
+        DrawTextEx(fontBm, points, (Vector2){(WIDTH / 2 -measurment.x/2 ), (HEIGHT / 2-measurment.y/2 )}, (float)fontBm.baseSize, 2, (Color){255,255,255,Clamp(endScreenTimer*2.5f,0,255)});
     }
     EndTextureMode();
     ClearBackground(BLACK);
@@ -193,8 +195,8 @@ int main()
      * Init stuff
      ****************************************************************************/
     Vector2 origin = {0.5, 0.5};
-    sprite_init_static_with_origin(&lose, "resources/lose.png", WIDTH / 2, HEIGHT / 2 - 180, origin);
-    sprite_init_static_with_origin(&continueS, "resources/continue.png", WIDTH / 2, HEIGHT / 2 + 180, origin);
+    sprite_init_static_with_origin(&lose, "resources/lose.png", WIDTH / 2, HEIGHT / 2 - 150, origin);
+    sprite_init_static_with_origin(&continueS, "resources/continue.png", WIDTH / 2, HEIGHT / 2 + 150, origin);
     input_init(&input);
 
     init_game();
