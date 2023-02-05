@@ -24,7 +24,7 @@ typedef struct Mole
     Particles part_dig;
 } Mole;
 
-void mole_update(Mole *mole, Vector2 *movement);
+void mole_update(Mole *mole, Vector2 movement);
 void mole_init(Mole *mole, float x, float y);
 void mole_draw(Mole* mole);
 void mole_explode(Mole* mole);

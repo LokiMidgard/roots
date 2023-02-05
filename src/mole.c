@@ -13,7 +13,7 @@ void mole_init(Mole *mole, float x, float y)
 
     mole->health = 100;
     mole->points = 0;
-    mole->speed = 3;
+    mole->speed = 100.0f * 0.015f;
     sprite_init(&mole->sprite, "resources/mole.png", 8, 8, 30, 30, 15, 0);
 
     Vector2 position = {x, y};
@@ -26,83 +26,65 @@ void mole_init(Mole *mole, float x, float y)
     particles_init(&mole->part_dig);
 }
 
-void mole_update(Mole *mole, Vector2 *movement)
+void mole_update(Mole *mole, Vector2 movement)
 {
     Sprite *sprite = &mole->sprite;
 
-    // dig
-    int mole_width = (sprite->image.width / sprite->number_of_frames);
-    int mole_height = sprite->image.height;
+    int mole_width = 6;
 
-    // set movement speed of mole
-    *movement = Vector2Normalize(*movement);
-    *movement = Vector2Scale(*movement, mole->speed);
+    movement = Vector2Normalize(movement);
+    movement = Vector2Scale(movement, mole->speed);
 
-    Vector2 new_mole_position = Vector2Add(sprite->position, *movement);
+    Vector2 new_mole_position = Vector2Add(sprite->position, movement);
 
-    float terain_multiplyer = 1.0f;
-    for (int offsetX = -mole_width / 2; offsetX < mole_width / 2; ++offsetX)
-        for (int offsetY = -mole_height / 2; offsetY < mole_height / 2; ++offsetY)
-        {
-            if ((offsetY != -mole_height / 2 && offsetY != mole_height / 2 - 1) || (offsetX != -mole_width / 2 && offsetX != mole_width / 2 - 1))
-            {
-                Color *current = world_get_terrain(&world, (int)new_mole_position.x + offsetX, (int)new_mole_position.y + offsetY);
-                if (IS_COLOR(current, TERRA_ROOT))
-                {
-                    mole->health -= 1;
-                }
-                else if (IS_COLOR(current, TERRA_EMERALD))
-                {
-                    mole->points += 1;
-                }
-                else if (IS_COLOR(current, TERRA_QUICK_STONE))
-                {
-                    mole->speedBonus = 300;
-                }
-                else if (IS_COLOR(current, TERRA_DIG_STONE))
-                {
-                    mole->stoneEaterBonus = 600;
-                }
-            }
-        }
+    Dig dig = world_check_dig(&world,
+                              new_mole_position.x,
+                              new_mole_position.y,
+                              mole_width);
+    float dig_speed_penalty = 0.0f;
+    dig_speed_penalty += dig.types[EARTH] * 0.02f;
+    dig_speed_penalty += dig.types[STONE] * 0.05f;
+    float max_dig_speed_penalty = 0.98f;
+    dig_speed_penalty = fminf(max_dig_speed_penalty, dig_speed_penalty);
+    printf("%f\n", dig_speed_penalty);
+    movement = Vector2Scale(movement, (1.0f - dig_speed_penalty));
+    new_mole_position = Vector2Add(sprite->position, movement);
 
-    Dig dig = world_dig(&world, sprite->position.x, sprite->position.y, mole_width);
-    for(int t = EARTH; t < TerrainTypeSize; ++t) {
+    dig = world_dig(&world,
+                    new_mole_position.x,
+                    new_mole_position.y,
+                    mole_width);
+    sprite->position = new_mole_position;
+    mole->health -= dig.types[ROOT];
+
+    for(int t = 0; t < TerrainTypeSize; ++t) {
         int num = (int)(dig.types[t] * 0.1f);
         if (num > 0) {
-            particles_emit(&mole->part_dig, num, sprite->position.x, sprite->position.y, TerrainTypeToColor[t]);
+            particles_emit(&mole->part_dig, num, sprite->position.x, sprite->position.y, terrain_type_to_color(t));
         }
     }
 
-    terain_multiplyer -= dig.types[EARTH] * 0.01f;
-    terain_multiplyer -= dig.types[STONE] * 0.03f;
-    terain_multiplyer = fmaxf(0.1f, terain_multiplyer);
     // calculate bonuses
     if (mole->speedBonus > 0)
     {
-        *movement = Vector2Scale(*movement, 1.5);
+        movement = Vector2Scale(movement, 1.5);
         mole->speedBonus -= 1;
     }
     if (mole->stoneEaterBonus > 0)
     {
         mole->stoneEaterBonus -= 1;
     }
-    *movement = Vector2Scale(*movement, terain_multiplyer);
 
-    if (Vector2Length(*movement) > 0.5)
+    if (Vector2Length(movement) > 0.5f)
     {
         if (!IsSoundPlaying(mole->snd_dig))
-        {
             PlaySound(mole->snd_dig);
-        }
     }
 
-    if (terain_multiplyer == 0)
+    if (dig_speed_penalty == max_dig_speed_penalty)
     {
         if (!IsSoundPlaying(mole->snd_collide))
-        {
             PlaySound(mole->snd_collide);
-        }
     }
 
     if (mole->explode_time > 0) {

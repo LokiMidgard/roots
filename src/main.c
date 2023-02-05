@@ -55,7 +55,7 @@ void UpdateDrawFrame()
     {
         // update
         world_update(&world, &mole);
-        mole_update(&mole, &movement);
+        mole_update(&mole, movement);
     }
 
     // draw

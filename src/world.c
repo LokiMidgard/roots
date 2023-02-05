@@ -104,6 +104,25 @@ world_get_terrain(World *world, int x, int y)
     return bitmap + POS(x, y);
 }
 
+Dig world_check_dig(World *world, int x, int y, int radius)
+{
+    Dig dig = {0};
+    for (int offsetX = -radius; offsetX < radius; ++offsetX)
+    {
+        for (int offsetY = -radius; offsetY < radius; ++offsetY)
+        {
+            if (sqrtf(offsetX * offsetX + offsetY * offsetY) <= radius)
+            {
+                Color *c = world_get_terrain(world, x + offsetX, y + offsetY);
+                TerrainType t = color_to_terrain_type(*c);
+                dig.types[t] += 1;
+            }
+        }
+    }
+    dig.types[TUNNEL] = 0;
+    return (dig);
+}
+
 Dig world_dig(World *world, int x, int y, int radius)
 {
     Dig dig = {0};
@@ -111,20 +130,16 @@ Dig world_dig(World *world, int x, int y, int radius)
     {
         for (int offsetY = -radius; offsetY < radius; ++offsetY)
         {
-            if (sqrt(offsetX * offsetX + offsetY * offsetY) <= radius)
+            if (sqrtf(offsetX * offsetX + offsetY * offsetY) <= radius)
             {
                 Color *c = world_get_terrain(world, x + offsetX, y + offsetY);
-                for (int t = EARTH; t < TerrainTypeSize; ++t)
-                {
-                    if (t == TUNNEL)
-                        continue;
-                    if (color_are_equal(*c, terrain_type_to_color(t)))
-                        dig.types[t] += 1;
-                }
+                TerrainType t = color_to_terrain_type(*c);
+                dig.types[t] += 1;
                 world_set_terrain(world, x + offsetX, y + offsetY, TERRA_TUNEL);
             }
         }
     }
+    dig.types[TUNNEL] = 0;
     return (dig);
 }
 

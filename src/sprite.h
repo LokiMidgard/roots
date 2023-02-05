@@ -16,7 +16,7 @@ typedef struct Sprite
 } Sprite;
 
 void sprite_init(Sprite *s, const char *file, int frame_width, int num_of_frames, int x, int y, int speed, float rotation);
-void sprite_update(Sprite *s, Vector2 *movement);
+void sprite_update(Sprite *s, Vector2 movement);
 void sprite_draw(Sprite *s);
 
 #endif

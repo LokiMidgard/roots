@@ -33,13 +33,13 @@ void sprite_draw(Sprite *s)
     DrawTexturePro(s->image, frame, dstRect, origin, s->rotation, s->tint);
 }
 
-void sprite_update(Sprite *s, Vector2 *movement)
+void sprite_update(Sprite *s, Vector2 movement)
 {
     s->counter = (s->counter + 1) % (s->number_of_frames * s->speed);
-    if (movement->x != 0 || movement->y != 0)
+    if (movement.x != 0 || movement.y != 0)
     {
         Vector2 one = {0, -1};
-        s->rotation = Vector2Angle(one, *movement) * RAD2DEG;
-        s->position = Vector2Add(s->position, *movement);
+        s->rotation = Vector2Angle(one, movement) * RAD2DEG;
+        s->position = Vector2Add(s->position, movement);
     }
 }
