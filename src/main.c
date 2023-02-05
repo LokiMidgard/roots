@@ -61,7 +61,7 @@ void UpdateDrawFrame()
     // draw
 
     BeginDrawing();
-        ClearBackground(BLACK);
+        ClearBackground(MAGENTA);
         world_draw(&world);
         mole_draw(&mole);
         char text[256] = {0};

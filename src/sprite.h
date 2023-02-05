@@ -6,6 +6,7 @@
 typedef struct Sprite
 {
     Vector2 position;
+    Vector2 origin;
     int speed;
     int counter;
     Texture2D image;

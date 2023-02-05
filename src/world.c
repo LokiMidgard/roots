@@ -29,8 +29,11 @@ void world_set_terrain(World *world, int x, int y, Color color)
 void world_init(World *world)
 {
     world->speed = 0.3f;
-    world->pos_remainder = 100;
+    world->pos_remainder = -100;
+
     int index = 0;
+    index = world->number_of_images++;
+    world->images[index] = LoadImage("resources/tile_0.png");
     index = world->number_of_images++;
     world->images[index] = LoadImage("resources/tile_1.png");
     index = world->number_of_images++;
@@ -48,21 +51,32 @@ void world_init(World *world)
     world->worm_texture = LoadTexture("resources/worm.png");
     index = 0;
     index = world->number_of_bg++;
-    sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_0.png",640, 1, WIDTH / 2 - 640, HEIGHT / 2 + 90, 1, 0);
+    Vector2 origin = {0,1};
+    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_0.png",0,350, origin);
     index = world->number_of_bg++;
-    sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_0.png",640, 1, WIDTH / 2 + 640, HEIGHT / 2 + 90, 1, 0);
+    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_0.png",640,350, origin);
     index = world->number_of_bg++;
-    sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_0.png",640, 1, WIDTH / 2, HEIGHT / 2 + 90, 1, 0);
+    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_1.png",0, 350,origin);
     index = world->number_of_bg++;
-    sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_1.png",640, 1, WIDTH / 2, HEIGHT / 2 + 90, 1, 0);
+    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_1.png",640, 350,origin);
     index = world->number_of_bg++;
-    sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_2.png",640, 1, WIDTH / 2, HEIGHT / 2 + 90, 1, 0);
+    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_2.png",0, 350,origin);
     index = world->number_of_bg++;
-    sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_3.png",640, 1, WIDTH / 2, HEIGHT / 2 + 90, 1, 0);
+    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_2.png",640, 350,origin);
     index = world->number_of_bg++;
-    sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_4.png", 1560, 1, WIDTH / 2, HEIGHT / 2 + 50, 1, 0);
+    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_3.png",0, 350,origin);
     index = world->number_of_bg++;
-    sprite_init(&world->bg[index], "resources/forest/fg1.png", 960, 1, WIDTH / 2, HEIGHT / 2 + 290, 1, 0);
+    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_3.png",640, 350,origin);
+    index = world->number_of_bg++;
+    origin.x=0.5;
+    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_4.png", WIDTH / 2, 350,origin);
+    index = world->number_of_bg++;
+    origin.y=0.5;
+    sprite_init_static_with_origin(&world->bg[index], "resources/forest/fg1.png", WIDTH / 2, 350,origin);
+    // sprite_init(&world->bg[index], "resources/forest/fg1.png", 960, 1, WIDTH / 2, HEIGHT / 2 + 290, 1, 0);
+    
+    // index = world->number_of_bg++;
+    // sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_3.png",640, 1, WIDTH / 2, HEIGHT / 2 + 90, 1, 0);
     
     world->shader = LoadShader(0, "resources/shader.fs");
     world->texLoc = GetShaderLocation(world->shader, "texture_sand");
@@ -76,7 +90,7 @@ void world_init(World *world)
     for (int i = 0; i < NUM_SEEDS; ++i)
     {
         int x = rand() % WIDTH;
-        int y = HEIGHT - 1;
+        int y = 350;
         world_set_terrain(world, x, y, TERRA_ROOT_TIP);
         for (int offset = -3; offset < 3; ++offset)
         {
