@@ -5,6 +5,7 @@
 
 typedef struct Screen {
     RenderTexture2D buffer;
+    Shader shader;
     int oldWidth;
     int oldHeight;
 } Screen;
