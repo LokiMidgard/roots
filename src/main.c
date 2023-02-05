@@ -47,6 +47,22 @@ bool started = false;
 #include "hud.c"
 #include "inventory.c"
 
+void reset_game()
+{
+    mole_reset(&mole, WIDTH / 2, HEIGHT + 60);
+    world_reset(&world);
+    endScreenTimer = 0;
+}
+
+void init_game()
+{
+    world_init(&world);
+    hud_init(&hud, &inventory);
+    mole_init(&mole, WIDTH / 2, HEIGHT + 60);
+    stuff_init(&stuff);
+    inventory_init(&inventory);
+}
+
 void MainLoop()
 {
     UpdateMusicStream(music);
@@ -127,7 +143,7 @@ void MainLoop()
         }
         if (input_any(&input) && endScreenTimer > 150)
         {
-            initGameLogitc();
+            reset_game();
         }
         sprite_draw(&lose);
         char points[10];
@@ -139,15 +155,6 @@ void MainLoop()
     EndDrawing();
 }
 
-void initGameLogitc()
-{
-    hud_init(&hud, &inventory);
-    mole_init(&mole, WIDTH / 2, HEIGHT + 60);
-    world_init(&world);
-    endScreenTimer = 0;
-    stuff_init(&stuff);
-    inventory_init(&inventory);
-}
 
 int main()
 {
@@ -168,7 +175,7 @@ int main()
     sprite_init_static_with_origin(&continueS, "resources/continue.png", WIDTH / 2, HEIGHT / 2 - 80, origin);
     input_init(&input);
 
-    initGameLogitc();
+    init_game();
 
     input_set_mouse_center(&input, &mole.sprite);
     input_set_device(&input, INPUT_GAMEPAD);

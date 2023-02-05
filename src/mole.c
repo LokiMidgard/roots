@@ -4,6 +4,21 @@
 #include "mole.h"
 #include "world.h"
 
+void mole_reset(Mole *mole, int x, int y)
+{
+    mole->snd_dig = mole->snd_dig_earth;
+    mole->health = 100;
+    mole->points = 0;
+    mole->speed = 100.0f * 0.015f;
+
+    Vector2 position = {x, y};
+    mole->sprite.position = position;
+
+    mole->speedBonus = 0;
+    mole->stoneEaterBonus = 0;
+
+    mole->explode_time = 0;
+}
 void mole_init(Mole *mole, float x, float y)
 {
     // mole->snd_dig_earth = LoadSoundEx("resources/sound/dig03.mp3", 0.7f);
@@ -13,20 +28,11 @@ void mole_init(Mole *mole, float x, float y)
     mole->snd_explode = LoadSoundEx("resources/sound/explode.wav", 1.2f);
     mole->snd_hurt = LoadSoundEx("resources/sound/deep.wav", 1.0f);
 
-    mole->snd_dig = mole->snd_dig_earth;
-    mole->health = 100;
-    mole->points = 0;
-    mole->speed = 100.0f * 0.015f;
     sprite_init(&mole->sprite, "resources/mole_test.png", 16, 5, 30, 30, 15, 0);
 
-    Vector2 position = {x, y};
-    mole->sprite.position = position;
-
-    mole->speedBonus = 0;
-    mole->stoneEaterBonus = 0;
-
-    mole->explode_time = 0;
     particles_init(&mole->part_dig);
+
+    mole_reset(mole, x, y);
 }
 
 void mole_update(Mole *mole, Vector2 movement)

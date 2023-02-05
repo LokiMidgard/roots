@@ -65,6 +65,7 @@ typedef struct World
     
     // graphics
     int number_of_images;
+    Image first_image;
     Image images[10];
     int number_of_bg;
     Sprite bg[10];
@@ -77,6 +78,7 @@ typedef struct World
     int current_scroll;             // y-offset used for pixel lookups
     int last_scroll;                // number of lines scrolled in last frame
     int scrolling_paused;           // number of frames to stop scrolling
+    int depth;
     Color* current_bitmap;
     Color* next_bitmap;
     Texture2D screen_texture;
@@ -88,7 +90,6 @@ typedef struct World
     // Game Logic
     Worms worms;
 
-    int depth;
 } World;
 
 typedef struct Dig
