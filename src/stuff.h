@@ -14,8 +14,8 @@ typedef enum StuffType
     st_APPLE,
     st_BEATLE,
     st_THING,
-    st_blub,
-    st_blab,
+    st_BLUE,
+    st_ORANGE,
     st_size,
 } StuffType;
 

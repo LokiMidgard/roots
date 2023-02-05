@@ -29,6 +29,7 @@ Sprite lose;
 Hud hud;
 Music music;
 Font fontBm;
+Sound intro;
 Inventory inventory;
 
 bool started = false;
@@ -50,27 +51,35 @@ void MainLoop()
 
     Vector2 movement = input_get_dir(&input);
 
-    if (started)
-    {
-        if (input_is_button_pressed(&input, 0))
-            mole.stoneEaterBonus = 600;
-
-        if (input_is_button_pressed(&input, 1))
-            mole.speedBonus = 300;
-
-        if (input_is_button_pressed(&input, 2))
-            mole_explode(&mole);
-
-        if (mole.health > 0)
-        {
-            // update
-            world_update(&world);
-            mole.sprite.position.y -= world.last_scroll;
-            mole_update(&mole, movement);
-
-            snprintf(hud.debug_text, 256, "depth: %2.2d\npoints: %d\nhealth: %.f\ninput: %s\nfullscreen: F\nexit: ESC", world.depth, (int)mole.points, mole.health, input_get_device_name(&input));
-            hud_update(&hud);
+    if (started) {
+        if (input_is_button_pressed(&input, 0)) {
+            if (inventory_use(&inventory, st_MEAT)) {
+                mole.stoneEaterBonus = 600;
+            }
         }
+
+        if (input_is_button_pressed(&input, 1)) {
+            if (inventory_use(&inventory, st_STAR)) {
+                mole.speedBonus = 300;
+            }
+        }
+
+        if (input_is_button_pressed(&input, 2)) {
+            if (inventory_use(&inventory, st_BOMB)) {
+                mole_explode(&mole);
+            }
+        }
+    }
+
+    if (started && mole.health > 0)
+    {
+        // update
+        world_update(&world);
+        mole.sprite.position.y -= world.last_scroll;
+        mole_update(&mole, movement);
+
+        snprintf(hud.debug_text, 256, "depth: %2.2d\npoints: %d\nhealth: %.f\ninput: %s\nfullscreen: F\nexit: ESC", world.depth, (int)mole.points, mole.health, input_get_device_name(&input));
+        hud_update(&hud);
         stuff_update(&stuff, world.last_scroll);
     }
 
@@ -139,6 +148,9 @@ int main()
 
     input_set_mouse_center(&input, &mole.sprite);
     input_set_device(&input, INPUT_GAMEPAD);
+
+    intro = LoadSoundEx("resources/speech/roots.wav", 2.0f);
+    PlaySound(intro);
 
     music = LoadMusicStream("resources/bgm/doom.ogg");
     SetMusicVolume(music, 0.3f);

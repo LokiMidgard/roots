@@ -6,12 +6,12 @@
 
 void mole_init(Mole *mole, float x, float y)
 {
-    // mole->snd_dig_earth = LoadSoundEx("resources/dig03.mp3", 0.7f);
-    mole->snd_dig_earth = LoadSoundEx("resources/dig01.wav", 0.1f);
-    mole->snd_dig_stone = LoadSoundEx("resources/dig_stone.mp3", 0.4f);
-    mole->snd_collide = LoadSoundEx("resources/crumble.wav", 0.5f);
-    mole->snd_explode = LoadSoundEx("resources/explode.wav", 1.2f);
-    mole->snd_hurt = LoadSoundEx("resources/deep.wav", 1.0f);
+    // mole->snd_dig_earth = LoadSoundEx("resources/sound/dig03.mp3", 0.7f);
+    mole->snd_dig_earth = LoadSoundEx("resources/sound/dig01.wav", 0.1f);
+    mole->snd_dig_stone = LoadSoundEx("resources/sound/dig_stone.mp3", 0.4f);
+    mole->snd_collide = LoadSoundEx("resources/sound/crumble.wav", 0.5f);
+    mole->snd_explode = LoadSoundEx("resources/sound/explode.wav", 1.2f);
+    mole->snd_hurt = LoadSoundEx("resources/sound/deep.wav", 1.0f);
 
     mole->snd_dig = mole->snd_dig_earth;
     mole->health = 100;
@@ -145,11 +145,11 @@ void mole_update(Mole *mole, Vector2 movement)
 
     if (mole->stoneEaterBonus > 0 && mole->speedBonus > 0)
     {
-        sprite->tint = PURPLE;
+        sprite->tint = ORANGE;
     }
     else if (mole->speedBonus > 0)
     {
-        sprite->tint = BLUE;
+        sprite->tint = YELLOW;
     }
     else if (mole->stoneEaterBonus > 0)
     {

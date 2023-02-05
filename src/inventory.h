@@ -6,10 +6,13 @@
 
 typedef struct Inventory {
     int pickups[st_size];
+    Sound sounds[st_size];
     Sound snd_pickup;
 } Inventory;
 
 void inventory_init(Inventory* inventory);
+
 void inventory_add(Inventory* inventory, StuffType picked_up_type, int num);
+bool inventory_use(Inventory* inventory, StuffType type);
 
 #endif
