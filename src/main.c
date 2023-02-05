@@ -1,22 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
-#if !defined(PLATFORM_WEB)
-#include <conio.h>
-#endif
 #include <string.h>
+
 #include "raylib.h"
+
 #if defined(PLATFORM_WEB)
 #include <emscripten/emscripten.h>
 #endif
-int color_are_equal(Color c1, Color c2)
-{
-    return c1.r == c2.r && c1.g == c2.g && c1.b == c2.b;
-}
 
 #include "config.h"
-#if !defined(PLATFORM_WEB)
+#include "utils.h"
 #include "console.h"
-#endif
 #include "input.h"
 #include "sprite.h"
 #include "world.h"
@@ -32,24 +26,23 @@ Stuff stuff;
 Sprite lose;
 Hud hud;
 Music music;
+
 int inventory[st_size];
 Sound snd_pickup;
 
 bool started = false;
 
-#if !defined(PLATFORM_WEB)
 #include "console.c"
-#endif
 #include "input.c"
 #include "sprite.c"
 #include "world.c"
 #include "mole.c"
 #include "worms.c"
-#include "particles.c"
 #include "stuff.c"
+#include "particles.c"
 #include "hud.c"
 
-void UpdateDrawFrame()
+void MainLoop()
 {
     UpdateMusicStream(music);
 
@@ -99,19 +92,15 @@ void UpdateDrawFrame()
     }
 
     // draw
-
     BeginDrawing();
-    ClearBackground(MAGENTA);
-    world_draw(&world);
-    stuff_draw(&stuff);
-    mole_draw(&mole);
-    hud_draw(&hud, &stuff);
+        ClearBackground(MAGENTA);
+        world_draw(&world);
+        stuff_draw(&stuff);
+        mole_draw(&mole);
+        hud_draw(&hud, &stuff);
 
-    if (mole.health <= 0)
-    {
-        sprite_draw(&lose);
-    }
-
+        if (mole.health <= 0)
+            sprite_draw(&lose);
     EndDrawing();
 }
 
@@ -148,11 +137,11 @@ int main()
     PlayMusicStream(music);
 
 #if defined(PLATFORM_WEB)
-    emscripten_set_main_loop(UpdateDrawFrame, FPS, 1);
+    emscripten_set_main_loop(MainLoop, FPS, 1);
 #else
     while (!WindowShouldClose()) // Detect window close button or ESC key
     {
-        UpdateDrawFrame();
+        MainLoop();
     }
 #endif
 
@@ -160,9 +149,7 @@ int main()
      * Cleanup
      ****************************************************************************/
     CloseWindow();
-#if !defined(PLATFORM_WEB)
-    FreeConsole();
-#endif
+    CloseConsole();
 
     return 0;
 }
