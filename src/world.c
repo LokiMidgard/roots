@@ -122,7 +122,7 @@ void world_init(World *world)
         index = world->number_of_fg++;
         sprite_init_static_with_origin(&world->fg[index], "resources/forest/fg1.png", WIDTH / 2, 350, origin);
     }
-    world->shader = LoadShader(0, "resources/shader.fs");
+    world->shader = LoadShader(0, "resources/shader/shader.fs");
     world->shader_position_location = GetShaderLocation(world->shader, "scroll_position");
     world->shader_map_location = GetShaderLocation(world->shader, "texture_map");
     world->map_texture = LoadTextureFromImage(LoadImage("resources/tileMap.png"));
