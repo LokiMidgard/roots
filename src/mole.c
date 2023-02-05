@@ -2,6 +2,7 @@
 #include "raymath.h"
 #include "config.h"
 #include "mole.h"
+#include "world.h"
 
 void mole_init(Mole *mole, float x, float y)
 {

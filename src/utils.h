@@ -3,8 +3,8 @@
 
 #include "stdlib.h"
 
-int utils_random_int(int min, int max) {
-    int spread = max-min;
+int utils_random_int(int min, int maxInclusiv) {
+    int spread = (maxInclusiv+1)-min;
     int divisor = RAND_MAX/(spread);
     int retval;
 
