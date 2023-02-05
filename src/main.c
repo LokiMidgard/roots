@@ -66,7 +66,7 @@ void MainLoop()
             mole.sprite.position.y -= world.last_scroll;
             mole_update(&mole, movement);
 
-            snprintf(hud.debug_text, 256, "depth: %2.2d\npoints: %d\nhealth: %.f\ninput: %s\nfullscreen: F\nexit: ESC", world.depth, mole.points, mole.health, input_get_device_name(&input));
+            snprintf(hud.debug_text, 256, "depth: %2.2d\npoints: %d\nhealth: %.f\ninput: %s\nfullscreen: F\nexit: ESC", world.depth, (int)mole.points, mole.health, input_get_device_name(&input));
             hud_update(&hud);
         }
     }

@@ -14,7 +14,7 @@ typedef struct Mole
     float speed;
 
     // game logic
-    int points;
+    float points;
     float health;
     // bonuses have a value indicating the number of frames they have effect.
     float speedBonus;
