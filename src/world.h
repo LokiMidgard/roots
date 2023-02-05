@@ -62,6 +62,8 @@ typedef struct World
     Image images[10];
     int number_of_bg;
     Sprite bg[10];
+    int number_of_fg;
+    Sprite fg[10];
     Color* current_bitmap;
     Color* next_bitmap;
     Texture2D screen_texture;

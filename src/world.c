@@ -51,37 +51,38 @@ void world_init(World *world)
     world->worm_texture = LoadTexture("resources/worm.png");
     index = 0;
     index = world->number_of_bg++;
-    Vector2 origin = {0,1};
-    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_0.png",0,350, origin);
+    Vector2 origin = {0, 1};
+    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_0.png", 0, 350, origin);
     index = world->number_of_bg++;
-    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_0.png",640,350, origin);
+    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_0.png", 640, 350, origin);
     index = world->number_of_bg++;
-    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_1.png",0, 350,origin);
+    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_1.png", 0, 350, origin);
     index = world->number_of_bg++;
-    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_1.png",640, 350,origin);
+    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_1.png", 640, 350, origin);
     index = world->number_of_bg++;
-    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_2.png",0, 350,origin);
+    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_2.png", 0, 350, origin);
     index = world->number_of_bg++;
-    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_2.png",640, 350,origin);
+    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_2.png", 640, 350, origin);
     index = world->number_of_bg++;
-    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_3.png",0, 350,origin);
+    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_3.png", 0, 350, origin);
     index = world->number_of_bg++;
-    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_3.png",640, 350,origin);
+    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_3.png", 640, 350, origin);
     index = world->number_of_bg++;
-    origin.x=0.5;
-    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_4.png", WIDTH / 2, 350,origin);
-    index = world->number_of_bg++;
-    origin.y=0.5;
-    sprite_init_static_with_origin(&world->bg[index], "resources/forest/fg1.png", WIDTH / 2, 350,origin);
+    origin.x = 0.5;
+    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_4.png", WIDTH / 2, 350, origin);
+
+    index = 0;
+    origin.y = 0.5;
+    index = world->number_of_fg++;
+    sprite_init_static_with_origin(&world->fg[index], "resources/forest/fg1.png", WIDTH / 2, 350, origin);
     // sprite_init(&world->bg[index], "resources/forest/fg1.png", 960, 1, WIDTH / 2, HEIGHT / 2 + 290, 1, 0);
-    
+
     // index = world->number_of_bg++;
     // sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_3.png",640, 1, WIDTH / 2, HEIGHT / 2 + 90, 1, 0);
-    
+
     world->shader = LoadShader(0, "resources/shader.fs");
     world->texLoc = GetShaderLocation(world->shader, "texture_sand");
     world->sand_texture = LoadTextureFromImage(LoadImage("resources/sand.png"));
-
 
     world->leftSpeed = 20;
     world->rightSpeed = 20;
@@ -166,6 +167,11 @@ void world_scroll(World *world, Sprite *mole)
         for (int i = 0; i < world->number_of_bg; i++)
         {
             bg = &world->bg[i];
+            bg->position.y -= i * 0.05;
+        }
+        for (int i = 0; i < world->number_of_fg; i++)
+        {
+            bg = &world->fg[i];
             bg->position.y -= 1;
         }
 
@@ -326,6 +332,12 @@ void world_update(World *world, Mole *mole)
 
 void world_draw(World *world)
 {
+
+    for (int i = 0; i < world->number_of_bg; i++)
+    {
+        sprite_draw(&world->bg[i]);
+    }
+
     Rectangle srcRect = {0, 0, WIDTH, HEIGHT};
     Rectangle dstRect = {0, 0, GetScreenWidth(), GetScreenHeight()};
     Vector2 origin = {0, 0};
@@ -339,15 +351,15 @@ void world_draw(World *world)
     DrawTexturePro(world->screen_texture, srcRect, dstRect, origin, 0.0f, WHITE);
     EndShaderMode();
 
-
-    for (int i = 0; i < world->number_of_bg; i++)
-    {
-        sprite_draw(&world->bg[i]);
-    }
     for (int index = 0; index < world->number_of_active_worms; ++index)
     {
         Rectangle source = {0, 0, 8, 8};
         Vector2 target_position = {100.0f, 100.0f};
         DrawTextureRec(world->worm_texture, source, target_position, WHITE);
+    }
+
+    for (int i = 0; i < world->number_of_fg; i++)
+    {
+        sprite_draw(&world->fg[i]);
     }
 }
