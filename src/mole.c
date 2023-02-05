@@ -106,14 +106,13 @@ void mole_update(Mole *mole, Vector2 movement)
         mole->stoneEaterBonus -= 1;
     }
 
-    if (dig.types[EARTH] > 1 && dig.types[STONE] > 1)
+    if (dig.types[EARTH] > 1 || dig.types[STONE] > 1)
     {
         if (dig.types[STONE] > dig.types[EARTH])
             mole->snd_dig = mole->snd_dig_stone;
         else
             mole->snd_dig = mole->snd_dig_earth;
     }
-    float speed = Vector2Length(movement);
     if (fabsf(movement.x) > 0.0f || fabsf(movement.y) > 0.0f)
     {
         mole->sprite.speed = 5;
