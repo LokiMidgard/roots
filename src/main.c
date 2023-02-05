@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#if !defined(PLATFORM_WEB)
 #include <conio.h>
+#endif
 #include <string.h>
 #include "raylib.h"
 #if defined(PLATFORM_WEB)
@@ -12,7 +14,9 @@ int color_are_equal(Color c1, Color c2)
 }
 
 #include "config.h"
+#if !defined(PLATFORM_WEB)
 #include "console.h"
+#endif
 #include "input.h"
 #include "sprite.h"
 #include "world.h"
@@ -25,7 +29,9 @@ World  world;
 Sprite lose;
 
 
+#if !defined(PLATFORM_WEB)
 #include "console.c"
+#endif
 #include "input.c"
 #include "sprite.c"
 #include "world.c"
@@ -74,7 +80,9 @@ int main()
     /***************************************************************************
      * Init technical stuff
      ****************************************************************************/
+#if !defined(PLATFORM_WEB)
     InitConsole();
+#endif
     SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "raylib");
     InitAudioDevice();
@@ -103,7 +111,9 @@ int main()
      * Cleanup
      ****************************************************************************/
     CloseWindow();
+#if !defined(PLATFORM_WEB)
     FreeConsole();
+#endif
 
     return 0;
 }
