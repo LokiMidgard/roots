@@ -239,11 +239,18 @@ int world_scroll(World *world)
     return lines_to_scroll;
 }
 
+int last_max_root_height = 0;
+int max_root_height = 0;
 void update_roots(World *world)
 {
     int alternate = -1;
 
     // update pixles
+    int root_count = 0;
+    max_root_height = 0;
+
+    int distance_to_mole = mole.sprite.position.y - last_max_root_height;
+    printf("distance to mole: %d\n", distance_to_mole);
     for (int x = 0; x < WIDTH; x++)
         for (int y = HEIGHT - 1; y > 0; y--)
         {
@@ -252,6 +259,9 @@ void update_roots(World *world)
             Color *current = world_get_terrain(world, x, y);
             if (current->r == TERRA_ROOT_TIP.r)
             {
+                if (y > max_root_height)
+                    max_root_height = y;
+                root_count += 1;
                 // int targetHeight = x < (WIDTH / 3)
                 //                        ? world->leftSpeed
                 //                    : (x < 2 * WIDTH / 3)
@@ -260,7 +270,17 @@ void update_roots(World *world)
 
                 // if (rand() % targetHeight < y)
                 //     continue;
-                if (utils_random_int(0, 450) > mole.sprite.position.y)
+                int should_skip = 1;
+                if (distance_to_mole > 400)
+                    should_skip = 0;
+                else if (distance_to_mole > 70)
+                    should_skip = (utils_random_int(0, 100) <= 5);
+                else if (distance_to_mole > 50)
+                    should_skip = (utils_random_int(0, 100) <= 10);
+                else
+                    should_skip = (utils_random_int(0, 100) <= 55);
+
+                if (should_skip)
                     continue;
 
                 unsigned char direction = current->g & 7;
@@ -271,7 +291,7 @@ void update_roots(World *world)
                     age = 0;
                     direction = utils_random_int(0, 7);
                 }
-                age += 1;
+                age+=1;
 
                 if ((utils_random_int(0, 1000)) < 5)
                 {
@@ -340,7 +360,7 @@ void update_roots(World *world)
                 if (age == 150)
                 {
                     Color *right = world_get_terrain(world, x + 1, y);
-                    if (right->r != 3)
+                    if (right->r > 3 || right->b < age)
                     {
                         world_set_terrain(world, x + 1, y, TERRA_ROOT);
                     }
@@ -355,6 +375,16 @@ void update_roots(World *world)
                 }
             }
         }
+    last_max_root_height = max_root_height;
+    if (root_count < NUM_SEEDS / 2)
+    {
+        for (int i = 0; i < NUM_SEEDS / 2; ++i)
+        {
+            int x = utils_random_int(0, WIDTH-1);
+            int y = 1;
+            world_set_terrain(world, x, y, TERRA_ROOT_TIP);
+        }
+    }
 }
 
 void world_update(World *world)
@@ -363,9 +393,9 @@ void world_update(World *world)
     float scroll_start = HEIGHT * 0.3f;
     float scroll_fast  = HEIGHT * 0.8f;
     if ((float)mole.sprite.position.y > scroll_start)
-        speed = Remap((float)mole.sprite.position.y, scroll_start, scroll_fast, 0.1f, 1.0f);
+        speed = Remap((float)mole.sprite.position.y, scroll_start, scroll_fast, 0.3f, 2.0f);
     if ((float)mole.sprite.position.y > scroll_fast)
-        speed = Remap((float)mole.sprite.position.y, scroll_fast, HEIGHT, 1.0f, 10.0f);
+        speed = Remap((float)mole.sprite.position.y, scroll_fast, HEIGHT, 2.0f, 10.0f);
     world->speed = speed;
     world->last_scroll = world_scroll(world);
     update_roots(world);
