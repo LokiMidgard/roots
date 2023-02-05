@@ -80,7 +80,7 @@ void MainLoop()
 
     if (started)
     {
-        if (input_is_button_pressed(&input, 0))
+        if (input_is_button_pressed(&input, 0)) // down
         {
             if (inventory_use(&inventory, st_MEAT))
             {
@@ -88,15 +88,22 @@ void MainLoop()
             }
         }
 
-        if (input_is_button_pressed(&input, 1))
+        if (input_is_button_pressed(&input, 1)) // right
         {
-            if (inventory_use(&inventory, st_STAR))
+            if (inventory_use(&inventory, st_APPLE))
             {
                 mole.speedBonus = 300;
             }
         }
 
-        if (input_is_button_pressed(&input, 2))
+        if (input_is_button_pressed(&input, 2)) // up
+        {
+            if (inventory_use(&inventory, st_STAR))
+            {
+                //mole_explode(&mole);
+            }
+        }
+        if (input_is_button_pressed(&input, 3)) // left
         {
             if (inventory_use(&inventory, st_BOMB))
             {

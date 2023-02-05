@@ -389,8 +389,6 @@ void world_draw(World *world)
     DrawTexturePro(world->screen_texture, srcRect, dstRect, origin, 0.0f, WHITE);
     EndShaderMode();
 
-    // worms_draw(&world->worms);
-
     for (int i = 0; i < world->number_of_fg; i++)
     {
         sprite_draw(&world->fg[i]);

@@ -81,9 +81,11 @@ vec4 texelColor0 = texture(t0, fragTexCoord);
 
     vec2 offest =  vec2(0, scroll_position);
     vec2 offestCoord = (fragTexCoord + offest);
-    vec2 scale =  vec2(offestCoord.x*960.0f/ 256.0f *1.0f/scaleFactor ,offestCoord.y*540.0f/256.0f*1.0f/scaleFactor);
-    vec2 scale2 =  vec2(mod(scale.x*256.0f,32.0f)/256.0f+index.x*32.0f/ 256.0f,mod(scale.y*256.0f,32.0f)/256.0f+index.y*32.0f/ 256.0f);
-    
+    vec2 scale =  vec2(offestCoord.x*960.0f/ 256.0f *1.0f/scaleFactor,
+                       offestCoord.y*540.0f/256.0f*1.0f/scaleFactor);
+    vec2 scale2 =  vec2(mod(scale.x*256.0f,32.0f)/256.0f+index.x*32.0f/ 256.0f,
+                        mod(scale.y*256.0f,32.0f)/256.0f+index.y*32.0f/ 256.0f);
+
     
 
 

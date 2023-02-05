@@ -20,49 +20,76 @@ void hud_update(Hud* hud) {
 void hud_draw(Hud* hud, Stuff *stuff) {
     int x = 4;
     int y = 4;
-    int w = 200;
-    int h = 200;
+    int w = 150;
+    int h = 150;
 
     Rectangle dstRect = { x, y, w, h };
     Vector2 origin = { 0, 0 };
     // debug text
     DrawTextureNPatch(hud->tex_ninepatch, hud->np_info, dstRect, origin, 0.0f, WHITE);
-    DrawText(hud->debug_text, dstRect.x + hud->np_info.left + 2, dstRect.y + hud->np_info.top + 2, 20, BLACK);
+    DrawText(hud->debug_text, dstRect.x + hud->np_info.left + 2, dstRect.y + hud->np_info.top + 2, 12, BLACK);
 
     // fps
     DrawFPS(WIDTH/2, 10);
 
     // items
-    dstRect.x = WIDTH -x - w;
-    DrawTextureNPatch(hud->tex_ninepatch, hud->np_info, dstRect, origin, 0.0f, WHITE);
-
-    for(int type = 0; type < st_size; ++type)
+    //DrawTextureNPatch(hud->tex_ninepatch, hud->np_info, dstRect, origin, 0.0f, WHITE);
+    
+    float top_right_hud_size = 90.0f;
+    Rectangle top_right_hud =
     {
-        float left_offset = 30.0f;
-        float top_offset  = 32.0f;
-        float offset      = 30.0f;
+        WIDTH - top_right_hud_size - 16,
+        16,
+        top_right_hud_size,
+        top_right_hud_size
+    };
+    Color circle_background_color = {120, 120, 120, 200};
+    DrawCircle(top_right_hud.x + top_right_hud_size * 0.5f, 
+               top_right_hud.y + top_right_hud_size * 0.5f,
+               top_right_hud_size * 0.5f,
+               circle_background_color);
+
+    float top_offset  = 16.0f;
+    float left_offset = 20.0f;
+    Vector2 offset = {14.0f, 10.0f};
+    Vector2 item_positions[4] =
+    {
+        {
+            top_right_hud.x + top_right_hud.width*0.5f - offset.x + 3.0f,
+            top_right_hud.y + top_offset - offset.y
+        },
+        {
+            top_right_hud.x + left_offset - offset.x,
+            top_right_hud.y + top_right_hud.height*0.5f - offset.y
+        },
+        {
+            top_right_hud.x + top_right_hud.width*0.5f - offset.x + 3.0f,
+            top_right_hud.y + top_right_hud.height - top_offset - offset.y
+        },
+        {
+            top_right_hud.x - left_offset + top_right_hud.width - offset.x,
+            top_right_hud.y + top_right_hud.height*0.5f - offset.y
+        },
+    };
+    for(int type = 0; type < 4; ++type)
+    {
         int count = hud->inventory->pickups[type];
         int source_start_x = type * 8;
         Rectangle srcRect = {source_start_x, 0, 8, 8};
-        Rectangle dstRectStuff = {
-            dstRect.x + left_offset,
-            dstRect.y + type*offset + top_offset,
+        Rectangle target =
+        {
+            item_positions[type].x,
+            item_positions[type].y,
             16,
             16,
         };
-        if (type >= 5)
-        {
-            dstRectStuff.x += 70;
-            dstRectStuff.y -= 5*offset;
-        }
-
         Vector2 origin = {0, 0};
-        DrawTexturePro(stuff->tex, srcRect, dstRectStuff, origin, 0, WHITE);
+        DrawTexturePro(stuff->tex, srcRect, target, origin, 0, WHITE);
         char text[16] = {0};
         snprintf(text, 16, "%2d", count);
-        dstRectStuff.x += 20.0f;
-        dstRectStuff.y -= 2.0f;
-        DrawText(text, dstRectStuff.x, dstRectStuff.y, 20, BLACK);
+        target.x += 10.0f;
+        target.y -= 0.0f;
+        DrawText(text, target.x, target.y, 20, BLACK);
     }
 
 }
