@@ -209,7 +209,7 @@ void update_roots(World *world)
             alternate *= -1;
 
             Color *current = world_get_terrain(world, x, y);
-            if (IS_COLOR(current, TERRA_ROOT_TIP))
+            if (current->r == TERRA_ROOT_TIP.r)
             {
                 // int targetHeight = x < (WIDTH / 3)
                 //                        ? world->leftSpeed
@@ -222,8 +222,8 @@ void update_roots(World *world)
                 if (rand() % 100 > 25)
                     continue;
 
-                unsigned char direction = current->a & 7;
-                unsigned char age = current->a >> 3;
+                unsigned char direction = current->g & 7;
+                unsigned char age = current->g >> 3;
 
                 if (age > (15 + (rand() % 5)))
                 {
@@ -246,7 +246,7 @@ void update_roots(World *world)
                 r += 600 * (float)direction / 7;
 
                 Color new_tip = TERRA_ROOT_TIP;
-                new_tip.a = (age << 3) | direction;
+                new_tip.g = (age << 3) | direction;
 
                 if (r > 333 && r < 666)
                 {
@@ -261,7 +261,7 @@ void update_roots(World *world)
                     world_set_terrain(world, x + 1, y + 1, new_tip);
                 }
             }
-            else if (IS_COLOR(current, TERRA_ROOT_KNOT))
+            else if (current->r == TERRA_ROOT_KNOT.r)
             {
                 if (rand() % 100 > 5)
                     continue;
@@ -288,25 +288,25 @@ void update_roots(World *world)
                     world_set_terrain(world, x + 1 * alternate, y + 1, TERRA_ROOT_TIP);
                 }
             }
-            else if (IS_COLOR(current, TERRA_ROOT))
+            else if (current->r == TERRA_ROOT.r && current->a>0)
             {
-                int age = 255 - current->a;
+                int age =  current->b;
                 Color new_color = TERRA_ROOT;
-                new_color.a = max(0, current->a - 1);
+                new_color.b = max(0, current->b + 1);
 
                 world_set_terrain(world, x, y, new_color);
 
                 if (age == 150)
                 {
                     //  printf("\nage: %d",age);
-                    if (!IS_COLOR(world_get_terrain(world, x + 1, y), TERRA_ROOT))
+                    if (world_get_terrain(world, x + 1, y)->r > 3)
                     {
                         world_set_terrain(world, x + 1, y, TERRA_ROOT);
                     }
                 }
                 if (age == 200)
                 {
-                    if (!IS_COLOR(world_get_terrain(world, x - 1, y), TERRA_ROOT))
+                    if (world_get_terrain(world, x - 1, y)->r > 3)
                     {
                         world_set_terrain(world, x - 1, y, TERRA_ROOT);
                     }
