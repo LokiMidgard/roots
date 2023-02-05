@@ -81,10 +81,8 @@ void world_init(World *world)
 
     world->shader = LoadShader(0, "resources/shader.fs");
     world->shader_position_location = GetShaderLocation(world->shader, "scroll_position");
-    world->shader_sand_location = GetShaderLocation(world->shader, "texture_sand");
-    world->sand_texture = LoadTextureFromImage(LoadImage("resources/sand.png"));
-    world->shader_earth_location = GetShaderLocation(world->shader, "texture_earth");
-    world->earth_texture = LoadTextureFromImage(LoadImage("resources/earth.png"));
+    world->shader_map_location = GetShaderLocation(world->shader, "texture_map");
+    world->map_texture = LoadTextureFromImage(LoadImage("resources/tileMap.png"));
 
     // init roots
     for (int i = 0; i < NUM_SEEDS; ++i)
@@ -340,8 +338,7 @@ void world_draw(World *world)
     UpdateTextureRec(world->screen_texture, upper_screen, world->current_bitmap + (world->current_scroll * WIDTH));
     UpdateTextureRec(world->screen_texture, lower_screen, world->next_bitmap);
     BeginShaderMode(world->shader);
-    SetShaderValueTexture(world->shader, world->shader_sand_location, world->sand_texture);
-    SetShaderValueTexture(world->shader, world->shader_earth_location, world->earth_texture);
+    SetShaderValueTexture(world->shader, world->shader_map_location, world->map_texture);
     float scroll = world->current_scroll / (float)HEIGHT;
     SetShaderValue(world->shader, world->shader_position_location, &scroll, SHADER_UNIFORM_FLOAT);
     DrawTexturePro(world->screen_texture, srcRect, dstRect, origin, 0.0f, WHITE);

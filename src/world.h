@@ -76,10 +76,8 @@ typedef struct World
     Texture2D screen_texture;
     Shader shader;
     int shader_position_location;
-    int shader_sand_location;
-    Texture2D sand_texture;
-    int shader_earth_location;
-    Texture2D earth_texture;
+    int shader_map_location;
+    Texture2D map_texture;
 
     // Game Logic
     Worms worms;
