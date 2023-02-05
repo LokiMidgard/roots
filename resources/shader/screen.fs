@@ -23,6 +23,8 @@ out vec4 finalColor;
 void main()
 {
     vec4 c0 = texture(t0, fragTexCoord);
-    float att = min(1.0f, fragTexCoord.y * 10.0f);
+    float att = fragTexCoord.y < 0.3f ? min(1.0f, fragTexCoord.y * 10.0f)
+              : fragTexCoord.y > 0.7f ? min(1.0f, (1.0f - fragTexCoord.y) * 10.0f)
+              : 1.0f;
     finalColor = vec4(c0.x * att, c0.y * att, c0.z * att, c0.w);
 }
