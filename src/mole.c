@@ -6,8 +6,8 @@
 
 void mole_init(Mole *mole, float x, float y)
 {
-    mole->snd_dig = LoadSound("resources/dig01.wav");
-    SetSoundVolume(mole->snd_dig, 0.1f);
+    mole->snd_dig = LoadSound("resources/dig03.mp3");
+    SetSoundVolume(mole->snd_dig, 0.7f);
     mole->snd_collide = LoadSound("resources/crumble.wav");
     SetSoundVolume(mole->snd_collide, 0.5f);
     mole->snd_explode = LoadSound("resources/explode.wav");
