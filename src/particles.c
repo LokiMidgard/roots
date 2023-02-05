@@ -1,11 +1,15 @@
+#include "raymath.h"
 #include "particles.h"
 #include "config.h"
 
 void init(Particles* p, int i, int x, int y, Color color, float boost) {
-        p->pos[i].x = x + (0.1f * (rand() % 100)) - 5;
-        p->pos[i].y = y + (0.1f * (rand() % 100)) - 5;
-        p->spd[i].x = 0.03 * (rand() % 100 - 50) * boost;
-        p->spd[i].y = -0.01 * (rand() % 100) * boost;
+        float spd = 0.03 * (rand() % 100 - 50) * boost;
+        float angle = rand() %360;
+        Vector2 vSpd = Vector2Rotate((Vector2){spd, 0}, angle);
+        p->pos[i].x = x;
+        p->pos[i].y = y;
+        p->spd[i].x = vSpd.x;
+        p->spd[i].y = -vSpd.y;
         p->acc[i].x = 0;
         p->acc[i].y = 0.1f;
         p->age[i] = 0;
