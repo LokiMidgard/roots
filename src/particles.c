@@ -23,10 +23,11 @@ void particles_init(Particles* p) {
 }
 
 void particles_emit(Particles* p, int num, int x, int y, Color color, float boost) {
-    Color c = { (unsigned char)((int)color.r * 0.5f), (unsigned char)((int)color.g * 0.5f), (unsigned char)((int)color.b * 0.5f), 255};
-
     for (int i=0; i<NUM_PARTS; ++i) {
         if (p->age[i] == 0) {
+            float factor = 0.4f + (rand() % 50) / 100.0f;
+            Color c = { (unsigned char)((int)color.r * factor), (unsigned char)((int)color.g * factor), (unsigned char)((int)color.b * factor), 255};
+
             init(p, i, x, y, c, boost);
             p->age[i] = 15 * boost;
             --num;
