@@ -27,70 +27,30 @@ void world_set_terrain(World *world, int x, int y, Color color)
     bitmap[POS(x, y)] = color;
 }
 
-void world_init(World *world)
+void world_reset(World *world)
 {
     world->speed = 0.3f;
     world->pos_remainder = 0;
+
+    world->current_scroll = 0;
+    world->last_scroll = 0;
     world->scrolling_paused = 100;
+    world->depth =  0;
+    if (world->current_bitmap)
+    {
+        UnloadImageColors(world->current_bitmap);
+    }
+    world->current_bitmap = LoadImageColors(world->first_image);
+    world->next_bitmap = LoadImageColors(world->images[0]);
 
-    int index = 0;
-    Image image = LoadImage("resources/tile_0.png");
-    index = world->number_of_images++;
-    world->images[index] = LoadImage("resources/tile_1.png");
-    index = world->number_of_images++;
-    world->images[index] = LoadImage("resources/tile_2.png");
-    index = world->number_of_images++;
-    world->images[index] = LoadImage("resources/tile_3.png");
-    index = world->number_of_images++;
-    world->images[index] = LoadImage("resources/tile_4.png");
-    index = world->number_of_images++;
-    world->images[index] = LoadImage("resources/tile_5.png");
-
-    for (int image_index = 0; image_index < index; ++image_index)
-        ImageFormat(world->images + image_index, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
-
-    world->current_bitmap = LoadImageColors(image);
-    world->next_bitmap = LoadImageColors(world->images[1]);
-    world->screen_texture = LoadTextureFromImage(world->images[0]);
-
-    index = 0;
-    index = world->number_of_bg++;
-    Vector2 origin = {0, 1};
-    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_0.png", 0, 350, origin);
-    index = world->number_of_bg++;
-    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_0.png", 640, 350, origin);
-    index = world->number_of_bg++;
-    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_1.png", 0, 350, origin);
-    index = world->number_of_bg++;
-    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_1.png", 640, 350, origin);
-    index = world->number_of_bg++;
-    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_2.png", 0, 350, origin);
-    index = world->number_of_bg++;
-    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_2.png", 640, 350, origin);
-    index = world->number_of_bg++;
-    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_3.png", 0, 350, origin);
-    index = world->number_of_bg++;
-    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_3.png", 640, 350, origin);
-    index = world->number_of_bg++;
-    origin.x = 0.5;
-    sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_4.png", WIDTH / 2, 350, origin);
-
-
-    sprite_init_static_with_origin(&world->title, "resources/title.png", WIDTH / 2, 350, origin);
-
-    index = 0;
-    origin.y = 0.5;
-    index = world->number_of_fg++;
-    sprite_init_static_with_origin(&world->fg[index], "resources/forest/fg1.png", WIDTH / 2, 350, origin);
-    // sprite_init(&world->bg[index], "resources/forest/fg1.png", 960, 1, WIDTH / 2, HEIGHT / 2 + 290, 1, 0);
-
-    // index = world->number_of_bg++;
-    // sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_3.png",640, 1, WIDTH / 2, HEIGHT / 2 + 90, 1, 0);
-
-    world->shader = LoadShader(0, "resources/shader.fs");
-    world->shader_position_location = GetShaderLocation(world->shader, "scroll_position");
-    world->shader_map_location = GetShaderLocation(world->shader, "texture_map");
-    world->map_texture = LoadTextureFromImage(LoadImage("resources/tileMap.png"));
+    for (int index = 0; index < world->number_of_bg; ++index)
+    {
+        world->bg[index].position.y = 350.0f;
+    }
+    for (int index = 0; index < world->number_of_fg; ++index)
+    {
+        world->fg[index].position.y = 350.0f;
+    }
 
     // init roots
     for (int i = 0; i < NUM_SEEDS; ++i)
@@ -104,8 +64,73 @@ void world_init(World *world)
         }
     }
 
+}
+
+void world_init(World *world)
+{
+    world->first_image = LoadImage("resources/tile_0.png");
+
+    { // load images
+        int index = 0;
+        index = world->number_of_images++;
+        world->images[index] = LoadImage("resources/tile_1.png");
+        index = world->number_of_images++;
+        world->images[index] = LoadImage("resources/tile_2.png");
+        index = world->number_of_images++;
+        world->images[index] = LoadImage("resources/tile_3.png");
+        index = world->number_of_images++;
+        world->images[index] = LoadImage("resources/tile_4.png");
+        index = world->number_of_images++;
+        world->images[index] = LoadImage("resources/tile_5.png");
+
+        for (int image_index = 0; image_index < index; ++image_index)
+            ImageFormat(world->images + image_index, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
+
+        world->screen_texture = LoadTextureFromImage(world->images[0]);
+    }
+
+
+    { // load background images
+        int index = 0;
+        index = world->number_of_bg++;
+        Vector2 origin = {0, 1};
+        sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_0.png", 0, 350, origin);
+        index = world->number_of_bg++;
+        sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_0.png", 640, 350, origin);
+        index = world->number_of_bg++;
+        sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_1.png", 0, 350, origin);
+        index = world->number_of_bg++;
+        sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_1.png", 640, 350, origin);
+        index = world->number_of_bg++;
+        sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_2.png", 0, 350, origin);
+        index = world->number_of_bg++;
+        sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_2.png", 640, 350, origin);
+        index = world->number_of_bg++;
+        sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_3.png", 0, 350, origin);
+        index = world->number_of_bg++;
+        sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_3.png", 640, 350, origin);
+        index = world->number_of_bg++;
+        origin.x = 0.5f;
+        sprite_init_static_with_origin(&world->bg[index], "resources/forest/DeadForest_BG_4.png", WIDTH / 2, 350, origin);
+
+        sprite_init_static_with_origin(&world->title, "resources/title.png", WIDTH / 2, 350, origin);
+    }
+
+    { // load foreground images
+        int index = 0;
+        Vector2 origin = {0.5f, 0.5f};
+        index = world->number_of_fg++;
+        sprite_init_static_with_origin(&world->fg[index], "resources/forest/fg1.png", WIDTH / 2, 350, origin);
+    }
+    world->shader = LoadShader(0, "resources/shader.fs");
+    world->shader_position_location = GetShaderLocation(world->shader, "scroll_position");
+    world->shader_map_location = GetShaderLocation(world->shader, "texture_map");
+    world->map_texture = LoadTextureFromImage(LoadImage("resources/tileMap.png"));
+
     // init worms
     worms_init(&world->worms);
+
+    world_reset(world);
 }
 
 Color *
@@ -158,7 +183,8 @@ Dig world_dig(World *world, int x, int y, int radius)
             {
                 Color *c = world_get_terrain(world, x + offsetX, y + offsetY);
                 TerrainType t = color_to_terrain_type(*c);
-                if (t == TerrainTypeSize) {
+                if (t == TerrainTypeSize)
+                {
                     printf("ERROR: INVALID TERRAIN TYPE!");
                 }
                 dig.types[t] += 1;
@@ -196,7 +222,7 @@ int world_scroll(World *world)
             bg->position.y -= 1;
         }
 
-world->title.position.y-=2;
+        world->title.position.y -= 2;
 
         world->pos_remainder -= 1;
         world->current_scroll += 1;
@@ -234,20 +260,20 @@ void update_roots(World *world)
 
                 // if (rand() % targetHeight < y)
                 //     continue;
-                if (utils_random_int(0,100) > 25)
+                if (utils_random_int(0, 100) > 25)
                     continue;
 
                 unsigned char direction = current->g & 7;
                 unsigned char age = current->g >> 3;
 
-                if (age > utils_random_int(15,20))
+                if (age > utils_random_int(15, 20))
                 {
                     age = 0;
-                    direction = utils_random_int(0,7);
+                    direction = utils_random_int(0, 7);
                 }
                 age++;
 
-                if ((utils_random_int(0,1000)) < 5)
+                if ((utils_random_int(0, 1000)) < 5)
                 {
                     world_set_terrain(world, x, y, TERRA_ROOT_KNOT);
                 }
@@ -256,7 +282,7 @@ void update_roots(World *world)
                     world_set_terrain(world, x, y, TERRA_ROOT);
                 }
 
-                int r = utils_random_int(0,1000);
+                int r = utils_random_int(0, 1000);
                 r -= 300;
                 r += 600 * (float)direction / 7;
 
@@ -278,10 +304,10 @@ void update_roots(World *world)
             }
             else if (current->r == TERRA_ROOT_KNOT.r)
             {
-                if (utils_random_int(0,100) % 100 > 5)
+                if (utils_random_int(0, 100) % 100 > 5)
                     continue;
 
-                if (utils_random_int(0,100) < 2)
+                if (utils_random_int(0, 100) < 2)
                 {
                     world_set_terrain(world, x, y, TERRA_ROOT_KNOT);
                 }
@@ -290,11 +316,11 @@ void update_roots(World *world)
                     world_set_terrain(world, x, y, TERRA_ROOT);
                 }
 
-                if (utils_random_int(0,100) < 40)
+                if (utils_random_int(0, 100) < 40)
                 {
                     world_set_terrain(world, x, y + 1, TERRA_ROOT_TIP);
                 }
-                else if ((utils_random_int(0,100) % 1 < 1 && x > 0) || x >= WIDTH - 1)
+                else if ((utils_random_int(0, 100) % 1 < 1 && x > 0) || x >= WIDTH - 1)
                 {
                     world_set_terrain(world, x - 1 * alternate, y + 1, TERRA_ROOT_TIP);
                 }

@@ -28,12 +28,14 @@ Screen screen;
 Input input;
 Stuff stuff;
 Sprite lose;
+Sprite continueS;
 Hud hud;
 Music music;
 Font fontBm;
 Sound snd_intro;
 Sound snd_lost;
 Inventory inventory;
+int endScreenTimer;
 
 bool started = false;
 bool died = false;
@@ -50,6 +52,24 @@ bool died = false;
 #include "hud.c"
 #include "inventory.c"
 
+void reset_game()
+{
+    mole_reset(&mole, WIDTH / 2, HEIGHT + 60);
+    world_reset(&world);
+    inventory_reset(&inventory);
+    endScreenTimer = 0;
+}
+
+void init_game()
+{
+    world_init(&world);
+    hud_init(&hud, &inventory);
+    screen_init(&screen);
+    mole_init(&mole, WIDTH / 2, HEIGHT + 60);
+    stuff_init(&stuff);
+    inventory_init(&inventory);
+}
+
 void MainLoop()
 {
     UpdateMusicStream(music);
@@ -57,21 +77,28 @@ void MainLoop()
 
     Vector2 movement = input_get_dir(&input);
 
-    if (started) {
-        if (input_is_button_pressed(&input, 0)) {
-            if (inventory_use(&inventory, st_MEAT)) {
+    if (started)
+    {
+        if (input_is_button_pressed(&input, 0))
+        {
+            if (inventory_use(&inventory, st_MEAT))
+            {
                 mole.stoneEaterBonus = 600;
             }
         }
 
-        if (input_is_button_pressed(&input, 1)) {
-            if (inventory_use(&inventory, st_STAR)) {
+        if (input_is_button_pressed(&input, 1))
+        {
+            if (inventory_use(&inventory, st_STAR))
+            {
                 mole.speedBonus = 300;
             }
         }
 
-        if (input_is_button_pressed(&input, 2)) {
-            if (inventory_use(&inventory, st_BOMB)) {
+        if (input_is_button_pressed(&input, 2))
+        {
+            if (inventory_use(&inventory, st_BOMB))
+            {
                 mole_explode(&mole);
             }
         }
@@ -98,13 +125,11 @@ void MainLoop()
 
     if (!started)
     {
-        Vector2 dir = input_get_dir(&input);
-        if (dir.x != 0 || dir.y != 0 || input_is_button_pressed(&input, 0) || input_is_button_pressed(&input, 1) || input_is_button_pressed(&input, 2))
+        if (input_any(&input))
         {
             started = true;
         }
     }
-
 
     // check for collisions
     float pickup_radius = 10.0f;
@@ -127,6 +152,19 @@ void MainLoop()
 
     if (mole.health <= 0)
     {
+        float border_x = WIDTH / 10.0f;
+        float border_y = HEIGHT / 10.0f;
+        Color background_color = {0, 0, 0, 200}; 
+        DrawRectangle(border_x, border_y, WIDTH - 2 * border_x, HEIGHT - 2 * border_y, background_color);
+        endScreenTimer++;
+        if (endScreenTimer > 150)
+        {
+            sprite_draw(&continueS);
+        }
+        if (input_any(&input) && endScreenTimer > 150)
+        {
+            reset_game();
+        }
         sprite_draw(&lose);
         char points[10];
         snprintf(points, 10, "%d", (int)mole.points);
@@ -138,6 +176,7 @@ void MainLoop()
     screen_draw(&screen);
     EndDrawing();
 }
+
 
 int main()
 {
@@ -153,15 +192,12 @@ int main()
     /***************************************************************************
      * Init stuff
      ****************************************************************************/
-    input_init(&input);
-    screen_init(&screen);
-    hud_init(&hud, &inventory);
-    mole_init(&mole, WIDTH / 2, HEIGHT + 60);
-    world_init(&world);
     Vector2 origin = {0.5, 0.5};
-    sprite_init_static_with_origin(&lose, "resources/lose.png", WIDTH / 2, HEIGHT / 2 - 80, origin);
-    stuff_init(&stuff);
-    inventory_init(&inventory);
+    sprite_init_static_with_origin(&lose, "resources/lose.png", WIDTH / 2, HEIGHT / 2 - 180, origin);
+    sprite_init_static_with_origin(&continueS, "resources/continue.png", WIDTH / 2, HEIGHT / 2 + 180, origin);
+    input_init(&input);
+
+    init_game();
 
     input_set_mouse_center(&input, &mole.sprite);
     input_set_device(&input, INPUT_GAMEPAD);
