@@ -45,23 +45,23 @@ void world_init(World *world)
     world->next_bitmap = LoadImageColors(world->images[1]);
     world->screen_texture = LoadTextureFromImage(world->images[0]);
 
-     index = 0;
+    index = 0;
     index = world->number_of_bg++;
-    sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_0.png", 1, WIDTH / 2 - 640, HEIGHT / 2 + 90, 1, 0);
+    sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_0.png",640, 1, WIDTH / 2 - 640, HEIGHT / 2 + 90, 1, 0);
     index = world->number_of_bg++;
-    sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_0.png", 1, WIDTH / 2 + 640, HEIGHT / 2 + 90, 1, 0);
+    sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_0.png",640, 1, WIDTH / 2 + 640, HEIGHT / 2 + 90, 1, 0);
     index = world->number_of_bg++;
-    sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_0.png", 1, WIDTH / 2, HEIGHT / 2 + 90, 1, 0);
+    sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_0.png",640, 1, WIDTH / 2, HEIGHT / 2 + 90, 1, 0);
     index = world->number_of_bg++;
-    sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_1.png", 1, WIDTH / 2, HEIGHT / 2 + 90, 1, 0);
+    sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_1.png",640, 1, WIDTH / 2, HEIGHT / 2 + 90, 1, 0);
     index = world->number_of_bg++;
-    sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_2.png", 1, WIDTH / 2, HEIGHT / 2 + 90, 1, 0);
+    sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_2.png",640, 1, WIDTH / 2, HEIGHT / 2 + 90, 1, 0);
     index = world->number_of_bg++;
-    sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_3.png", 1, WIDTH / 2, HEIGHT / 2 + 90, 1, 0);
+    sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_3.png",640, 1, WIDTH / 2, HEIGHT / 2 + 90, 1, 0);
     index = world->number_of_bg++;
-    sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_4.png", 1, WIDTH / 2, HEIGHT / 2 + 50, 1, 0);
+    sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_4.png", 1560, 1, WIDTH / 2, HEIGHT / 2 + 50, 1, 0);
     index = world->number_of_bg++;
-    sprite_init(&world->bg[index], "resources/forest/fg1.png", 1, WIDTH / 2, HEIGHT / 2 + 290, 1, 0);
+    sprite_init(&world->bg[index], "resources/forest/fg1.png", 960, 1, WIDTH / 2, HEIGHT / 2 + 290, 1, 0);
 
     world->leftSpeed = 20;
     world->rightSpeed = 20;
