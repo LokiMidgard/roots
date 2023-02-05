@@ -21,16 +21,16 @@ typedef enum TerrainType
 
 Color TerrainTypeToColor[TerrainTypeSize] =
 {
-    BROWN,
-    DARKBROWN,
-    GRAY,
-    CLITERAL(Color) {0, 0, 0, 20},
-    CLITERAL(Color) {0, 1, 255, 255},
-    CLITERAL(Color) {0, 255, 1, 255},
-    GREEN,
-    BLUE,
-    RED,
-    CLITERAL(Color) {237, 214, 92, 255},
+    TERRA_EARTH,
+    TERRA_TUNEL,
+    TERRA_STONE,
+    TERRA_ROOT,
+    TERRA_ROOT_TIP,
+    TERRA_ROOT_KNOT,
+    TERRA_EMERALD,
+    TERRA_QUICK_STONE,
+    TERRA_DIG_STONE,
+    TERRA_SAND,
 };
 
 Color
@@ -69,8 +69,11 @@ typedef struct World
     Texture2D screen_texture;
     
     Shader shader;
-    int texLoc;
+    int shader_position_location;
+    int shader_sand_location;
     Texture2D sand_texture;
+    int shader_earth_location;
+    Texture2D earth_texture;
 
     int number_of_active_worms;
     Vector2 worm_positions[MAX_WORMS];

@@ -81,8 +81,11 @@ void world_init(World *world)
     // sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_3.png",640, 1, WIDTH / 2, HEIGHT / 2 + 90, 1, 0);
 
     world->shader = LoadShader(0, "resources/shader.fs");
-    world->texLoc = GetShaderLocation(world->shader, "texture_sand");
+    world->shader_position_location = GetShaderLocation(world->shader, "scroll_position");
+    world->shader_sand_location = GetShaderLocation(world->shader, "texture_sand");
     world->sand_texture = LoadTextureFromImage(LoadImage("resources/sand.png"));
+    world->shader_earth_location = GetShaderLocation(world->shader, "texture_earth");
+    world->earth_texture = LoadTextureFromImage(LoadImage("resources/earth.png"));
 
     world->leftSpeed = 20;
     world->rightSpeed = 20;
@@ -288,9 +291,9 @@ void update_roots(World *world)
                     world_set_terrain(world, x + 1 * alternate, y + 1, TERRA_ROOT_TIP);
                 }
             }
-            else if (current->r == TERRA_ROOT.r && current->a>0)
+            else if (current->r == TERRA_ROOT.r && current->a > 0)
             {
-                int age =  current->b;
+                int age = current->b;
                 Color new_color = TERRA_ROOT;
                 new_color.b = max(0, current->b + 1);
 
@@ -347,7 +350,10 @@ void world_draw(World *world)
     UpdateTextureRec(world->screen_texture, upper_screen, world->current_bitmap + (world->current_scroll * WIDTH));
     UpdateTextureRec(world->screen_texture, lower_screen, world->next_bitmap);
     BeginShaderMode(world->shader);
-    SetShaderValueTexture(world->shader, world->texLoc, world->sand_texture);
+    SetShaderValueTexture(world->shader, world->shader_sand_location, world->sand_texture);
+    SetShaderValueTexture(world->shader, world->shader_earth_location, world->earth_texture);
+    float scroll = world->current_scroll / (float)HEIGHT;
+    SetShaderValue(world->shader, world->shader_position_location, &scroll, SHADER_UNIFORM_FLOAT);
     DrawTexturePro(world->screen_texture, srcRect, dstRect, origin, 0.0f, WHITE);
     EndShaderMode();
 
