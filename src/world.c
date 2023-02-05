@@ -68,20 +68,20 @@ void world_reset(World *world)
 
 void world_init(World *world)
 {
-    world->first_image = LoadImage("resources/tile_0.png");
+    world->first_image = LoadImage("resources/level/tile_0.png");
 
     { // load images
         int index = 0;
         index = world->number_of_images++;
-        world->images[index] = LoadImage("resources/tile_1.png");
+        world->images[index] = LoadImage("resources/level/tile_1.png");
         index = world->number_of_images++;
-        world->images[index] = LoadImage("resources/tile_2.png");
+        world->images[index] = LoadImage("resources/level/tile_2.png");
         index = world->number_of_images++;
-        world->images[index] = LoadImage("resources/tile_3.png");
+        world->images[index] = LoadImage("resources/level/tile_3.png");
         index = world->number_of_images++;
-        world->images[index] = LoadImage("resources/tile_4.png");
+        world->images[index] = LoadImage("resources/level/tile_4.png");
         index = world->number_of_images++;
-        world->images[index] = LoadImage("resources/tile_5.png");
+        world->images[index] = LoadImage("resources/level/tile_5.png");
 
         for (int image_index = 0; image_index < index; ++image_index)
             ImageFormat(world->images + image_index, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
@@ -125,7 +125,7 @@ void world_init(World *world)
     world->shader = LoadShader(0, "resources/shader/shader.fs");
     world->shader_position_location = GetShaderLocation(world->shader, "scroll_position");
     world->shader_map_location = GetShaderLocation(world->shader, "texture_map");
-    world->map_texture = LoadTextureFromImage(LoadImage("resources/tileMap.png"));
+    world->map_texture = LoadTextureFromImage(LoadImage("resources/level/tileMap.png"));
 
     // init worms
     worms_init(&world->worms);

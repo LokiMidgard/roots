@@ -14,7 +14,7 @@ void spawn_stuff(Stuff* stuff, int x, int y, StuffType type) {
 }
 
 void stuff_init(Stuff* stuff) {
-    stuff->tex = LoadTexture("resources/stuff.png");
+    stuff->tex = LoadTexture("resources/sprites/stuff.png");
     for (int index = 0; index < 3; ++index)
     {
         StuffType type = rand() % st_size;
