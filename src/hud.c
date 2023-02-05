@@ -5,7 +5,7 @@ void hud_init(Hud* hud, Inventory* inventory) {
     int size = 128;
     int border = 16;
 
-    hud->tex_ninepatch = LoadTexture(TextFormat("resources/ninepatch_%i_%i.png", size, border));
+    hud->tex_ninepatch = LoadTexture(TextFormat("resources/ninepatch/ninepatch_%i_%i.png", size, border));
     hud->np_info.source = (Rectangle){ 0.0f, 0.0f, size, size },
     hud->np_info.left = border;
     hud->np_info.top = border;
