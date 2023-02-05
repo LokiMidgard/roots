@@ -6,18 +6,14 @@
 
 void mole_init(Mole *mole, float x, float y)
 {
-    mole->snd_dig_earth = LoadSound("resources/dig03.mp3");
-    SetSoundVolume(mole->snd_dig, 0.7f);
-    mole->snd_dig_stone = LoadSound("resources/dig_stone.mp3");
-    SetSoundVolume(mole->snd_dig, 0.7f);
-    mole->snd_dig = mole->snd_dig_earth;
-    mole->snd_collide = LoadSound("resources/crumble.wav");
-    SetSoundVolume(mole->snd_collide, 0.5f);
-    mole->snd_explode = LoadSound("resources/explode.wav");
-    SetSoundVolume(mole->snd_explode, 1.2f);
-    mole->snd_hurt = LoadSound("resources/deep.wav");
-    SetSoundVolume(mole->snd_hurt, 1.0f);
+    // mole->snd_dig_earth = LoadSoundEx("resources/dig03.mp3", 0.7f);
+    mole->snd_dig_earth = LoadSoundEx("resources/dig01.wav", 0.1f);
+    mole->snd_dig_stone = LoadSoundEx("resources/dig_stone.mp3", 0.4f);
+    mole->snd_collide = LoadSoundEx("resources/crumble.wav", 0.5f);
+    mole->snd_explode = LoadSoundEx("resources/explode.wav", 1.2f);
+    mole->snd_hurt = LoadSoundEx("resources/deep.wav", 1.0f);
 
+    mole->snd_dig = mole->snd_dig_earth;
     mole->health = 100;
     mole->points = 0;
     mole->speed = 100.0f * 0.015f;
