@@ -32,8 +32,7 @@ void world_init(World *world)
     world->pos_remainder = -100;
 
     int index = 0;
-    index = world->number_of_images++;
-    world->images[index] = LoadImage("resources/tile_0.png");
+    Image image = LoadImage("resources/tile_0.png");
     index = world->number_of_images++;
     world->images[index] = LoadImage("resources/tile_1.png");
     index = world->number_of_images++;
@@ -44,7 +43,7 @@ void world_init(World *world)
     world->images[index] = LoadImage("resources/tile_4.png");
     index = world->number_of_images++;
     world->images[index] = LoadImage("resources/tile_5.png");
-    world->current_bitmap = LoadImageColors(world->images[0]);
+    world->current_bitmap = LoadImageColors(image);
     world->next_bitmap = LoadImageColors(world->images[1]);
     world->screen_texture = LoadTextureFromImage(world->images[0]);
 
