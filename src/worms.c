@@ -8,7 +8,6 @@ void init_worm(Worms* worms, int x, int y) {
             worms->alive[i] = true;
             worms->pos[i].x = x;
             worms->pos[i].y = y;
-            printf("Worm created at: %.f, %.f", worms->pos[i].x, worms->pos[i].y);
             return;
         }
     }
