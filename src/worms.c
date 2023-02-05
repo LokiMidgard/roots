@@ -38,10 +38,10 @@ void worms_draw(Worms* worms) {
         if (worms->alive[i]) {
             Rectangle srcRect = { 0, 0, 8, 8};
             Rectangle dstRect = {
-                worms->pos[i].x * GetScreenWidth() / WIDTH,     // x
-                worms->pos[i].y * GetScreenHeight() / HEIGHT,   // y
-                8 * GetScreenWidth() / WIDTH,                   // width
-                8 * GetScreenHeight() / HEIGHT                  // height
+                worms->pos[i].x,     // x
+                worms->pos[i].y,   // y
+                8,                   // width
+                8                  // height
             };
             Vector2 origin = { 4, 4};
             DrawTexturePro(worms->tex, srcRect, dstRect, origin, 0, WHITE);

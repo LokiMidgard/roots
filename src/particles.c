@@ -54,11 +54,9 @@ void particles_update(Particles* p) {
 }
 
 void particles_draw(Particles* p) {
-    float factorX = GetScreenWidth() / (float)WIDTH;
-    float factorY = GetScreenHeight() / (float)HEIGHT;
     for(int i=0; i<NUM_PARTS; ++i) {
         if (p->age[i] > 0) {
-            DrawCircle(p->pos[i].x * factorX, p->pos[i].y * factorY, 2, p->color[i]);
+            DrawCircle(p->pos[i].x, p->pos[i].y, 2, p->color[i]);
         }
     }
 }

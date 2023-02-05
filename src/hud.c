@@ -33,7 +33,7 @@ void hud_draw(Hud* hud, Stuff *stuff) {
     DrawFPS(WIDTH/2, 10);
 
     // items
-    dstRect.x = GetScreenWidth() -x - w;
+    dstRect.x = WIDTH -x - w;
     DrawTextureNPatch(hud->tex_ninepatch, hud->np_info, dstRect, origin, 0.0f, WHITE);
 
     for(int type = 0; type < st_size; ++type)

@@ -11,6 +11,7 @@
 #include "config.h"
 #include "utils.h"
 #include "console.h"
+#include "screen.h"
 #include "input.h"
 #include "sprite.h"
 #include "world.h"
@@ -23,6 +24,7 @@
 
 Mole mole;
 World world;
+Screen screen;
 Input input;
 Stuff stuff;
 Sprite lose;
@@ -38,6 +40,7 @@ bool died = false;
 
 #include "console.c"
 #include "input.c"
+#include "screen.c"
 #include "sprite.c"
 #include "world.c"
 #include "mole.c"
@@ -114,6 +117,7 @@ void MainLoop()
 
     // draw
     BeginDrawing();
+    BeginTextureMode(screen.buffer);
     ClearBackground(MAGENTA);
     world_draw(&world);
     stuff_draw(&stuff);
@@ -126,9 +130,10 @@ void MainLoop()
         char points[10];
         snprintf(points, 10, "%d", (int)mole.points);
         Vector2 measurment = MeasureTextEx(fontBm, points, (float)fontBm.baseSize, 2);
-        DrawTextEx(fontBm, points, (Vector2){(WIDTH / 2 -measurment.x/2 )* GetScreenWidth() / WIDTH, (HEIGHT / 2)* GetScreenHeight() / HEIGHT}, (float)fontBm.baseSize, 2, WHITE);
+        DrawTextEx(fontBm, points, (Vector2){(WIDTH / 2 -measurment.x/2 ), (HEIGHT / 2)}, (float)fontBm.baseSize, 2, WHITE);
     }
-
+    EndTextureMode();
+    screen_draw(&screen);
     EndDrawing();
 }
 
@@ -147,6 +152,7 @@ int main()
      * Init stuff
      ****************************************************************************/
     input_init(&input);
+    screen_init(&screen);
     hud_init(&hud, &inventory);
     mole_init(&mole, WIDTH / 2, HEIGHT + 60);
     world_init(&world);

@@ -73,10 +73,10 @@ void stuff_draw(Stuff* stuff) {
         int source_start_x = type * 8;
         Rectangle srcRect = {source_start_x + 0.5f, 0.5f, 7.0f, 7.0f};
         Rectangle dstRect = {
-            (stuff->pos[index].x-4) * GetScreenWidth() / WIDTH,     // x
-            (stuff->pos[index].y-4) * GetScreenHeight() / HEIGHT,   // y
-            8 * GetScreenWidth() / WIDTH,                   // width
-            8 * GetScreenHeight() / HEIGHT                  // height
+            (stuff->pos[index].x-4),     // x
+            (stuff->pos[index].y-4),   // y
+            8,                   // width
+            8                  // height
         };
         Vector2 origin = {4, 4};
         DrawTexturePro(stuff->tex, srcRect, dstRect, origin, 0, WHITE);

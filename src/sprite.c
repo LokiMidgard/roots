@@ -15,8 +15,8 @@ void sprite_init(Sprite *s, const char *file, int frame_width, int num_of_frames
     s->speed = speed;
     s->rotation = rotation;
     s->tint = WHITE;
-    s->origin.x = s->frame_width / 2 * GetScreenWidth() / WIDTH;
-    s->origin.y = s->image.height / 2 * GetScreenHeight() / HEIGHT;
+    s->origin.x = s->frame_width / 2;
+    s->origin.y = s->image.height / 2;
 }
 void sprite_init_static_with_origin(Sprite *s, const char *file, int x, int y, Vector2 origin)
 {
@@ -29,8 +29,8 @@ void sprite_init_static_with_origin(Sprite *s, const char *file, int x, int y, V
     s->speed = 0;
     s->rotation = 0;
     s->tint = WHITE;
-    s->origin.x = s->frame_width * origin.x * GetScreenWidth() / WIDTH;
-    s->origin.y = s->image.height * origin.y * GetScreenHeight() / HEIGHT;
+    s->origin.x = s->frame_width * origin.x;
+    s->origin.y = s->image.height * origin.y;
 }
 
 void sprite_draw(Sprite *s)
@@ -41,10 +41,10 @@ void sprite_draw(Sprite *s)
     int frame_height = s->image.height;
     Rectangle frame = {s->current_frame * frame_width, 0, frame_width, frame_height};
     Rectangle dstRect = {
-        s->position.x * GetScreenWidth() / WIDTH,   // x
-        s->position.y * GetScreenHeight() / HEIGHT, // y
-        frame_width * GetScreenWidth() / WIDTH,     // width
-        frame_height * GetScreenHeight() / HEIGHT   // height
+        s->position.x,   // x
+        s->position.y, // y
+        frame_width,     // width
+        frame_height   // height
     };
 
     DrawTexturePro(s->image, frame, dstRect, s->origin, s->rotation, s->tint);

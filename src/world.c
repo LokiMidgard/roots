@@ -347,7 +347,7 @@ void world_draw(World *world)
     }
 
     Rectangle srcRect = {0, 0, WIDTH, HEIGHT};
-    Rectangle dstRect = {0, 0, GetScreenWidth(), GetScreenHeight()};
+    Rectangle dstRect = {0, 0, WIDTH, HEIGHT};
     Vector2 origin = {0, 0};
 
     Rectangle upper_screen = {0, 0, WIDTH, HEIGHT - world->current_scroll};
