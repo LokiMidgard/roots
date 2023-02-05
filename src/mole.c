@@ -45,10 +45,10 @@ void mole_update(Mole *mole, Vector2 movement)
                               new_mole_position.y,
                               mole_width);
 
-// Points 
-    mole->points += dig.types[EMERALD]*20;
-    mole->points += dig.types[EARTH]*1;
-    mole->points += dig.types[STONE]*2;
+    // Points
+    mole->points += dig.types[EMERALD] * 20 * 0.003f;
+    mole->points += dig.types[EARTH] * 1 * 0.003f;
+    mole->points += dig.types[STONE] * 2 * 0.003f;
 
     if (dig.types[QUICK_STONE] > 0)
     {
@@ -65,9 +65,9 @@ void mole_update(Mole *mole, Vector2 movement)
     dig_speed_penalty += dig.types[EMERALD] * 0.05f;
     dig_speed_penalty += dig.types[QUICK_STONE] * 0.05f;
     dig_speed_penalty += dig.types[DIG_STONE] * 0.05f;
-    float max_dig_speed_penalty = mole->stoneEaterBonus>0? 0.48f: 0.98f;
+    float max_dig_speed_penalty = mole->stoneEaterBonus > 0 ? 0.48f : 0.98f;
     dig_speed_penalty = fminf(max_dig_speed_penalty, dig_speed_penalty);
-    float defaultSpeed = mole->speedBonus>0?1.5f:1.0f;
+    float defaultSpeed = mole->speedBonus > 0 ? 1.5f : 1.0f;
     movement = Vector2Scale(movement, (defaultSpeed - dig_speed_penalty));
     new_mole_position = Vector2Add(sprite->position, movement);
 
@@ -108,7 +108,7 @@ void mole_update(Mole *mole, Vector2 movement)
 
     if (dig.types[EARTH] > 1 && dig.types[STONE] > 1)
     {
-        if(dig.types[STONE] > dig.types[EARTH])
+        if (dig.types[STONE] > dig.types[EARTH])
             mole->snd_dig = mole->snd_dig_stone;
         else
             mole->snd_dig = mole->snd_dig_earth;
