@@ -360,9 +360,13 @@ void update_roots(World *world)
 
 void world_update(World *world)
 {
-    float speed = Remap((float)mole.sprite.position.y, 0.0f, 500.0f, 0.3f, 1.8f);
-    if ((float)mole.sprite.position.y > 500.0f)
-        speed = Remap((float)mole.sprite.position.y, 500.0f, 540.0f, 1.8f, 5.0f);
+    float speed = 0.0f;
+    float scroll_start = HEIGHT * 0.3f;
+    float scroll_fast  = HEIGHT * 0.8f;
+    if ((float)mole.sprite.position.y > scroll_start)
+        speed = Remap((float)mole.sprite.position.y, scroll_start, scroll_fast, 0.1f, 1.0f);
+    if ((float)mole.sprite.position.y > scroll_fast)
+        speed = Remap((float)mole.sprite.position.y, scroll_fast, HEIGHT, 1.0f, 10.0f);
     world->speed = speed;
     world->last_scroll = world_scroll(world);
     update_roots(world);
