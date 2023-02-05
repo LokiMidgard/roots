@@ -58,6 +58,8 @@ typedef struct World
     float pos_remainder;
     int number_of_images;
     Image images[10];
+    int number_of_bg;
+    Sprite bg[10];
     Color* current_bitmap;
     Color* next_bitmap;
     Texture2D screen_texture;
