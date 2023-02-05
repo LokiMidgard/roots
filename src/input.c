@@ -1,52 +1,57 @@
 #include "config.h"
 #include "input.h"
 
-int g_device = INPUT_KEYBOARD;
-Sprite* g_sprite = (Sprite*)0;
-int g_mouse_deadzone = 20;
-int g_gamepad = 0;
-float g_gamepad_deadzone = 0.2f;
+void input_init(Input* input) {
+    input->device = INPUT_KEYBOARD;
+    input->sprite = (Sprite*)0;
+    input->mouse_deadzone = 20;
+    input->gamepad = 0;
+    input->gamepad_deadzone = 0.2f;
+    input->oldWidth = 0;
+    input->oldHeight = 0;
+}
 
-int oldWidth = 0;
-int oldHeight = 0;
-
-bool input_set_device(int device) {
+bool input_set_device(Input* input, int device) {
     switch(device) {
         case INPUT_GAMEPAD:
-            g_device = device;
-            g_gamepad = 0;
+            input->device = device;
+            input->gamepad = 0;
         default:
-            g_device = device;
+            input->device = device;
             break;
     }
     return true;
 }
 
-void input_set_mouse_center(Sprite* sprite) { g_sprite = sprite; }
-
-void input_set_mouse_deadzone(int deadzone) { g_mouse_deadzone = deadzone; }
-
-int input_get_device() {
-    return g_device == INPUT_GAMEPAD && !IsGamepadAvailable(g_gamepad) ? INPUT_KEYBOARD : g_device;
+void input_set_mouse_center(Input* input, Sprite* sprite) {
+    input->sprite = sprite;
 }
 
-Vector2 input_get_dir() {
+void input_set_mouse_deadzone(Input* input, int deadzone) {
+    input->mouse_deadzone = deadzone;
+}
+
+int input_get_device(Input* input) {
+    return input->device == INPUT_GAMEPAD && !IsGamepadAvailable(input->gamepad) ? INPUT_KEYBOARD : input->device;
+}
+
+Vector2 input_get_dir(Input* input) {
     Vector2 dir = { 0, 0 };
 
     if (IsKeyPressed(KEY_F)) {
         if (!IsWindowFullscreen()) {
-            oldWidth = GetScreenWidth();
-            oldHeight = GetScreenHeight();
+            input->oldWidth = GetScreenWidth();
+            input->oldHeight = GetScreenHeight();
             int mon = GetCurrentMonitor();
             SetWindowSize(GetMonitorWidth(mon), GetMonitorHeight(mon));
             ToggleFullscreen();
         } else {
             ToggleFullscreen();
-            SetWindowSize(oldWidth, oldHeight);
+            SetWindowSize(input->oldWidth, input->oldHeight);
         }
     }
 
-    int device = input_get_device();
+    int device = input_get_device(input);
 
     switch(device) {
         case INPUT_KEYBOARD:
@@ -60,27 +65,27 @@ Vector2 input_get_dir() {
             dir = GetMousePosition();
             dir.x *= WIDTH/(float)GetScreenWidth();
             dir.y *= HEIGHT/(float)GetScreenHeight();
-            dir.x -= g_sprite ? g_sprite->position.x : (WIDTH >> 1);
-            dir.y -= g_sprite ? g_sprite->position.y : (HEIGHT >> 1);
+            dir.x -= input->sprite ? input->sprite->position.x : (WIDTH >> 1);
+            dir.y -= input->sprite ? input->sprite->position.y : (HEIGHT >> 1);
 
-            if (abs(dir.x) < g_mouse_deadzone) dir.x = 0;
-            if (abs(dir.y) < g_mouse_deadzone) dir.y = 0;
+            if (abs(dir.x) < input->mouse_deadzone) dir.x = 0;
+            if (abs(dir.y) < input->mouse_deadzone) dir.y = 0;
             break;
 
         case INPUT_GAMEPAD:
-            dir.x = GetGamepadAxisMovement(g_gamepad, GAMEPAD_AXIS_LEFT_X);
-            dir.y = GetGamepadAxisMovement(g_gamepad, GAMEPAD_AXIS_LEFT_Y);
+            dir.x = GetGamepadAxisMovement(input->gamepad, GAMEPAD_AXIS_LEFT_X);
+            dir.y = GetGamepadAxisMovement(input->gamepad, GAMEPAD_AXIS_LEFT_Y);
 
-            if (fabsf(dir.x) < g_gamepad_deadzone) dir.x = 0.0f;
-            if (fabsf(dir.y) < g_gamepad_deadzone) dir.y = 0.0f;
+            if (fabsf(dir.x) < input->gamepad_deadzone) dir.x = 0.0f;
+            if (fabsf(dir.y) < input->gamepad_deadzone) dir.y = 0.0f;
             break;
     }
 
     return Vector2Normalize(dir);
 }
 
-bool input_is_button_down(int button) {
-    switch(input_get_device()) {
+bool input_is_button_down(Input* input, int button) {
+    switch(input_get_device(input)) {
         case INPUT_KEYBOARD:
             switch(button) {
                 case 0: return IsKeyDown(KBD_BUTTON_0);
@@ -92,16 +97,16 @@ bool input_is_button_down(int button) {
             return IsMouseButtonDown(button);
         case INPUT_GAMEPAD:
             switch(button) {
-                case 0: return IsGamepadButtonDown(g_gamepad, GPD_BUTTON_0);
-                case 1: return IsGamepadButtonDown(g_gamepad, GPD_BUTTON_1);
-                case 2: return IsGamepadButtonDown(g_gamepad, GPD_BUTTON_2);
+                case 0: return IsGamepadButtonDown(input->gamepad, GPD_BUTTON_0);
+                case 1: return IsGamepadButtonDown(input->gamepad, GPD_BUTTON_1);
+                case 2: return IsGamepadButtonDown(input->gamepad, GPD_BUTTON_2);
             }
     }
     return false;
 }
 
-bool input_is_button_pressed(int button) {
-    switch(input_get_device()) {
+bool input_is_button_pressed(Input* input, int button) {
+    switch(input_get_device(input)) {
         case INPUT_KEYBOARD:
             switch(button) {
                 case 0: return IsKeyPressed(KBD_BUTTON_0);
@@ -113,16 +118,16 @@ bool input_is_button_pressed(int button) {
             return IsMouseButtonPressed(button);
         case INPUT_GAMEPAD:
             switch(button) {
-                case 0: return IsGamepadButtonPressed(g_gamepad, GPD_BUTTON_0);
-                case 1: return IsGamepadButtonPressed(g_gamepad, GPD_BUTTON_1);
-                case 2: return IsGamepadButtonPressed(g_gamepad, GPD_BUTTON_2);
+                case 0: return IsGamepadButtonPressed(input->gamepad, GPD_BUTTON_0);
+                case 1: return IsGamepadButtonPressed(input->gamepad, GPD_BUTTON_1);
+                case 2: return IsGamepadButtonPressed(input->gamepad, GPD_BUTTON_2);
             }
     }
     return false;
 }
 
-const char* input_get_device_name() {
-    switch(input_get_device()) {
+const char* input_get_device_name(Input* input) {
+    switch(input_get_device(input)) {
         case INPUT_GAMEPAD: return "Gamepad";
         case INPUT_MOUSE: return "Mouse";
         case INPUT_KEYBOARD: return "Keyboard";

@@ -17,13 +17,25 @@
 #define GPD_BUTTON_1 GAMEPAD_BUTTON_RIGHT_FACE_RIGHT
 #define GPD_BUTTON_2 GAMEPAD_BUTTON_RIGHT_FACE_UP
 
-bool input_set_device(int device);
-void input_set_mouse_center(Sprite* sprite);
+typedef struct Input {
+    int device;
+    Sprite* sprite;
+    int mouse_deadzone;
+    int gamepad;
+    float gamepad_deadzone;
+    int oldWidth;
+    int oldHeight;
+} Input;
 
-Vector2 input_get_dir();
-bool input_is_button_pressed(int button);
-bool input_is_button_down(int button);
+void input_init(Input* input);
 
-const char* input_get_device_name();
+bool input_set_device(Input* input, int device);
+void input_set_mouse_center(Input* input, Sprite* sprite);
+
+Vector2 input_get_dir(Input* input);
+bool input_is_button_pressed(Input* input, int button);
+bool input_is_button_down(Input* input, int button);
+
+const char* input_get_device_name(Input* input);
 
 #endif
