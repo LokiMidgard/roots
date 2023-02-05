@@ -19,11 +19,9 @@ int color_are_equal(Color c1, Color c2)
 #include "mole.h"
 #include "particles.h"
 
-
-Mole   mole;
-World  world;
+Mole mole;
+World world;
 Sprite lose;
-
 
 #include "console.c"
 #include "input.c"
@@ -32,39 +30,41 @@ Sprite lose;
 #include "mole.c"
 #include "particles.c"
 
-
 void UpdateDrawFrame()
 {
     // handle input
     Vector2 movement = input_get_dir();
- 
+
     if (input_is_button_pressed(0))
-        mole.stoneEaterBonus=600;
+        mole.stoneEaterBonus = 600;
 
     if (input_is_button_pressed(1))
-        mole.speedBonus=300;
+        mole.speedBonus = 300;
 
-    if (input_is_button_pressed(2)) 
+    if (input_is_button_pressed(2))
         mole_explode(&mole);
 
-    if(mole.health>0){
+    if (mole.health > 0)
+    {
         // update
         world_update(&world, &mole);
         mole_update(&mole, &movement);
     }
+
     // draw
+
     BeginDrawing();
-        ClearBackground(BLACK);
-        world_draw(&world);
-        mole_draw(&mole);
-        char text[256] = {0};
-        snprintf(text, 256, "depth: %2.2d\npoints: %d\nhealth: %.f\ninput: %s\nfullscreen: F\nexit: ESC", world.depth, mole.points, mole.health, input_get_device_name());
-        DrawText(text, 10, 10, 14, WHITE);
-        
-     if(mole.health<=0){
+    ClearBackground(BLACK);
+    world_draw(&world);
+    mole_draw(&mole);
+    char text[256] = {0};
+    snprintf(text, 256, "depth: %2.2d\npoints: %d\nhealth: %.f\ninput: %s\nfullscreen: F\nexit: ESC", world.depth, mole.points, mole.health, input_get_device_name());
+    DrawText(text, 10, 10, 14, WHITE);
+
+    if (mole.health <= 0)
+    {
         sprite_draw(&lose);
     }
-
 
     EndDrawing();
 }
@@ -85,7 +85,7 @@ int main()
      ****************************************************************************/
     mole_init(&mole, 30, 30);
     world_init(&world);
-    sprite_init(&lose, "resources/lose.png",1, WIDTH/2, HEIGHT/2, 15, 0);
+    sprite_init(&lose, "resources/lose.png", 1, WIDTH / 2, HEIGHT / 2, 15, 0);
 
     input_set_mouse_center(&mole.sprite);
     input_set_device(INPUT_GAMEPAD);

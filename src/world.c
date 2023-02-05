@@ -44,6 +44,7 @@ void world_init(World *world)
     world->current_bitmap = LoadImageColors(world->images[0]);
     world->next_bitmap = LoadImageColors(world->images[1]);
     world->screen_texture = LoadTextureFromImage(world->images[0]);
+    world->shader = LoadShader("resources/shader.fs");
 
     world->leftSpeed = 20;
     world->rightSpeed = 20;
@@ -264,5 +265,7 @@ void world_draw(World *world)
     Rectangle lower_screen = {0, HEIGHT - world->depth, WIDTH, world->depth};
     UpdateTextureRec(world->screen_texture, upper_screen, world->current_bitmap + (world->depth * WIDTH));
     UpdateTextureRec(world->screen_texture, lower_screen, world->next_bitmap);
+    BeginShaderMode(world->shader);
     DrawTexturePro(world->screen_texture, srcRect, dstRect, origin, 0.0f, WHITE);
+    EndShaderMode();
 }
