@@ -116,7 +116,7 @@ void mole_update(Mole *mole, Vector2 movement)
     if (fabsf(movement.x) > 0.0f || fabsf(movement.y) > 0.0f)
     {
         mole->sprite.speed = 5;
-        if (!IsSoundPlaying(mole->snd_dig))
+        if (!IsSoundPlaying(mole->snd_dig) && (dig.types[EARTH] > 1 || dig.types[STONE] > 1 || dig.types[EMERALD] > 1 || dig.types[SAND] > 1 || dig.types[QUICK_STONE] > 1 || dig.types[DIG_STONE] > 1))
             PlaySound(mole->snd_dig);
     }
     else
