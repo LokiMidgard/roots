@@ -21,12 +21,12 @@ int color_are_equal(Color c1, Color c2)
 #include "sprite.h"
 #include "world.h"
 #include "mole.h"
+#include "worms.h"
 #include "particles.h"
 
 Mole mole;
 World world;
 Sprite lose;
-
 
 #if !defined(PLATFORM_WEB)
 #include "console.c"
@@ -35,6 +35,7 @@ Sprite lose;
 #include "sprite.c"
 #include "world.c"
 #include "mole.c"
+#include "worms.c"
 #include "particles.c"
 
 void UpdateDrawFrame()
@@ -54,7 +55,8 @@ void UpdateDrawFrame()
     if (mole.health > 0)
     {
         // update
-        world_update(&world, &mole);
+        world_update(&world);
+        mole.sprite.position.y -= world.last_scroll;
         mole_update(&mole, movement);
     }
 

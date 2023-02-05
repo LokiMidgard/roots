@@ -3,6 +3,7 @@
 
 #include "raylib.h"
 #include "mole.h"
+#include "worms.h"
 
 typedef enum TerrainType
 {
@@ -52,22 +53,27 @@ color_to_terrain_type(Color c)
     return(TerrainTypeSize);
 };
 
-#define MAX_WORMS 20
-
 typedef struct World
 {
+    // physics
     float speed;
     float pos_remainder;
+    
+    // graphics
     int number_of_images;
     Image images[10];
     int number_of_bg;
     Sprite bg[10];
     int number_of_fg;
     Sprite fg[10];
+
+    // rendering
+    int current_scroll;             // y-offset used for pixel lookups
+    int last_scroll;                // number of lines scrolled in last frame
+    int scrolling_paused;           // number of frames to stop scrolling
     Color* current_bitmap;
     Color* next_bitmap;
     Texture2D screen_texture;
-    
     Shader shader;
     int shader_position_location;
     int shader_sand_location;
@@ -75,15 +81,10 @@ typedef struct World
     int shader_earth_location;
     Texture2D earth_texture;
 
-    int number_of_active_worms;
-    Vector2 worm_positions[MAX_WORMS];
-    Texture2D worm_texture;
-    
-    int current_scroll;
+    // Game Logic
+    Worms worms;
+
     int depth;
-    int leftSpeed;
-    int centerSpeed;
-    int rightSpeed;
 } World;
 
 typedef struct Dig
@@ -92,7 +93,7 @@ typedef struct Dig
 } Dig;
 
 void world_init(World *world);
-void world_update(World *world, Mole *mole);
+void world_update(World *world);
 void world_draw(World *world);
 
 #endif
