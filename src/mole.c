@@ -15,7 +15,7 @@ void mole_init(Mole *mole, float x, float y)
     mole->health = 100;
     mole->points = 0;
     mole->speed = 100.0f * 0.015f;
-    sprite_init(&mole->sprite, "resources/mole_test.png", 16, 16, 30, 30, 15, 0);
+    sprite_init(&mole->sprite, "resources/mole_test.png", 16, 5, 30, 30, 15, 0);
 
     Vector2 position = {x, y};
     mole->sprite.position = position;
@@ -75,10 +75,16 @@ void mole_update(Mole *mole, Vector2 movement)
         mole->stoneEaterBonus -= 1;
     }
 
-    if (Vector2Length(movement) > 0.5f)
+    float speed = Vector2Length(movement);
+    if (speed > 0.5f)
     {
+        mole->sprite.speed = 5;
         if (!IsSoundPlaying(mole->snd_dig))
             PlaySound(mole->snd_dig);
+    }
+    else
+    {
+        mole->sprite.speed = 0;
     }
 
     if (dig_speed_penalty == max_dig_speed_penalty)
