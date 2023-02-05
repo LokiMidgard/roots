@@ -57,9 +57,9 @@ void mole_update(Mole *mole, Vector2 movement)
     mole->health -= dig.types[ROOT];
 
     for(int t = 0; t < TerrainTypeSize; ++t) {
-        int num = (int)(dig.types[t] * 0.1f);
+        int num = (int)(dig.types[t] * 0.4f);
         if (num > 0) {
-            particles_emit(&mole->part_dig, num, sprite->position.x, sprite->position.y, terrain_type_to_color(t));
+            particles_emit(&mole->part_dig, num, sprite->position.x, sprite->position.y, terrain_type_to_color(t), 1);
         }
     }
 
@@ -94,9 +94,9 @@ void mole_update(Mole *mole, Vector2 movement)
         float radius = sin(mole->explode_time) * 50;
         Dig d = world_dig(&world, sprite->position.x, sprite->position.y, radius);
         for(int t = EARTH; t < TerrainTypeSize; ++t) {
-            int num = (int)(d.types[t] * 0.1f);
+            int num = (int)(d.types[t] * 0.4f);
             if (num > 0) {
-                particles_emit(&mole->part_dig, num, sprite->position.x, sprite->position.y, TerrainTypeToColor[t]);
+                particles_emit(&mole->part_dig, num, sprite->position.x, sprite->position.y, TerrainTypeToColor[t], 4);
             }
         }
     }

@@ -43,6 +43,9 @@ terrain_type_to_color(TerrainType t)
 TerrainType
 color_to_terrain_type(Color c)
 {
+    if(c.r<3 && c.a>0){ // roots have more colors 
+        return ROOT;
+    }
     for (int TerrainType = 0;
          TerrainType < TerrainTypeSize;
          ++TerrainType)
