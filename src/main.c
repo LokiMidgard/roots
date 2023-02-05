@@ -92,7 +92,7 @@ int main()
     /***************************************************************************
      * Init stuff
      ****************************************************************************/
-    mole_init(&mole, 30, 30);
+    mole_init(&mole, WIDTH/2, HEIGHT+60);
     world_init(&world);
     sprite_init(&lose, "resources/lose.png", 660, 1, WIDTH/2, HEIGHT/2, 15, 0);
 

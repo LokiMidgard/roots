@@ -44,6 +44,24 @@ void world_init(World *world)
     world->current_bitmap = LoadImageColors(world->images[0]);
     world->next_bitmap = LoadImageColors(world->images[1]);
     world->screen_texture = LoadTextureFromImage(world->images[0]);
+
+    index = 0;
+    index = world->number_of_bg++;
+    sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_0.png",640, 1, WIDTH / 2 - 640, HEIGHT / 2 + 90, 1, 0);
+    index = world->number_of_bg++;
+    sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_0.png",640, 1, WIDTH / 2 + 640, HEIGHT / 2 + 90, 1, 0);
+    index = world->number_of_bg++;
+    sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_0.png",640, 1, WIDTH / 2, HEIGHT / 2 + 90, 1, 0);
+    index = world->number_of_bg++;
+    sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_1.png",640, 1, WIDTH / 2, HEIGHT / 2 + 90, 1, 0);
+    index = world->number_of_bg++;
+    sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_2.png",640, 1, WIDTH / 2, HEIGHT / 2 + 90, 1, 0);
+    index = world->number_of_bg++;
+    sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_3.png",640, 1, WIDTH / 2, HEIGHT / 2 + 90, 1, 0);
+    index = world->number_of_bg++;
+    sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_4.png", 1560, 1, WIDTH / 2, HEIGHT / 2 + 50, 1, 0);
+    index = world->number_of_bg++;
+    sprite_init(&world->bg[index], "resources/forest/fg1.png", 960, 1, WIDTH / 2, HEIGHT / 2 + 290, 1, 0);
     
     world->shader = LoadShader(0, "resources/shader.fs");
     world->texLoc = GetShaderLocation(world->shader, "texture_sand");
@@ -96,8 +114,10 @@ Dig world_dig(World *world, int x, int y, int radius)
             if (sqrt(offsetX * offsetX + offsetY * offsetY) <= radius)
             {
                 Color *c = world_get_terrain(world, x + offsetX, y + offsetY);
-                for(int t = EARTH; t < TerrainTypeSize; ++t) {
-                    if (t == TUNNEL) continue;
+                for (int t = EARTH; t < TerrainTypeSize; ++t)
+                {
+                    if (t == TUNNEL)
+                        continue;
                     if (color_are_equal(*c, terrain_type_to_color(t)))
                         dig.types[t] += 1;
                 }
@@ -112,6 +132,13 @@ void world_scroll(World *world, Sprite *mole)
 {
     for (int i = 0; i < world->pos_remainder; i++)
     {
+        Sprite *bg;
+        for (int i = 0; i < world->number_of_bg; i++)
+        {
+            bg = &world->bg[i];
+            bg->position.y -= 1;
+        }
+
         world->pos_remainder -= 1;
         world->depth += 1;
         mole->position.y -= 1;
@@ -147,15 +174,15 @@ void update_roots(World *world)
             Color *current = world_get_terrain(world, x, y);
             if (IS_COLOR(current, TERRA_ROOT_TIP))
             {
-                int targetHeight = x < (WIDTH / 3)
-                                       ? world->leftSpeed
-                                   : (x < 2 * WIDTH / 3)
-                                       ? world->centerSpeed
-                                       : world->leftSpeed;
+                // int targetHeight = x < (WIDTH / 3)
+                //                        ? world->leftSpeed
+                //                    : (x < 2 * WIDTH / 3)
+                //                        ? world->centerSpeed
+                //                        : world->leftSpeed;
 
                 // if (rand() % targetHeight < y)
                 //     continue;
-                if (rand() % 100 > 20)
+                if (rand() % 100 > 25)
                     continue;
 
                 unsigned char direction = current->a & 7;
@@ -226,7 +253,7 @@ void update_roots(World *world)
             }
             else if (IS_COLOR(current, TERRA_ROOT))
             {
-                int age = 255-current->a;
+                int age = 255 - current->a;
                 Color new_color = TERRA_ROOT;
                 new_color.a = max(0, current->a - 1);
 
@@ -234,7 +261,7 @@ void update_roots(World *world)
 
                 if (age == 150)
                 {
-                //  printf("\nage: %d",age);
+                    //  printf("\nage: %d",age);
                     if (!IS_COLOR(world_get_terrain(world, x + 1, y), TERRA_ROOT))
                     {
                         world_set_terrain(world, x + 1, y, TERRA_ROOT);
@@ -273,4 +300,10 @@ void world_draw(World *world)
     SetShaderValueTexture(world->shader, world->texLoc, world->sand_texture);
     DrawTexturePro(world->screen_texture, srcRect, dstRect, origin, 0.0f, WHITE);
     EndShaderMode();
+
+
+    for (int i = 0; i < world->number_of_bg; i++)
+    {
+        sprite_draw(&world->bg[i]);
+    }
 }
