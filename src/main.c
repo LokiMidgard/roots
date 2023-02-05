@@ -84,7 +84,7 @@ int main()
 #if !defined(PLATFORM_WEB)
     InitConsole();
 #endif
-    SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "raylib");
     InitAudioDevice();
     SetTargetFPS(FPS);

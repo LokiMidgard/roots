@@ -45,7 +45,6 @@
             "program": "${workspaceFolder}/dist/RELEASE/roots.exe",
             "MIMode": "gdb",
             "windows": {
-              "program": "${workspaceFolder}/${fileBasenameNoExtension}.exe",
               "miDebuggerPath": "${workspaceFolder}/raylib/w64devkit/bin/gdb.exe"
             },
             "osx": {
