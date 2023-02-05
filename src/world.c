@@ -44,6 +44,11 @@ void world_init(World *world)
     world->images[index] = LoadImage("resources/tile_4.png");
     index = world->number_of_images++;
     world->images[index] = LoadImage("resources/tile_5.png");
+
+    for (int image_index = 0; image_index < index; ++image_index)
+        ImageFormat(world->images + image_index, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
+
+
     world->current_bitmap = LoadImageColors(image);
     world->next_bitmap = LoadImageColors(world->images[1]);
     world->screen_texture = LoadTextureFromImage(world->images[0]);
