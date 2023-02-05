@@ -52,6 +52,8 @@ color_to_terrain_type(Color c)
     return(TerrainTypeSize);
 };
 
+#define MAX_WORMS 20
+
 typedef struct World
 {
     float speed;
@@ -67,6 +69,10 @@ typedef struct World
     Shader shader;
     int texLoc;
     Texture2D sand_texture;
+
+    int number_of_active_worms;
+    Vector2 worm_positions[MAX_WORMS];
+    Texture2D worm_texture;
     
     int current_scroll;
     int depth;

@@ -45,6 +45,7 @@ void world_init(World *world)
     world->next_bitmap = LoadImageColors(world->images[1]);
     world->screen_texture = LoadTextureFromImage(world->images[0]);
 
+    world->worm_texture = LoadTexture("resources/worm.png");
     index = 0;
     index = world->number_of_bg++;
     sprite_init(&world->bg[index], "resources/forest/DeadForest_BG_0.png",640, 1, WIDTH / 2 - 640, HEIGHT / 2 + 90, 1, 0);
@@ -294,12 +295,19 @@ void update_roots(World *world)
         }
 }
 
+void update_worms(World *world)
+{
+    if (world->number_of_active_worms < 3)
+        world->number_of_active_worms += 1;
+}
+
 void world_update(World *world, Mole *mole)
 {
 
     world->pos_remainder += world->speed;
     world_scroll(world, &mole->sprite);
     update_roots(world);
+    update_worms(world);
 }
 
 void world_draw(World *world)
@@ -321,5 +329,11 @@ void world_draw(World *world)
     for (int i = 0; i < world->number_of_bg; i++)
     {
         sprite_draw(&world->bg[i]);
+    }
+    for (int index = 0; index < world->number_of_active_worms; ++index)
+    {
+        Rectangle source = {0, 0, 8, 8};
+        Vector2 target_position = {100.0f, 100.0f};
+        DrawTextureRec(world->worm_texture, source, target_position, WHITE);
     }
 }

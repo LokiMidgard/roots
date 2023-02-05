@@ -46,7 +46,6 @@ void mole_update(Mole *mole, Vector2 movement)
     dig_speed_penalty += dig.types[STONE] * 0.05f;
     float max_dig_speed_penalty = 0.98f;
     dig_speed_penalty = fminf(max_dig_speed_penalty, dig_speed_penalty);
-    printf("%f\n", dig_speed_penalty);
     movement = Vector2Scale(movement, (1.0f - dig_speed_penalty));
     new_mole_position = Vector2Add(sprite->position, movement);
 
