@@ -234,6 +234,7 @@ int world_scroll(World *world)
             world->current_bitmap = world->next_bitmap;
             int selected_image = rand() % world->number_of_images;
             world->next_bitmap = LoadImageColors(world->images[selected_image]);
+            printf("done changing bitmaps\n");
         }
     }
     return lines_to_scroll;
@@ -380,9 +381,10 @@ void world_draw(World *world)
     Rectangle lower_screen = {0, HEIGHT - world->current_scroll, WIDTH, world->current_scroll};
     UpdateTextureRec(world->screen_texture, upper_screen, world->current_bitmap + (world->current_scroll * WIDTH));
     UpdateTextureRec(world->screen_texture, lower_screen, world->next_bitmap);
+
     BeginShaderMode(world->shader);
     SetShaderValueTexture(world->shader, world->shader_map_location, world->map_texture);
-    float scroll = world->current_scroll / (float)HEIGHT;
+    float scroll = world->depth / (float)(HEIGHT);
     SetShaderValue(world->shader, world->shader_position_location, &scroll, SHADER_UNIFORM_FLOAT);
     DrawTexturePro(world->screen_texture, srcRect, dstRect, origin, 0.0f, WHITE);
     EndShaderMode();
