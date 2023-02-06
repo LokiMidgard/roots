@@ -19,4 +19,6 @@
 * [X] Health oben Links als UI-Overlay
 * [ ] Item Spawn Punkte in Level
 * [ ] Root-Grafik wieder etwas dunkler machen
-* [ ] Inventory Max Items
+* [ ] Roots driften nach rechts
+* [X] Inventory Max Items
+* [ ] Mole soll näher an den Rand laufen können
