@@ -20,6 +20,7 @@ void mole_reset(Mole *mole, int x, int y)
 
     mole->explode_time = 0;
 }
+
 void mole_init(Mole *mole, float x, float y)
 {
     // mole->snd_dig_earth = LoadSoundEx("resources/sound/dig03.mp3", 0.7f);
@@ -29,8 +30,8 @@ void mole_init(Mole *mole, float x, float y)
     mole->snd_explode = LoadSoundEx("resources/sound/explode.wav", 1.2f);
     mole->snd_hurt = LoadSoundEx("resources/sound/deep.wav", 1.0f);
     mole->snd_heal = LoadSoundEx("resources/sound/powerup.wav", 0.5f);
-    mole->snd_speed = LoadSoundEx("resources/sound/speed.wav", 0.5f);
-    mole->snd_powerup = LoadSoundEx("resources/sound/powerup.wav", 0.5f);
+    mole->snd_speed = LoadSoundEx("resources/sound/speed.wav", 0.3f);
+    mole->snd_powerup = LoadSoundEx("resources/sound/powerup.wav", 0.3f);
 
     sprite_init(&mole->sprite, "resources/sprites/mole_test.png", 16, 5, 30, 30, 15, 0);
 
