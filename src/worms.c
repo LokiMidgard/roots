@@ -14,7 +14,7 @@ void init_worm(Worms* worms, int x, int y) {
 }
 
 void worms_init(Worms* worms) {
-    worms->tex = LoadTexture("resources/stuff.png");
+    worms->tex = LoadTexture("resources/sprites/stuff.png");
     for (int i=0; i<3; ++i) {
         init_worm(worms, 30 + (rand() % (WIDTH-60)), HEIGHT - (rand() % 50));
     }

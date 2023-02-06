@@ -78,6 +78,14 @@ void MainLoop()
 
     Vector2 movement = input_get_dir(&input);
 
+    if (IsKeyPressed(KEY_P)) {
+        started = !started;
+    }
+
+    if (IsKeyPressed(KEY_R)) {
+        world_reload_tilemap(&world);
+    }
+
     if (started)
     {
         if (input_is_button_pressed(&input, 0)) // down
@@ -121,7 +129,7 @@ void MainLoop()
         mole.sprite.position.y -= world.last_scroll;
         mole_update(&mole, movement);
 
-        snprintf(hud.debug_text, 256, "depth: %2.2d\npoints: %d\nhealth: %.f\ninput: %s\nfullscreen: F\nexit: ESC", world.depth, (int)mole.points, mole.health, input_get_device_name(&input));
+        snprintf(hud.debug_text, 256, "depth: %2.2d\npoints: %d\nhealth: %.f\ninput: %s\npause: P\nfullscreen: F\nexit: ESC", world.depth, (int)mole.points, mole.health, input_get_device_name(&input));
         hud_update(&hud);
         stuff_update(&stuff, world.last_scroll);
 
@@ -139,17 +147,17 @@ void MainLoop()
         {
             started = true;
         }
+    } else {
+        // check for collisions
+        float pickup_radius = 10.0f;
+        StuffType picked_up_type;
+        int success = stuff_pickup(&stuff,
+                                mole.sprite.position,
+                                pickup_radius,
+                                &picked_up_type);
+        if (success)
+            inventory_add(&inventory, picked_up_type, 1);
     }
-
-    // check for collisions
-    float pickup_radius = 10.0f;
-    StuffType picked_up_type;
-    int success = stuff_pickup(&stuff,
-                               mole.sprite.position,
-                               pickup_radius,
-                               &picked_up_type);
-    if (success)
-        inventory_add(&inventory, picked_up_type, 1);
 
     // draw
     BeginDrawing();
@@ -159,7 +167,6 @@ void MainLoop()
     stuff_draw(&stuff);
     mole_draw(&mole);
     hud_draw(&hud, &stuff);
-
 
     if (mole.health <= 0)
     {

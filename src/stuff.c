@@ -14,7 +14,7 @@ void spawn_stuff(Stuff* stuff, int x, int y, StuffType type) {
 }
 
 void stuff_init(Stuff* stuff) {
-    stuff->tex = LoadTexture("resources/stuff.png");
+    stuff->tex = LoadTexture("resources/sprites/stuff.png");
     stuff->random_spawn_ranges_start[st_STAR] = 60 * 60;
     stuff->random_spawn_ranges_end[st_STAR] = 100 * 60;
     stuff->random_spawn_ranges_start[st_BOMB] = 10 * 60;

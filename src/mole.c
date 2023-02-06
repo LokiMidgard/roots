@@ -28,7 +28,7 @@ void mole_init(Mole *mole, float x, float y)
     mole->snd_explode = LoadSoundEx("resources/sound/explode.wav", 1.2f);
     mole->snd_hurt = LoadSoundEx("resources/sound/deep.wav", 1.0f);
 
-    sprite_init(&mole->sprite, "resources/mole_test.png", 16, 5, 30, 30, 15, 0);
+    sprite_init(&mole->sprite, "resources/sprites/mole_test.png", 16, 5, 30, 30, 15, 0);
 
     particles_init(&mole->part_dig);
 
@@ -181,8 +181,8 @@ void mole_update(Mole *mole, Vector2 movement)
 
 void mole_draw(Mole *mole)
 {
-    sprite_draw(&mole->sprite);
     particles_draw(&mole->part_dig);
+    sprite_draw(&mole->sprite);
 }
 
 void mole_explode(Mole *mole)
