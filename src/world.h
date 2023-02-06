@@ -68,7 +68,7 @@ typedef struct World
     // graphics
     int number_of_images;
     Image first_image;
-    Image images[10];
+    Image images[30];
     int number_of_bg;
     Sprite bg[10];
     int number_of_fg;

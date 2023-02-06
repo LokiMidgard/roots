@@ -1,0 +1,11 @@
+Was ich gern noch hätte:
+
+- Wenn wir sowas wie ein save file machen:
+    - Statistiken x Erde gesammelt; y Blub gesammelt
+    - Achievements: root canal: x meter durch wurzeln gegraben usw.
+
+- Level:
+    - noch mehr verschiedene
+    - Biome:
+        - Andere Level, wenn man tiefer kommt
+

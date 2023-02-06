@@ -89,6 +89,20 @@ void world_init(World *world)
         world->images[index] = LoadImage("resources/level/tile_4.png");
         index = world->number_of_images++;
         world->images[index] = LoadImage("resources/level/tile_5.png");
+        index = world->number_of_images++;
+        world->images[index] = LoadImage("resources/level/tile_6.png");
+        index = world->number_of_images++;
+        world->images[index] = LoadImage("resources/level/tile_7.png");
+        index = world->number_of_images++;
+        world->images[index] = LoadImage("resources/level/tile_8.png");
+        index = world->number_of_images++;
+        world->images[index] = LoadImage("resources/level/tile_9.png");
+        index = world->number_of_images++;
+        world->images[index] = LoadImage("resources/level/tile_9.png");
+        index = world->number_of_images++;
+        world->images[index] = LoadImage("resources/level/tile_9.png");
+        index = world->number_of_images++;
+        world->images[index] = LoadImage("resources/level/tile_9.png");
 
         for (int image_index = 0; image_index < index; ++image_index)
             ImageFormat(world->images + image_index, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
