@@ -1,6 +1,6 @@
 #include "console.h"
 
-#if !defined(PLATFORM_WEB)
+#if DEBUG && !defined(PLATFORM_WEB)
 
 int __stdcall AllocConsole(void);
 void __stdcall FreeConsole(void);
@@ -18,7 +18,6 @@ void InitConsole() {
 void CloseConsole() {
     FreeConsole();
 }
-
 #else
 void InitConsole() {}
 void CloseConsole() {}
