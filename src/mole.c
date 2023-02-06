@@ -83,6 +83,7 @@ void mole_update(Mole *mole, Vector2 movement)
         particles_emit(&mole->part_dig, 20, sprite->position.x, sprite->position.y, RED, 1.4f);
     }
     mole->health -= dig.types[ROOT];
+    mole->health -= dig.types[LAVA] * 0.03;
 
     for (int t = 0; t < TerrainTypeSize; ++t)
     {
