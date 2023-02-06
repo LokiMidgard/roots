@@ -5,6 +5,7 @@ Was ich gern noch hätte:
     - Achievements: root canal: x meter durch wurzeln gegraben usw.
 
 - Level:
+    - platzierbare objekte im level
     - noch mehr verschiedene
     - Biome:
         - Andere Level, wenn man tiefer kommt
