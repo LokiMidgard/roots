@@ -3,6 +3,7 @@
 
 #include "raylib.h"
 #include "stuff.h"
+#include "mole.h"
 #include "inventory.h"
 
 typedef struct Hud {
@@ -14,6 +15,6 @@ typedef struct Hud {
 
 void hud_init(Hud* hud, Inventory* inventory);
 void hud_update(Hud* hud);
-void hud_draw(Hud* hud, Stuff *stuff);
+void hud_draw(Hud* hud, Stuff *stuff, Mole* mole);
 
 #endif

@@ -1,5 +1,6 @@
 #include "config.h"
 #include "hud.h"
+#include "mole.h"
 
 #define _WIDTH WIDTH        // GetScreenWidth()
 #define _HEIGHT HEIGHT      // GetSCreenHeight()
@@ -22,7 +23,7 @@ void hud_init(Hud* hud, Inventory* inventory) {
 void hud_update(Hud* hud) {
 }
 
-void hud_draw(Hud* hud, Stuff *stuff) {
+void hud_draw(Hud* hud, Stuff *stuff, Mole* mole) {
     int w = _WIDTH - 16;
     int h = 40;
 
@@ -45,6 +46,16 @@ void hud_draw(Hud* hud, Stuff *stuff) {
             DrawText(texts[i], dstRect.x + hud->np_info.left + 4, dstRect.y + hud->np_info.top - 1, 12, BLACK);
         }
     }
+
+    // health
+    x = 10;
+    y = 50;
+    h = 8; 
+    w = WIDTH - 140;
+    DrawRectangleGradientV(x-2, y-2, w+4, h+2, DARKGRAY, BLACK);
+    DrawRectangleGradientV(x-2, y+h, w+4, h+2, BLACK, DARKGRAY);
+    DrawRectangleGradientV(x, y, w*mole->health/100.0, h, DARKGREEN, GREEN);
+    DrawRectangleGradientV(x, y+h, w*mole->health/100.0, h, GREEN, DARKGREEN);
 
     // fps
     // DrawFPS(WIDTH/2, 10);

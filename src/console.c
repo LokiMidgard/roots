@@ -19,6 +19,8 @@ void CloseConsole() {
     FreeConsole();
 }
 #else
+
 void InitConsole() {}
 void CloseConsole() {}
+
 #endif

@@ -16,6 +16,6 @@
     - Zoomed In
 
 # Tasks
-* [ ] Health oben Links als UI-Overlay
+* [X] Health oben Links als UI-Overlay
 * [ ] Item Spawn Punkte in Level
 * [ ] Root-Grafik wieder etwas dunkler machen
