@@ -131,6 +131,7 @@ void world_init(World *world)
     }
     world->shader = LoadShader(0, "resources/shader/shader.fs");
     world->shader_position_location = GetShaderLocation(world->shader, "scroll_position");
+    world->shader_time_location = GetShaderLocation(world->shader, "game_time");
     world->shader_map_location = GetShaderLocation(world->shader, "texture_map");
     
     world_reload_tilemap(world);
@@ -430,7 +431,9 @@ void world_draw(World *world)
     BeginShaderMode(world->shader);
     SetShaderValueTexture(world->shader, world->shader_map_location, world->map_texture);
     float scroll = world->depth / (float)(HEIGHT);
+    float time = GetTime();
     SetShaderValue(world->shader, world->shader_position_location, &scroll, SHADER_UNIFORM_FLOAT);
+    SetShaderValue(world->shader, world->shader_time_location, &time, SHADER_UNIFORM_FLOAT);
     DrawTexturePro(world->screen_texture, srcRect, dstRect, origin, 0.0f, WHITE);
     EndShaderMode();
 

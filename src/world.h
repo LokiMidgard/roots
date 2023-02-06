@@ -18,6 +18,7 @@ typedef enum TerrainType
     QUICK_STONE,
     DIG_STONE,
     SAND,
+    LAVA,
     TerrainTypeSize,
 } TerrainType;
 
@@ -33,6 +34,7 @@ Color TerrainTypeToColor[TerrainTypeSize] =
     TERRA_QUICK_STONE,
     TERRA_DIG_STONE,
     TERRA_SAND,
+    TERRA_LAVA,
 };
 
 Color
@@ -84,6 +86,7 @@ typedef struct World
     Texture2D screen_texture;
     Shader shader;
     int shader_position_location;
+    int shader_time_location;
     int shader_map_location;
     Texture2D map_texture;
 

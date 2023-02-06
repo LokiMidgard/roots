@@ -9,6 +9,7 @@ in vec4 fragColor;
 uniform sampler2D t0;
 uniform sampler2D texture_map;
 uniform float scroll_position;
+uniform float game_time = 0;
 
 // out
 out vec4 finalColor;
@@ -39,6 +40,7 @@ out vec4 finalColor;
 #define isEmerald(c) check(c, 3, 228, 48)
 #define isQuickStone(c) check(c, 3, 121, 241)
 #define isDigStone(c) check(c, 230, 41, 55)
+#define isLava(c) check(c, 255, 0, 0)
 #define isRoot(c) (c.x < 3 / 255.f && c.w > 0)
 
 void main()
@@ -49,7 +51,9 @@ void main()
     vec4 l = texture(t0, fragTexCoord + vec2(-PW, 0));
     vec4 r = texture(t0, fragTexCoord + vec2(PW, 0));
 
-    vec2 offset =  vec2(0, isTunel(c0) ? scroll_position * 0.5 : scroll_position);
+    bool inward = isTunel(c0) || isLava(c0);
+
+    vec2 offset =  vec2(isLava(c0) ? sin(game_time*0.1) * 0.1 : 0, scroll_position * (isTunel(c0) ? 0.5 : isLava(c0) ? 0.95 : 1));
     vec2 offsetCoord = vec2(fragTexCoord + offset);
 
     vec2 index = isEarth(c0) ? vec2(1,0)
@@ -59,6 +63,7 @@ void main()
         : isEmerald(c0) ? vec2(5,0)
         : isQuickStone(c0) ? vec2(6,0)
         : isDigStone(c0) ? vec2(7,0)
+        : isLava(c0) ? vec2(0, 1)
         : vec2(0,0);
 
     vec2 scale =  vec2(offsetCoord.x * TM_WF, offsetCoord.y * TM_HF);
@@ -68,9 +73,9 @@ void main()
     vec4 rootColor = vec4(1.0f/2.0f-(c0.z/2.0f),1.0f/4.0f-(c0.z/4.0f),1.0f/2.0f-(c0.z/2.0f),255.0f);
 
     finalColor = isRoot(c0) ? rootColor
-        : !isTunel(c0) && (c0 != t || c0 != l) ? vec4(c1.xyz * 1.7f, c1.a)
-        : !isTunel(c0) && (c0 != b || c0 != r) ? vec4(c1.xyz * 0.6f, c1.a)
-        : isTunel(c0) && (c0 != t || c0 != l) ? vec4(c1.xyz * 0.5f, c1.a)
-        : isTunel(c0) && (c0 != b || c0 != r) ? vec4(c1.xyz * 1.9f, c1.a)
+        : !inward && (c0 != t || c0 != l) ? vec4(c1.xyz * 1.7f, c1.a)
+        : !inward && (c0 != b || c0 != r) ? vec4(c1.xyz * 0.6f, c1.a)
+        : inward && (c0 != t || c0 != l) ? vec4(c1.xyz * 0.5f, c1.a)
+        : inward && (c0 != b || c0 != r) ? vec4(c1.xyz * 1.9f, c1.a)
         : c1;
 }
