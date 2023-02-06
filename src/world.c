@@ -212,7 +212,7 @@ Dig world_dig(World *world, int x, int y, int radius)
                     printf("ERROR: INVALID TERRAIN TYPE!");
                 }
                 dig.types[t] += 1;
-                world_set_terrain(world, x + offsetX, y + offsetY, TERRA_TUNEL);
+                world_set_terrain(world, x + offsetX, y + offsetY, t == LAVA ? TERRA_LAVA : TERRA_TUNEL);
             }
         }
     }
