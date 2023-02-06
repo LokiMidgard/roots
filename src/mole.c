@@ -7,7 +7,7 @@
 void mole_reset(Mole *mole, int x, int y)
 {
     mole->snd_dig = mole->snd_dig_earth;
-    mole->health = 100;
+    mole->health = MOLE_MAX_HEALTH;
     mole->points = 0;
     mole->speed = 100.0f * 0.015f;
 
@@ -56,14 +56,6 @@ void mole_update(Mole *mole, Vector2 movement)
     mole->points += dig.types[EARTH] * 1 * 0.003f;
     mole->points += dig.types[STONE] * 2 * 0.003f;
 
-    if (dig.types[QUICK_STONE] > 0)
-    {
-        mole->speedBonus = 300;
-    }
-    if (dig.types[DIG_STONE] > 0)
-    {
-        mole->stoneEaterBonus = 600;
-    }
 
     float dig_speed_penalty = 0.0f;
     dig_speed_penalty += dig.types[EARTH] * 0.02f;

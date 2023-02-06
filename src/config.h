@@ -23,5 +23,7 @@
 #define TERRA_SAND (CLITERAL(Color) {237, 214, 92, 255})
 
 #define NUM_SEEDS (30)
+
+#define MOLE_MAX_HEALTH (100)
 #endif
 

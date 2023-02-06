@@ -15,11 +15,14 @@ void spawn_stuff(Stuff* stuff, int x, int y, StuffType type) {
 
 void stuff_init(Stuff* stuff) {
     stuff->tex = LoadTexture("resources/stuff.png");
-    for (int index = 0; index < 3; ++index)
-    {
-        StuffType type = rand() % st_size;
-        spawn_stuff(stuff, 30 + (rand() % (WIDTH-60)), HEIGHT - (rand() % 50), type);
-    }
+    stuff->random_spawn_ranges_start[st_STAR] = 60 * 60;
+    stuff->random_spawn_ranges_end[st_STAR] = 100 * 60;
+    stuff->random_spawn_ranges_start[st_BOMB] = 10 * 60;
+    stuff->random_spawn_ranges_end[st_BOMB] = 20 * 60;
+    stuff->random_spawn_ranges_start[st_MEAT] = 30 * 60;
+    stuff->random_spawn_ranges_end[st_MEAT] = 120 * 60;
+    stuff->random_spawn_ranges_start[st_APPLE] = 1 * 60;
+    stuff->random_spawn_ranges_end[st_APPLE] = 100 * 60;
 }
 
 void stuff_remove(Stuff *stuff, int index)
@@ -37,7 +40,21 @@ void stuff_remove(Stuff *stuff, int index)
 
 
 void stuff_update(Stuff* stuff, int last_scroll) {
-    for(int index = 0; index < stuff->active_stuff; ++index)
+    // update spawn timer
+    for (int index = 0; index < st_size; ++index)
+    {
+        stuff->spawn_timer[index] -= 1;
+        if (stuff->spawn_timer[index] <= 0)
+        {
+            StuffType type = rand() % st_size;
+            spawn_stuff(stuff, 30 + (rand() % (WIDTH-60)), HEIGHT + (rand() % 50), type);
+            stuff->spawn_timer[index] = utils_random_int(
+                stuff->random_spawn_ranges_start[type],
+                stuff->random_spawn_ranges_end[type]);
+        }
+    }
+
+    for (int index = 0; index < stuff->active_stuff; ++index)
     {
         stuff->pos[index].y -= last_scroll;
         if (stuff->pos[index].y < -10)
@@ -45,11 +62,6 @@ void stuff_update(Stuff* stuff, int last_scroll) {
             stuff_remove(stuff, index);
             --index;
         }
-    }
-    if (stuff->active_stuff < 3)
-    {
-        StuffType type = rand() % st_size;
-        spawn_stuff(stuff, 30 + (rand() % (WIDTH-60)), HEIGHT - (rand() % 50), type);
     }
 }
 

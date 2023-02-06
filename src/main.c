@@ -84,7 +84,7 @@ void MainLoop()
         {
             if (inventory_use(&inventory, st_MEAT))
             {
-                mole.stoneEaterBonus = 600;
+                mole.stoneEaterBonus = 2*60;
             }
         }
 
@@ -92,7 +92,9 @@ void MainLoop()
         {
             if (inventory_use(&inventory, st_APPLE))
             {
-                mole.speedBonus = 300;
+                mole.health += 20;
+                if (mole.health > MOLE_MAX_HEALTH)
+                    mole.health = MOLE_MAX_HEALTH;
             }
         }
 
@@ -100,7 +102,7 @@ void MainLoop()
         {
             if (inventory_use(&inventory, st_STAR))
             {
-                //mole_explode(&mole);
+                mole.speedBonus = 5*60;
             }
         }
         if (input_is_button_pressed(&input, 3)) // left
