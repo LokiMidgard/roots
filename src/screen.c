@@ -3,7 +3,7 @@
 
 void screen_init(Screen* screen) {
     screen->buffer = LoadRenderTexture(WIDTH, HEIGHT);
-    SetTextureFilter(screen->buffer.texture, TEXTURE_FILTER_TRILINEAR);
+    SetTextureFilter(screen->buffer.texture, TEXTURE_FILTER_ANISOTROPIC_16X);
     screen->shader = LoadShader(0, "resources/shader/screen.fs");
 }
 
