@@ -15,6 +15,13 @@ typedef enum StuffType
     st_size,
 } StuffType;
 
+char *StuffTypeName[st_size] =
+{
+    "Star",
+    "Bomb",
+    "Meat",
+    "Apple",
+};
 
 typedef struct Stuff
 {
@@ -22,6 +29,9 @@ typedef struct Stuff
     int        active_stuff;
     StuffType  type[MAX_STUFF];
     Vector2    pos[MAX_STUFF];
+    int        spawn_timer[st_size];
+    int        random_spawn_ranges_start[st_size];
+    int        random_spawn_ranges_end[st_size];
 } Stuff;
 
 void stuff_init(Stuff* stuff);

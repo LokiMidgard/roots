@@ -24,5 +24,7 @@
 #define TERRA_LAVA (CLITERAL(Color) {255, 0, 0, 255})
 
 #define NUM_SEEDS (30)
+
+#define MOLE_MAX_HEALTH (100)
 #endif
 
