@@ -16,22 +16,26 @@ void inventory_init(Inventory* inventory) {
     inventory->snd_pickup       = LoadSoundEx("resources/sound/pickup.wav", 0.3f);
 }
 
-void inventory_add(Inventory* inventory, StuffType picked_up_type, int num) {
-    inventory->pickups[picked_up_type] += num;
-    Sound s;
-    switch(picked_up_type) {
-        case st_STAR:
-        case st_BOMB:
-        case st_MEAT:
-        case st_APPLE:
-            s = inventory->sounds[picked_up_type];
-            break;
-        default:
-            s = inventory->snd_pickup;
-            SetSoundPitch(inventory->snd_pickup, 0.7 + (rand() % 60 / 100.0f));
-            break;
+bool inventory_add(Inventory* inventory, StuffType picked_up_type, int num) {
+    if (inventory->pickups[picked_up_type] < INV_MAX_ITEMS) {
+        inventory->pickups[picked_up_type] += num;
+        Sound s;
+        switch(picked_up_type) {
+            case st_STAR:
+            case st_BOMB:
+            case st_MEAT:
+            case st_APPLE:
+                s = inventory->sounds[picked_up_type];
+                break;
+            default:
+                s = inventory->snd_pickup;
+                SetSoundPitch(inventory->snd_pickup, 0.7 + (rand() % 60 / 100.0f));
+                break;
+        }
+        PlaySound(s);
+        return true;
     }
-    PlaySound(s);
+    return false;
 }
 
 bool inventory_use(Inventory* inventory, StuffType type) {

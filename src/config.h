@@ -26,5 +26,7 @@
 #define NUM_SEEDS (30)
 
 #define MOLE_MAX_HEALTH (100)
+#define INV_MAX_ITEMS (9)
+
 #endif
 

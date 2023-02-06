@@ -54,8 +54,8 @@ void hud_draw(Hud* hud, Stuff *stuff, Mole* mole) {
     w = WIDTH - 140;
     DrawRectangleGradientV(x-2, y-2, w+4, h+2, DARKGRAY, BLACK);
     DrawRectangleGradientV(x-2, y+h, w+4, h+2, BLACK, DARKGRAY);
-    DrawRectangleGradientV(x, y, w*mole->health/100.0, h, DARKGREEN, GREEN);
-    DrawRectangleGradientV(x, y+h, w*mole->health/100.0, h, GREEN, DARKGREEN);
+    DrawRectangleGradientV(x, y, w*mole->health/(float)MOLE_MAX_HEALTH, h, DARKGREEN, GREEN);
+    DrawRectangleGradientV(x, y+h, w*mole->health/(float)MOLE_MAX_HEALTH, h, GREEN, DARKGREEN);
 
     // fps
     // DrawFPS(WIDTH/2, 10);
