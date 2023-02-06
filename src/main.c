@@ -90,35 +90,22 @@ void MainLoop()
     {
         if (input_is_button_pressed(&input, 0)) // down
         {
-            if (inventory_use(&inventory, st_MEAT))
-            {
-                mole.stoneEaterBonus = 2*60;
-            }
+            mole_consume(&mole, &inventory, st_MEAT);
         }
 
         if (input_is_button_pressed(&input, 1)) // right
         {
-            if (inventory_use(&inventory, st_APPLE))
-            {
-                mole.health += 20;
-                if (mole.health > MOLE_MAX_HEALTH)
-                    mole.health = MOLE_MAX_HEALTH;
-            }
+            mole_consume(&mole, &inventory, st_APPLE);
         }
 
         if (input_is_button_pressed(&input, 2)) // up
         {
-            if (inventory_use(&inventory, st_STAR))
-            {
-                mole.speedBonus = 5*60;
-            }
+            mole_consume(&mole, &inventory, st_STAR);
         }
+
         if (input_is_button_pressed(&input, 3)) // left
         {
-            if (inventory_use(&inventory, st_BOMB))
-            {
-                mole_explode(&mole);
-            }
+            mole_consume(&mole, &inventory, st_BOMB);
         }
     }
 
@@ -166,7 +153,7 @@ void MainLoop()
     world_draw(&world);
     stuff_draw(&stuff);
     mole_draw(&mole);
-    hud_draw(&hud, &stuff);
+    hud_draw(&hud, &stuff, &mole);
 
     if (mole.health <= 0)
     {

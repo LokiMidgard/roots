@@ -31,23 +31,12 @@ void inventory_add(Inventory* inventory, StuffType picked_up_type, int num) {
             SetSoundPitch(inventory->snd_pickup, 0.7 + (rand() % 60 / 100.0f));
             break;
     }
-    if (!IsSoundPlaying(s)) {
-        PlaySound(s);
-    }
+    PlaySound(s);
 }
 
 bool inventory_use(Inventory* inventory, StuffType type) {
     if (inventory->pickups[type] > 0) {
         --inventory->pickups[type];
-        switch(type) {
-            case st_STAR:
-            case st_MEAT:
-            case st_APPLE:
-                PlaySound(inventory->sounds[type]);
-                break;
-            default:
-                break;
-        }
         return true;
     }
     return false;

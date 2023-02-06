@@ -4,6 +4,7 @@
 #include "raylib.h"
 #include "sprite.h"
 #include "particles.h"
+#include "inventory.h"
 
 typedef struct Mole
 {
@@ -27,6 +28,9 @@ typedef struct Mole
     Sound snd_collide;
     Sound snd_explode;
     Sound snd_hurt;
+    Sound snd_heal;
+    Sound snd_speed;
+    Sound snd_powerup;
 
     // fx
     float explode_time;
@@ -36,6 +40,6 @@ typedef struct Mole
 void mole_update(Mole *mole, Vector2 movement);
 void mole_init(Mole *mole, float x, float y);
 void mole_draw(Mole* mole);
-void mole_explode(Mole* mole);
 
+void mole_consume(Mole* mole, Inventory* inventory, StuffType type);
 #endif

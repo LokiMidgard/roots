@@ -3,6 +3,7 @@
 #include "config.h"
 #include "mole.h"
 #include "world.h"
+#include "utils.h"
 
 void mole_reset(Mole *mole, int x, int y)
 {
@@ -27,6 +28,9 @@ void mole_init(Mole *mole, float x, float y)
     mole->snd_collide = LoadSoundEx("resources/sound/crumble.wav", 0.5f);
     mole->snd_explode = LoadSoundEx("resources/sound/explode.wav", 1.2f);
     mole->snd_hurt = LoadSoundEx("resources/sound/deep.wav", 1.0f);
+    mole->snd_heal = LoadSoundEx("resources/sound/powerup.wav", 0.5f);
+    mole->snd_speed = LoadSoundEx("resources/sound/speed.wav", 0.5f);
+    mole->snd_powerup = LoadSoundEx("resources/sound/powerup.wav", 0.5f);
 
     sprite_init(&mole->sprite, "resources/sprites/mole_test.png", 16, 5, 30, 30, 15, 0);
 
@@ -186,14 +190,35 @@ void mole_draw(Mole *mole)
     sprite_draw(&mole->sprite);
 }
 
-void mole_explode(Mole *mole)
-{
-    if (mole->explode_time == 0)
-    {
-        mole->explode_time = 3.1415f;
-        if (!IsSoundPlaying(mole->snd_explode))
-        {
-            PlaySound(mole->snd_explode);
+void mole_consume(Mole* mole, Inventory* inventory, StuffType type) {
+    if (inventory_use(inventory, type)) {
+        switch(type) {
+            case st_APPLE:
+                mole->health += 20;
+                if (mole->health > MOLE_MAX_HEALTH) {
+                    mole->health = MOLE_MAX_HEALTH;
+                } else {
+                    PlaySound(mole->snd_heal);
+                }
+                break;
+            case st_MEAT:
+                mole->stoneEaterBonus = 2*60;
+                PlaySound(mole->snd_powerup);
+                break;
+            case st_STAR:
+                mole->speedBonus = 5*60;
+                PlaySound(mole->snd_speed);
+                break;
+            case st_BOMB:
+                if (mole->explode_time == 0) {
+                    mole->explode_time = 3.1415f;
+                    if (!IsSoundPlaying(mole->snd_explode)) {
+                        PlaySound(mole->snd_explode);
+                    }
+                }
+                break;
+            default:
+                break;
         }
     }
 }
