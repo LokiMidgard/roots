@@ -81,6 +81,7 @@ bool input_is_button_down(Input* input, int button) {
                 case 0: return IsKeyDown(KBD_BUTTON_0);
                 case 1: return IsKeyDown(KBD_BUTTON_1);
                 case 2: return IsKeyDown(KBD_BUTTON_2);
+                case 3: return IsKeyDown(KBD_BUTTON_3);
             }
             break;
         case INPUT_MOUSE:
@@ -90,6 +91,7 @@ bool input_is_button_down(Input* input, int button) {
                 case 0: return IsGamepadButtonDown(input->gamepad, GPD_BUTTON_0);
                 case 1: return IsGamepadButtonDown(input->gamepad, GPD_BUTTON_1);
                 case 2: return IsGamepadButtonDown(input->gamepad, GPD_BUTTON_2);
+                case 3: return IsGamepadButtonDown(input->gamepad, GPD_BUTTON_3);
             }
     }
     return false;
@@ -102,6 +104,7 @@ bool input_is_button_pressed(Input* input, int button) {
                 case 0: return IsKeyPressed(KBD_BUTTON_0);
                 case 1: return IsKeyPressed(KBD_BUTTON_1);
                 case 2: return IsKeyPressed(KBD_BUTTON_2);
+                case 3: return IsKeyPressed(KBD_BUTTON_3);
             }
             break;
         case INPUT_MOUSE:
