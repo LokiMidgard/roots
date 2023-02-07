@@ -16,3 +16,4 @@ bool inventory_add(Inventory* inventory, StuffType picked_up_type, int num);
 bool inventory_use(Inventory* inventory, StuffType type);
 
 #endif
+

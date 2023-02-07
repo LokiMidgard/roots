@@ -3,7 +3,7 @@
 int __stdcall AllocConsole(void);
 void __stdcall FreeConsole(void);
 
-void InitConsole() {
+void InitConsole(void) {
     FILE *ConsoleIn  = 0;
     FILE *ConsoleOut = 0;
     FILE *ConsoleErr = 0;
@@ -13,12 +13,12 @@ void InitConsole() {
     freopen_s(&ConsoleErr, "CONOUT$", "w", stderr);
 }
 
-void CloseConsole() {
+void CloseConsole(void) {
     FreeConsole();
 }
 #else
 
-void InitConsole() {}
-void CloseConsole() {}
+void InitConsole(void) {}
+void CloseConsole(void) {}
 
 #endif

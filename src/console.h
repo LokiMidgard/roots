@@ -6,7 +6,7 @@
 #include "stdio.h"
 #endif
 
-void InitConsole();
-void CloseConsole();
+void InitConsole(void);
+void CloseConsole(void);
 
 #endif

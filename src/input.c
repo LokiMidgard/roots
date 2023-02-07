@@ -58,8 +58,8 @@ Vector2 input_get_dir(Input* input) {
             dir.x -= input->sprite ? input->sprite->position.x : (WIDTH >> 1);
             dir.y -= input->sprite ? input->sprite->position.y : (HEIGHT >> 1);
 
-            if (abs(dir.x) < input->mouse_deadzone) dir.x = 0;
-            if (abs(dir.y) < input->mouse_deadzone) dir.y = 0;
+            if (fabsf(dir.x) < input->mouse_deadzone) dir.x = 0;
+            if (fabsf(dir.y) < input->mouse_deadzone) dir.y = 0;
             break;
 
         case INPUT_GAMEPAD:

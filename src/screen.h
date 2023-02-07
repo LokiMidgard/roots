@@ -15,3 +15,4 @@ void screen_update(Screen* screen);
 void screen_draw(Screen* screen);
 
 #endif
+

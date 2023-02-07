@@ -55,7 +55,7 @@ bool died = false;
 #include "hud.c"
 #include "inventory.c"
 
-void reset_game()
+void reset_game(void)
 {
     roots_reset(&roots);
     mole_reset(&mole, WIDTH / 2, HEIGHT + 60);
@@ -65,7 +65,7 @@ void reset_game()
     died = false;
 }
 
-void init_game()
+void init_game(void)
 {
     world_init(&world);
     hud_init(&hud, &inventory);
@@ -75,7 +75,7 @@ void init_game()
     inventory_init(&inventory);
 }
 
-void MainLoop()
+void MainLoop(void)
 {
     UpdateMusicStream(music);
     screen_update(&screen);
@@ -205,7 +205,7 @@ void MainLoop()
 }
 
 
-int main()
+int main(void)
 {
     /***************************************************************************
      * Init technical stuff

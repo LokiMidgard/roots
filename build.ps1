@@ -1,4 +1,4 @@
-make
+.\clang-build.ps1
 
 if ($?)
 {

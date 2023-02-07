@@ -58,7 +58,7 @@ color_to_terrain_type(Color c)
             return(TerrainType);
     }
     return(TerrainTypeSize);
-};
+}
 
 typedef struct World
 {
