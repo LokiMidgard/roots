@@ -1,3 +1,6 @@
 make
 
-./dist/RELEASE/roots.exe
+if ($?)
+{
+    ./dist/RELEASE/roots.exe
+}

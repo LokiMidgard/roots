@@ -21,9 +21,11 @@
 #include "particles.h"
 #include "hud.h"
 #include "inventory.h"
+#include "roots.h"
 
 Mole mole;
 World world;
+Roots roots = {0};
 Screen screen;
 Input input;
 Stuff stuff;
@@ -40,6 +42,7 @@ int endScreenTimer;
 bool started = false;
 bool died = false;
 
+#include "roots.c"
 #include "console.c"
 #include "input.c"
 #include "screen.c"
@@ -54,6 +57,7 @@ bool died = false;
 
 void reset_game()
 {
+    roots_reset(&roots);
     mole_reset(&mole, WIDTH / 2, HEIGHT + 60);
     world_reset(&world);
     inventory_reset(&inventory);
@@ -80,6 +84,10 @@ void MainLoop()
 
     if (IsKeyPressed(KEY_P)) {
         started = !started;
+    }
+
+    if (IsKeyPressed(KEY_U)) {
+        reset_game();
     }
 
     if (IsKeyPressed(KEY_R)) {
@@ -113,10 +121,22 @@ void MainLoop()
     {
         // update
         world_update(&world);
+        roots_update(&roots, &world);
         mole.sprite.position.y -= world.last_scroll;
         mole_update(&mole, movement);
 
-        snprintf(hud.debug_text, 256, "depth: %2.2d\npoints: %d\nhealth: %.f\ninput: %s\npause: P\nfullscreen: F\nexit: ESC", world.depth, (int)mole.points, mole.health, input_get_device_name(&input));
+        snprintf(hud.debug_text, 256,
+                 "depth: %2.2d\n"
+                 "points: %d\n"
+                 "health: %.f\n"
+                 "input: %s\n"
+                 "pause: P\n"
+                 "fullscreen: F\n"
+                 "exit: ESC",
+                 world.depth,
+                 (int)mole.points,
+                 mole.health,
+                 input_get_device_name(&input));
         hud_update(&hud);
         stuff_update(&stuff, world.last_scroll);
 
@@ -193,7 +213,7 @@ int main()
     InitConsole();
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "raylib");
-    InitAudioDevice();
+    //InitAudioDevice();
     SetTargetFPS(FPS);
 
     /***************************************************************************
@@ -205,6 +225,7 @@ int main()
     input_init(&input);
 
     init_game();
+    reset_game();
 
     input_set_mouse_center(&input, &mole.sprite);
     input_set_device(&input, INPUT_GAMEPAD);

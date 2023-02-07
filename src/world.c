@@ -173,7 +173,7 @@ world_get_terrain(World *world, int x, int y)
         y += world->current_scroll;
     }
     if (x < 0 || y < 0 || x >= WIDTH || y >= HEIGHT)
-        return &TERRA_EARTH;
+        return &EMPTY_COLOR;
     return bitmap + POS(x, y);
 }
 
@@ -421,7 +421,7 @@ void world_update(World *world)
         speed = Remap((float)mole.sprite.position.y, scroll_fast, HEIGHT, 2.0f, 10.0f);
     world->speed = speed;
     world->last_scroll = world_scroll(world);
-    update_roots(world);
+    //update_roots(world);
     worms_update(&world->worms, world->last_scroll);
 }
 

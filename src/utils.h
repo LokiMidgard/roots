@@ -2,6 +2,7 @@
 #define ROOTS_UTILS_H
 
 #include "stdlib.h"
+#include "raymath.h"
 
 int utils_random_int(int min, int maxInclusiv) {
     int spread = (maxInclusiv+1)-min;
@@ -13,6 +14,11 @@ int utils_random_int(int min, int maxInclusiv) {
     } while (retval > spread);
 
     return min + retval;
+}
+
+float utils_random_float(float min, float maxInclusiv) {
+    float between_zero_and_one = (float)rand() / (float)RAND_MAX;
+    return Remap(between_zero_and_one, 0.0f, 1.0f, min, maxInclusiv);
 }
 
 int color_are_equal(Color c1, Color c2)

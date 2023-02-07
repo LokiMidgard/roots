@@ -36,6 +36,7 @@ Color TerrainTypeToColor[TerrainTypeSize] =
     TERRA_SAND,
     TERRA_LAVA,
 };
+Color EMPTY_COLOR = TERRA_EARTH;
 
 Color
 terrain_type_to_color(TerrainType t)

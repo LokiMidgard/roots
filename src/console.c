@@ -1,6 +1,4 @@
-#include "console.h"
-
-#if DEBUG && !defined(PLATFORM_WEB)
+#if !defined(PLATFORM_WEB)
 
 int __stdcall AllocConsole(void);
 void __stdcall FreeConsole(void);
