@@ -57,9 +57,9 @@ if ($Debug)
 
         if ($?)
         {
-            cp "$build_directory\roots.exe" "$dist_directory\desktop-release\"
-            cp "$build_directory\roots.pdb" "$dist_directory\desktop-release\"
-                & "$dist_directory\desktop-debug\roots.exe"
+            cp "$build_directory\roots.exe" "$dist_directory\desktop-debug\"
+            cp "$build_directory\roots.pdb" "$dist_directory\desktop-debug\"
+            & "$dist_directory\desktop-debug\roots.exe"
         }
 }
 else
@@ -74,8 +74,8 @@ else
 
         if ($?)
         {
-            cp "$build_directory\roots.exe" "$dist_directory\desktop-debug\"
-                & "$dist_directory\desktop-release\roots.exe"
+            cp "$build_directory\roots.exe" "$dist_directory\desktop-release\"
+            & "$dist_directory\desktop-release\roots.exe"
         }
 }
 
