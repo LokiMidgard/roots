@@ -108,4 +108,6 @@ void world_draw(World *world);
 Dig world_check_dig(World *world, int x, int y, int radius);
 Dig world_dig(World *world, int x, int y, int radius);
 
+void world_set_radius(World *world, int x, int y, int radius, Color c);
+
 #endif

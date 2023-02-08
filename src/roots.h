@@ -2,28 +2,25 @@
 #define ROOTS_H
 
 #include "raylib.h"
-#include "world.h"
+//#include "world.h"
 
-#define MAX_LEAFS 50 
-#define MAX_ROOT_SEGMENTS 100
+#define MAX_ROOT_PATHS 100
+#define ROOT_PATH_SIZE 10
 
-typedef struct RootSegment
+typedef struct RootPath
 {
-    Vector2 start;
-    Vector2 direction;
-    float   length;
-    float   max_length;
-    float   grow_speed;
-    float   start_radius;
-    int     parent;
-} RootSegment;
+    Vector2 nodes[ROOT_PATH_SIZE];
+    Vector2 growth_direction;
+    int     first_node;
+    float   tip_size;
+    float   tip_size_target;
+    float   growth_speed;
+} RootPath;
 
 typedef struct Roots
 {
-    int number_of_leafs;
-    int number_of_segments;
-    int leafs[MAX_LEAFS];
-    RootSegment segments[MAX_ROOT_SEGMENTS];
+    int number_of_paths;
+    RootPath paths[MAX_ROOT_PATHS];
 } Roots;
 
 void roots_update(Roots *roots, World *world);

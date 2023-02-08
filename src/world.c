@@ -196,6 +196,20 @@ Dig world_check_dig(World *world, int x, int y, int radius)
     return (dig);
 }
 
+void world_set_radius(World *world, int x, int y, int radius, Color color)
+{
+    for (int offsetX = -radius; offsetX < radius; ++offsetX)
+    {
+        for (int offsetY = -radius; offsetY < radius; ++offsetY)
+        {
+            if (sqrtf(offsetX * offsetX + offsetY * offsetY) <= radius)
+            {
+                world_set_terrain(world, x + offsetX, y + offsetY, color);
+            }
+        }
+    }
+}
+
 Dig world_dig(World *world, int x, int y, int radius)
 {
     Dig dig = {0};

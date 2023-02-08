@@ -1,197 +1,113 @@
+#include "roots.h"
 
-void remove_leaf(Roots *roots, int index)
+void roots_randomize_paths(Roots *roots)
 {
-    if (roots->number_of_leafs == 0) return;
-    roots->leafs[index] = roots->leafs[roots->number_of_leafs - 1];
-    roots->number_of_leafs -= 1;
-}
-
-void remove_segment(Roots *roots, int index)
-{
-    if (roots->number_of_segments == 0) return;
-    int last_segment_index = roots->number_of_segments - 1;
-    roots->segments[index] = roots->segments[last_segment_index];
-    roots->number_of_segments -= 1;
-
-    for (int leaf_index = 0;
-         leaf_index < roots->number_of_leafs;
-         ++leaf_index)
+    for (int index = 0; index < MAX_ROOT_PATHS; ++index)
     {
-        if (roots->leafs[leaf_index] == last_segment_index)
+        RootPath *path = roots->paths + index;
+        path->first_node  = 0;
+        Vector2 direction = {0.0f, -1.0f};
+        float offset = WIDTH / (float)MAX_ROOT_PATHS;
+        Vector2 start     = {index * offset + 10.0f, -100.0f};
+        path->growth_direction = (Vector2){0.0f, 1.0f};
+        path->tip_size  = 0.0f;
+        path->tip_size_target = 50.0f;
+        path->growth_speed = 2.0f;
+        for (int node_index = 0; node_index < ROOT_PATH_SIZE; ++node_index)
         {
-            roots->leafs[leaf_index] = index;
-            break;
+            path->nodes[node_index] = start;
+            start = Vector2Add(start,
+                               Vector2Scale(direction,
+                                            utils_random_float(20.0f, 100.0f)));
+            float angle = utils_random_float(-10.0f, 10.0f);
+            direction = Vector2Rotate(direction, angle * DEG2RAD);
         }
     }
-    for (int leaf_index = 0;
-         leaf_index < roots->number_of_leafs;
-         ++leaf_index)
-    {
-        if (roots->leafs[leaf_index] == index)
-        {
-            remove_leaf(roots, leaf_index);
-            break;
-        }
-    }
-    for (int segment_index = 0;
-         segment_index < roots->number_of_segments;
-         ++segment_index)
-    {
-        if (roots->segments[segment_index].parent == index)
-            roots->segments[segment_index].parent = -1;
-        if (roots->segments[segment_index].parent == last_segment_index)
-            roots->segments[segment_index].parent = index;
-    }
-}
-
-void spawn_leaf(Roots *roots,
-                int parent_index)
-{
-    if (roots->number_of_leafs == MAX_LEAFS)
-    {
-        remove_leaf(roots, utils_random_int(0, MAX_LEAFS - 1));
-    }
-    if (roots->number_of_segments == MAX_ROOT_SEGMENTS)
-    {
-        for (int index = 0; index < roots->number_of_segments; ++index)
-        {
-            if (roots->segments[index].length > roots->segments[index].max_length)
-            {
-                printf("removing non leaf start %d\n", roots->number_of_leafs);
-                remove_segment(roots, index);
-                printf("removing non leaf end %d\n", roots->number_of_leafs);
-                break;
-            }
-        }
-    }
-    int leaf_index = roots->number_of_leafs++;
-    int segment_index = roots->number_of_segments++;
-    if (parent_index == -1)
-    {
-        RootSegment new_segment =
-        {
-            .start = {300.0f, 400.0f},
-            .direction = {0.0f, 1.0f},
-            .length = 0.0f,
-            .max_length = 10.0f,
-            .grow_speed = 0.1f,
-            .start_radius = 1.0f,
-            .parent = -1,
-        };
-        roots->leafs[leaf_index] = segment_index;
-        roots->segments[segment_index] = new_segment;
-        return;
-    }
-    if (parent_index < 0 || parent_index >= roots->number_of_segments)
-        return;
-
-    RootSegment parent = roots->segments[parent_index];
-    Vector2 start = Vector2Add(parent.start,
-                               Vector2Scale(parent.direction, parent.length));
-    if (start.x < 0 || start.x > WIDTH || start.y < 0)
-        return;
-    float angle_change = utils_random_float(-45.0f, 45.0f);
-    Vector2 direction = Vector2Rotate(parent.direction, DEG2RAD * angle_change);
-    float grow_speed = utils_random_float(0.5f, 0.7f);
-    float max_length = utils_random_float(10.0f, 100.0f);
-    RootSegment new_segment =
-    {
-        .start = start,
-        .direction = direction,
-        .length = 0.0f,
-        .max_length = max_length,
-        .grow_speed = grow_speed,
-        .start_radius = 1.0f,
-        .parent = parent_index,
-    };
-    roots->leafs[leaf_index] = segment_index;
-    roots->segments[segment_index] = new_segment;
 }
 
 void roots_reset(Roots *roots)
 {
-    roots->number_of_segments = 0;
-    roots->number_of_leafs = 0;
-    spawn_leaf(roots, -1);
+    roots->number_of_paths = MAX_ROOT_PATHS;
+    roots_randomize_paths(roots);
+}
+
+void roots_set_world(World *world, Vector2 from, Vector2 to, float *radius)
+{
+    float growth_per_pixel_length = 3.0f / 100.0f;
+    Vector2 direction = Vector2Subtract(to, from);
+    float total_length = Vector2Length(direction);
+    direction = Vector2Scale(direction, 1.0f / total_length);
+    float length = 0.0f;
+    while(length < total_length)
+    {
+        world_set_radius(world, from.x, from.y, *radius, TERRA_ROOT);
+        from = Vector2Add(from, Vector2Scale(direction, *radius));
+        *radius += growth_per_pixel_length * *radius;
+        length += *radius;
+    }
 }
 
 
 void roots_update(Roots *roots, World *world)
 {
-    float growth_per_pixel_length = 5.0f / 100.0f;
-
-    // check and remove completed leafs
-    for (int index = 0;
-         index < roots->number_of_leafs;
-         ++index)
+    for (int index = 0; index < roots->number_of_paths; ++index)
     {
-        int segment_index  = roots->leafs[index];
-        RootSegment *leaf  = roots->segments + segment_index;
-
-        if (leaf->length >= leaf->max_length)
-        {
-            remove_leaf(roots, index);
-            --index;
-
-            int new_leafs = 5;
-            if (roots->number_of_leafs > 70)
-                new_leafs = utils_random_int(0, 1);
-            if (roots->number_of_leafs > 40)
-                new_leafs = utils_random_int(0, 2);
-            if (roots->number_of_leafs > 10)
-                new_leafs = utils_random_int(0, 4);
-
-
-            printf("i died making %d new leafs\n", new_leafs);
-            for (int count = 0; count < new_leafs; ++count)
-                spawn_leaf(roots, segment_index);
-
-            printf("segments: %d, leafs: %d\n",
-                   roots->number_of_segments,
-                   roots->number_of_leafs);
+        RootPath *path = roots->paths + index;
+        int node = path->first_node;
+        do {
+            path->nodes[node].y -= world->last_scroll;
+            node = (node + 1) % ROOT_PATH_SIZE;
         }
-        else
-        {
-            leaf->length += leaf->grow_speed;
-            int parent_index = leaf->parent;
-            RootSegment *child = leaf;
-            while(parent_index != -1)
-            {
-                RootSegment *parent = roots->segments + parent_index;
-                parent->start_radius =
-                    child->start_radius + child->length * growth_per_pixel_length;
-                parent_index = parent->parent;
-                child = parent;
-            }
-        }
+        while (node != path->first_node);
+
     }
-
-    // grow segments
-    for (int index = 0;
-         index < roots->number_of_segments;
-         ++index)
+    for (int index = 0; index < roots->number_of_paths; ++index)
     {
-        RootSegment *root_segment = roots->segments + index;
-        if (root_segment->start.y < -100.0f)
-        {
-            remove_segment(roots, index);
-            --index;
-            continue;
-        }
-        root_segment->start.y -= world->last_scroll;
+        float radius = 1.0f;
+        RootPath *path = roots->paths + index;
 
-        Vector2 current_point = Vector2Add(root_segment->start,
-                                           Vector2Scale(root_segment->direction,
-                                                        root_segment->length));
-        Vector2 direction     = Vector2Scale(root_segment->direction, -1.0f);
-        float length = 0.0f;
-        while(length < root_segment->length)
+        path->tip_size += path->growth_speed;
+        Vector2 end = path->nodes[path->first_node];
+        Vector2 start =
+            Vector2Add(end,
+                       Vector2Scale(path->growth_direction, path->tip_size));
+        roots_set_world(world, start, end, &radius);
+
+        int node = path->first_node;
+        int last_node = (node + ROOT_PATH_SIZE - 1) % ROOT_PATH_SIZE;
+        do {
+            start = path->nodes[node];
+            end   = path->nodes[(node + 1) % ROOT_PATH_SIZE];
+            roots_set_world(world, start, end, &radius);
+            node = (node + 1) % ROOT_PATH_SIZE;
+        }
+        while (node != last_node);
+
+        if (path->tip_size > path->tip_size_target)
         {
-            float radius = root_segment->start_radius + length * growth_per_pixel_length;
-            radius = fmaxf(radius, 1.0f);
-            world_dig(world, current_point.x, current_point.y, radius);
-            current_point = Vector2Add(current_point, Vector2Scale(direction, radius));
-            length += radius;
+            Vector2 first  = path->nodes[path->first_node];
+            Vector2 second = path->nodes[(path->first_node + 1) % ROOT_PATH_SIZE];
+
+            path->first_node = (path->first_node + ROOT_PATH_SIZE - 1) % ROOT_PATH_SIZE;
+            path->nodes[path->first_node] =
+                Vector2Add(first,
+                           Vector2Scale(path->growth_direction, path->tip_size));
+
+            float left_angle = -10.0f;
+            float right_angle = 10.0f;
+            if (first.x > WIDTH * 0.9f)
+                left_angle = 1.0f;
+            if (first.x < WIDTH * 0.1f)
+                right_angle = -1.0f;
+            float angle = utils_random_float(left_angle, right_angle);
+            Vector2 last_direction = Vector2Normalize(Vector2Subtract(first, second));
+            Vector2 next_direction = Vector2Rotate(last_direction, angle * DEG2RAD);
+
+            path->growth_direction = next_direction;
+            path->tip_size = 0;
+            path->tip_size_target = utils_random_float(10.0f, 50.0f);
+            path->growth_speed = utils_random_float(0.1f, 4.0f);
+            if (first.y < 0.0f) path->growth_speed = 15.0f;
         }
     }
 }
