@@ -106,7 +106,9 @@ void roots_update(Roots *roots, World *world)
             path->growth_direction = next_direction;
             path->tip_size = 0;
             path->tip_size_target = utils_random_float(10.0f, 50.0f);
-            path->growth_speed = utils_random_float(0.1f, 4.0f);
+            if (first.y > 0.0f) path->growth_speed = 1.0f;
+            path->growth_speed += utils_random_float(-0.5f, 1.0f);
+            path->growth_speed = Clamp(path->growth_speed, 0.0f, 4.0f);
             if (first.y < 0.0f) path->growth_speed = 15.0f;
         }
     }
