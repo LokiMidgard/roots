@@ -212,7 +212,7 @@ int main(void)
      ****************************************************************************/
     InitConsole();
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "raylib");
+    InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "roots");
     InitAudioDevice();
     SetTargetFPS(FPS);
 

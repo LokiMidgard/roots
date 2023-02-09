@@ -210,6 +210,17 @@ void world_set_radius(World *world, int x, int y, int radius, Color color)
     }
 }
 
+void world_set_rectangle(World *world, int x, int y, int half_width, Color color)
+{
+    for (int offsetX = -half_width; offsetX < half_width; ++offsetX)
+    {
+        for (int offsetY = -half_width; offsetY < half_width; ++offsetY)
+        {
+                world_set_terrain(world, x + offsetX, y + offsetY, color);
+        }
+    }
+}
+
 Dig world_dig(World *world, int x, int y, int radius)
 {
     Dig dig = {0};

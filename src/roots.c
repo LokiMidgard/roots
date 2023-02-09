@@ -97,27 +97,37 @@ void roots_update(Roots *roots, World *world, Mole *mole)
                 Vector2Add(first,
                            Vector2Scale(path->growth_direction, path->tip_size));
 
-            float left_angle = -10.0f;
-            float right_angle = 10.0f;
-            if (first.x > WIDTH * 0.9f)
-                left_angle = 1.0f;
-            if (first.x < WIDTH * 0.1f)
-                right_angle = -1.0f;
-            float angle = utils_random_float(left_angle, right_angle);
             Vector2 last_direction = Vector2Normalize(Vector2Subtract(first, second));
+            Vector2 next_direction = {0};
             if (roots->target_mode)
             {
-                last_direction = Vector2Normalize(
+                Vector2 mole_direction = Vector2Normalize(
                     Vector2Subtract(mole->sprite.position,
                                     path->nodes[path->first_node]));
+                float left_angle = -70.0f;
+                float right_angle = 70.0f;
+                float angle = utils_random_float(left_angle, right_angle);
+                Vector2 down = {0.0f, 1.0f};
+                next_direction = Vector2Rotate(mole_direction, angle * DEG2RAD);
             }
-            Vector2 next_direction = Vector2Rotate(last_direction, angle * DEG2RAD);
+            else 
+            {
+                float left_angle = -80.0f;
+                float right_angle = 80.0f;
+                if (first.x > WIDTH * 0.9f)
+                    left_angle = 1.0f;
+                if (first.x < WIDTH * 0.1f)
+                    right_angle = -1.0f;
+                float angle = utils_random_float(left_angle, right_angle);
+                Vector2 down = {0.0f, 1.0f};
+                next_direction = Vector2Rotate(down, angle * DEG2RAD);
+            }
 
             path->growth_direction = next_direction;
             path->tip_size = 0;
-            path->tip_size_target = utils_random_float(10.0f, 50.0f);
+            path->tip_size_target = utils_random_float(30.0f, 80.0f);
             if (first.y > 0.0f) path->growth_speed = 1.0f;
-            path->growth_speed += utils_random_float(-0.5f, 1.0f);
+            path->growth_speed += utils_random_float(-0.5f, 2.0f);
             float max_speed = 4.0f;
             if (roots->target_mode)
                 max_speed = 8.0f;

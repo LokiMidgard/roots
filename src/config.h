@@ -22,6 +22,8 @@
 #define TERRA_DIG_STONE     CLITERAL(Color){ 230,  41,  55, 255 }   // ???
 #define TERRA_SAND          CLITERAL(Color){ 237, 214,  92, 255 }   //
 #define TERRA_LAVA          CLITERAL(Color){ 255,   0,   0, 255 }   // RED
+#define TERRA_BARK          CLITERAL(Color){   8,   0,   0, 255 }   // RED
+#define TERRA_ROOT_OUTER    CLITERAL(Color){   9,   0,   0, 255 }   // RED
 
 #define NUM_SEEDS (30)
 

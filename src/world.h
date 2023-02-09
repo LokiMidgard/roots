@@ -19,6 +19,8 @@ typedef enum TerrainType
     DIG_STONE,
     SAND,
     LAVA,
+    BARK,
+    ROOT_OUTER,
     TerrainTypeSize,
 } TerrainType;
 
@@ -35,6 +37,8 @@ Color TerrainTypeToColor[TerrainTypeSize] =
     TERRA_DIG_STONE,
     TERRA_SAND,
     TERRA_LAVA,
+    TERRA_BARK,
+    TERRA_ROOT_OUTER,
 };
 Color EMPTY_COLOR = TERRA_EARTH;
 
@@ -109,5 +113,6 @@ Dig world_check_dig(World *world, int x, int y, int radius);
 Dig world_dig(World *world, int x, int y, int radius);
 
 void world_set_radius(World *world, int x, int y, int radius, Color c);
+void world_set_rectangle(World *world, int x, int y, int radius, Color c);
 
 #endif

@@ -41,6 +41,8 @@ out vec4 finalColor;
 #define isQuickStone(c) check(c, 3, 121, 241)
 #define isDigStone(c) check(c, 230, 41, 55)
 #define isLava(c) check(c, 255, 0, 0)
+#define isBark(c) check(c, 8, 0, 0)
+#define isRootOuter(c) check(c, 9, 0, 0)
 #define isRoot(c) (c.x < 3 / 255.f && c.w > 0)
 
 void main()
@@ -64,6 +66,8 @@ void main()
         : isQuickStone(c0) ? vec2(6,0)
         : isDigStone(c0) ? vec2(7,0)
         : isLava(c0) ? vec2(0, 1)
+        : isBark(c0) ? vec2(1, 1)
+        : isRootOuter(c0) ? vec2(2, 1)
         : vec2(0,0);
 
     vec2 scale =  vec2(offsetCoord.x * TM_WF, offsetCoord.y * TM_HF);
