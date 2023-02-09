@@ -48,8 +48,12 @@ void roots_set_world(World *world, Vector2 from, Vector2 to, float *radius)
 }
 
 
-void roots_update(Roots *roots, World *world)
+void roots_update(Roots *roots, World *world, Mole *mole)
 {
+    if (IsKeyPressed(KEY_H))
+    {
+        roots->target_mode ^= 1;
+    }
     for (int index = 0; index < roots->number_of_paths; ++index)
     {
         RootPath *path = roots->paths + index;
@@ -83,7 +87,7 @@ void roots_update(Roots *roots, World *world)
         }
         while (node != last_node);
 
-        if (path->tip_size > path->tip_size_target)
+        if (path->tip_size > path->tip_size_target) // create new tip
         {
             Vector2 first  = path->nodes[path->first_node];
             Vector2 second = path->nodes[(path->first_node + 1) % ROOT_PATH_SIZE];
@@ -101,6 +105,12 @@ void roots_update(Roots *roots, World *world)
                 right_angle = -1.0f;
             float angle = utils_random_float(left_angle, right_angle);
             Vector2 last_direction = Vector2Normalize(Vector2Subtract(first, second));
+            if (roots->target_mode)
+            {
+                last_direction = Vector2Normalize(
+                    Vector2Subtract(mole->sprite.position,
+                                    path->nodes[path->first_node]));
+            }
             Vector2 next_direction = Vector2Rotate(last_direction, angle * DEG2RAD);
 
             path->growth_direction = next_direction;
@@ -108,7 +118,10 @@ void roots_update(Roots *roots, World *world)
             path->tip_size_target = utils_random_float(10.0f, 50.0f);
             if (first.y > 0.0f) path->growth_speed = 1.0f;
             path->growth_speed += utils_random_float(-0.5f, 1.0f);
-            path->growth_speed = Clamp(path->growth_speed, 0.0f, 4.0f);
+            float max_speed = 4.0f;
+            if (roots->target_mode)
+                max_speed = 8.0f;
+            path->growth_speed = Clamp(path->growth_speed, 0.0f, max_speed);
             if (first.y < 0.0f) path->growth_speed = 15.0f;
         }
     }

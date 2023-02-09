@@ -121,7 +121,7 @@ void MainLoop(void)
     {
         // update
         world_update(&world);
-        roots_update(&roots, &world);
+        roots_update(&roots, &world, &mole);
         mole.sprite.position.y -= world.last_scroll;
         mole_update(&mole, movement);
 

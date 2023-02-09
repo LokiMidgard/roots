@@ -21,8 +21,9 @@ typedef struct Roots
 {
     int number_of_paths;
     RootPath paths[MAX_ROOT_PATHS];
+    int target_mode;
 } Roots;
 
-void roots_update(Roots *roots, World *world);
+void roots_update(Roots *roots, World *world, Mole *mole);
 
 #endif
