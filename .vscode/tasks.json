@@ -5,54 +5,30 @@
     "tasks": [
         {
             "label": "build debug",
-            "type": "process",
-            "command": "make",
-            "args": [
-                "PLATFORM=PLATFORM_DESKTOP",
-                "BUILD_MODE=DEBUG"
-            ],
+            "type": "shell",
             "windows": {
-                "command": "./raylib/w64devkit/bin/make.exe",
+                "command": "./build.ps1",
                 "args": [
-                    "BUILD_MODE=DEBUG"
-                ],
-            },
-            "osx": {
-                "args": [
-                    "RAYLIB_PATH=<path_to_raylib>/raylib",
-                    "PROJECT_NAME=${fileBasenameNoExtension}",
-                    "OBJS=${fileBasenameNoExtension}.c",
-                    "BUILD_MODE=DEBUG"
+                    "-NoRun",
+                    "-Debug"
                 ],
             },
             "group": {
                 "kind": "build",
                 "isDefault": true
-            },
-            "problemMatcher": [
-                "$gcc"
-            ]
+            }
         },
         {
             "label": "build release",
-            "type": "process",
-            "command": "make",
+            "type": "shell",
             
             "windows": {
-                "command": "./raylib/w64devkit/bin/make.exe",
-
-            },
-            "osx": {
+                "command": "./build.ps1",
                 "args": [
-                    "RAYLIB_PATH=<path_to_raylib>/raylib",
-                    "PROJECT_NAME=${fileBasenameNoExtension}",
-                    "OBJS=${fileBasenameNoExtension}.c"
-                ],
+                    "-NoRun"
+                ]
             },
-            "group": "build",
-            "problemMatcher": [
-                "$gcc"
-            ]
+            "group": "build"
         }
     ]
 }

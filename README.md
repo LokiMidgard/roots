@@ -13,7 +13,8 @@
 
 ### Howto build
 
+- Install python3 https://www.python.org/downloads/ IT HAS TO BE python 3.10
 - Install cmake https://cmake.org/download/
-- Install clang https://github.com/llvm/llvm-project/releases/tag/llvmorg-14.0.6
+- Install clang https://github.com/llvm/llvm-project/releases
 
-Run build.ps1
+Run .\build.ps1

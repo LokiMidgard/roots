@@ -11,5 +11,6 @@
 	"explorer.fileNesting.expand": true,
 	"explorer.fileNesting.patterns": {
 		"*.c": "${capture}.h"
-	}
+	},
+	"cmake.configureOnOpen": false
 }

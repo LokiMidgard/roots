@@ -6,53 +6,20 @@
         "configurations": [
           {
             "name": "Debug",
-            "type": "cppdbg",
+            "type": "lldb",
             "request": "launch",
-            "program": "${workspaceFolder}/dist/DEBUG/roots.exe",
+            "program": "${workspaceFolder}/dist/desktop-debug/roots.exe",
             "args": [],
-            "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
-            "environment": [],
-            "externalConsole": false,
-            "MIMode": "gdb",
-            "setupCommands": [
-              {
-                "description": "Enable pretty-printing for gdb",
-                "text": "-enable-pretty-printing",
-                "ignoreFailures": false
-              }
-            ],
-            "windows": {
-              "miDebuggerPath": "${workspaceFolder}/raylib/w64devkit/bin/gdb.exe",
-            },
-            "osx": {
-              "MIMode": "lldb"
-            },
-            "linux": {
-              "miDebuggerPath": "/usr/bin/gdb",
-            },
             "preLaunchTask": "build debug"
           },
           {
             "name": "Run",
-            "type": "cppdbg",
+            "type": "lldb",
             "request": "launch",
             "args": [],
-            "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
-            "environment": [],
-            "externalConsole": false,
-            "program": "${workspaceFolder}/dist/RELEASE/roots.exe",
-            "MIMode": "gdb",
-            "windows": {
-              "miDebuggerPath": "${workspaceFolder}/raylib/w64devkit/bin/gdb.exe"
-            },
-            "osx": {
-              "MIMode": "lldb"
-            },
-            "linux": {
-              "miDebuggerPath": "/usr/bin/gdb"
-            },
+            "program": "${workspaceFolder}/dist/desktop-release/roots.exe",
             "preLaunchTask": "build release",
           }
         ]
