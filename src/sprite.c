@@ -61,8 +61,8 @@ void sprite_update(Sprite *s, Vector2 movement)
     //s->counter = (s->counter + 1) % (s->number_of_frames * s->speed);
     if (movement.x != 0 || movement.y != 0)
     {
-        Vector2 one = {0, -1};
-        s->rotation = Vector2Angle(one, movement) * RAD2DEG;
+        Vector2 one = {0, 0};
+        s->rotation = Vector2Angle(one, movement) * RAD2DEG + 90;
         s->position = Vector2Add(s->position, movement);
     }
 }
